@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-20T00:00:00Z",
+  "title": "Design System: Lloyd D'Souza — portfolio",
+  "extensions": {
+    "colorMeta": {
+      "sodium-amber": { "role": "primary", "displayName": "Sodium Amber", "canonical": "#e0a84f", "tonalRamp": ["#3a2a0f", "#5c4216", "#7f5c1e", "#a37728", "#c69138", "#e0a84f", "#ebc48a", "#f6e2c4"] },
+      "paper-amber": { "role": "primary", "displayName": "Paper Amber (light theme)", "canonical": "#8f5b0e" },
+      "charcoal-ground": { "role": "neutral", "displayName": "Charcoal Ground", "canonical": "#16161a", "tonalRamp": ["#0b0b0d", "#16161a", "#1e1e23", "#25252b", "#33333a", "#4d4d55", "#a39e94", "#ede6da"] },
+      "warm-ink": { "role": "neutral", "displayName": "Warm Ink", "canonical": "#ede6da" },
+      "warm-ink-muted": { "role": "neutral", "displayName": "Muted Ink", "canonical": "#a39e94" },
+      "paper-ground": { "role": "neutral", "displayName": "Paper", "canonical": "#f2eee6" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "The name on the home hero and the case-study title." },
+      "headline": { "displayName": "Headline", "purpose": "Section titles." },
+      "title": { "displayName": "Title", "purpose": "Sub-sections and the diagram detail heading." },
+      "body": { "displayName": "Body", "purpose": "Prose, max 66ch." },
+      "label": { "displayName": "Label", "purpose": "Condensed sentence-case table heads, keys and legend tags." },
+      "code": { "displayName": "Code", "purpose": "Literal identifiers only." }
+    },
+    "shadows": [
+      { "name": "frame", "value": "0 1px 0 rgb(0 0 0 / 0.4), 0 18px 40px -24px rgb(0 0 0 / 0.7)", "purpose": "Screenshot frames and the open mobile menu only." }
+    ],
+    "motion": [
+      { "name": "ease-smooth-out", "value": "cubic-bezier(0.22, 1, 0.36, 1)", "purpose": "State changes, menu open, signal draw." },
+      { "name": "duration-quick", "value": "150ms", "purpose": "Spec text swap, hover." },
+      { "name": "duration-fast", "value": "250ms", "purpose": "Theme icon swap, menu open, edge highlight." },
+      { "name": "signal-pass", "value": "420ms draw per edge, 150ms stagger, fade at +1.7s", "purpose": "The one load moment: signal travels the pipeline once." }
+    ],
+    "breakpoints": [
+      { "name": "stack-tables", "value": "40rem" },
+      { "name": "mobile-nav", "value": "48rem" },
+      { "name": "section-split", "value": "56rem" },
+      { "name": "hero-split", "value": "64rem" },
+      { "name": "diagram-list (container)", "value": "480px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one main action in a strip; ink fill, never amber.",
+      "html": "<a class=\"ds-btn-primary\" href=\"#\">Read the case study</a>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; min-height: 2.875rem; padding: 0 1.25rem; background: var(--ink, #ede6da); color: var(--ground, #16161a); border: 1px solid var(--ink, #ede6da); border-radius: 2px; font: 600 0.875rem/1 'Archivo Variable', sans-serif; text-decoration: none; transition: background-color 150ms cubic-bezier(0.22,1,0.36,1); } .ds-btn-primary:hover { background: #a39e94; border-color: #a39e94; } .ds-btn-primary:focus-visible { outline: 2px solid #e0a84f; outline-offset: 3px; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Supporting action with a strong hairline.",
+      "html": "<a class=\"ds-btn\" href=\"#\">View the repository</a>",
+      "css": ".ds-btn { display: inline-flex; align-items: center; min-height: 2.875rem; padding: 0 1.25rem; background: transparent; color: #ede6da; border: 1px solid #4d4d55; border-radius: 2px; font: 600 0.875rem/1 'Archivo Variable', sans-serif; text-decoration: none; transition: background-color 150ms, border-color 150ms; } .ds-btn:hover { background: #1e1e23; border-color: #a39e94; } .ds-btn:focus-visible { outline: 2px solid #e0a84f; outline-offset: 3px; }"
+    },
+    {
+      "name": "Navigation Link",
+      "kind": "nav",
+      "description": "Muted header link that goes to ink when hovered or current.",
+      "html": "<nav class=\"ds-nav\"><a href=\"#\" aria-current=\"true\">Projects</a><a href=\"#\">Engineering</a><a href=\"#\">About</a></nav>",
+      "css": ".ds-nav { display: flex; gap: 0.25rem; } .ds-nav a { display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 0.75rem; color: #a39e94; font: 520 0.875rem 'Archivo Variable', sans-serif; text-decoration: none; } .ds-nav a:hover, .ds-nav a[aria-current='true'] { color: #ede6da; } .ds-nav a:focus-visible { outline: 2px solid #e0a84f; outline-offset: 3px; }"
+    },
+    {
+      "name": "Stage Block",
+      "kind": "custom",
+      "refersTo": "stage-block",
+      "description": "A pipeline diagram block; selection is a filled marker and doubled amber border.",
+      "html": "<button class=\"ds-stage\" aria-pressed=\"true\"><span class=\"ds-stage__label\">Claim analysis</span><span class=\"ds-stage__sub\">local model via Ollama</span></button>",
+      "css": ".ds-stage { display: flex; flex-direction: column; gap: 0.15em; padding: 0.6rem 0.75rem; min-width: 11rem; background: #1e1e23; color: #ede6da; border: 1px solid #4d4d55; border-radius: 2px; font: inherit; text-align: left; cursor: pointer; } .ds-stage:hover { background: #25252b; border-color: #a39e94; } .ds-stage[aria-pressed='true'] { border-color: #e0a84f; box-shadow: inset 0 0 0 1px #e0a84f; } .ds-stage__label { display: flex; align-items: center; gap: 0.45em; font-weight: 620; } .ds-stage__label::before { content: ''; width: 0.5em; height: 0.5em; border: 1.5px solid #a39e94; } .ds-stage[aria-pressed='true'] .ds-stage__label::before { border-color: #e0a84f; background: #e0a84f; } .ds-stage__sub { padding-left: 0.95em; color: #a39e94; font-size: 0.86em; font-stretch: 78%; }"
+    },
+    {
+      "name": "Ruled Spec Table",
+      "kind": "custom",
+      "description": "Parameter tables with hairline rows and tabular numerals.",
+      "html": "<table class=\"ds-table\"><thead><tr><th>Parameter</th><th class=\"n\">Limit</th><th>Unit</th></tr></thead><tbody><tr><th>Whole analysis</th><td class=\"n\">180</td><td>seconds</td></tr><tr><th>Claims checked</th><td class=\"n\">5</td><td>per article</td></tr></tbody></table>",
+      "css": ".ds-table { border-collapse: collapse; width: 100%; font: 0.875rem/1.5 'Archivo Variable', sans-serif; color: #ede6da; font-variant-numeric: tabular-nums; } .ds-table th, .ds-table td { padding: 0.75rem 1rem 0.75rem 0; border-top: 1px solid #33333a; text-align: left; } .ds-table thead th { color: #a39e94; font-size: 0.8125rem; font-weight: 600; font-stretch: 78%; border-top: 1px solid #4d4d55; border-bottom: 1px solid #4d4d55; } .ds-table tbody th { font-weight: 600; } .ds-table .n { text-align: right; font-weight: 600; }"
+    },
+    {
+      "name": "Status Row",
+      "kind": "custom",
+      "description": "Done or open, drawn as a solid or dashed rule plus the word.",
+      "html": "<ul class=\"ds-status\"><li><span class=\"m\"></span><span>Frontend connected to the live backend</span><span class=\"l\">Done</span></li><li><span class=\"m open\"></span><span>Deployment for public hosting</span><span class=\"l\">Open</span></li></ul>",
+      "css": ".ds-status { list-style: none; margin: 0; padding: 0; font: 1rem 'Archivo Variable', sans-serif; color: #ede6da; } .ds-status li { display: grid; grid-template-columns: 2.75rem 1fr auto; align-items: center; gap: 1rem; padding: 0.75rem 0; border-top: 1px solid #33333a; } .ds-status .m { border-top: 2px solid #ede6da; } .ds-status .m.open { border-top: 2px dashed #a39e94; } .ds-status .l { color: #a39e94; font-size: 0.8125rem; font-weight: 600; font-stretch: 78%; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Component Datasheet",
+    "overview": "The site reads like the datasheet for a part: a general description, a block diagram, characteristic tables, test conditions, operating limits. The engineer is presented the way a careful manufacturer presents a component, by what it does, how it is wired, how it was tested and where it stops working. Credibility comes from specificity and stated limits, not adjectives. Surfaces are a dark charcoal sheet with warm white ink; the light theme is the same sheet printed on paper. Structure is carried by 1px hairline rules, ruled tables with tabular numerals, and block-diagram linework, never by cards or shadows. There is vast quiet ground around each section's single figure. One sodium amber marks live signal and focus, nothing else.",
+    "keyCharacteristics": [
+      "Hairline-ruled tables and key/value rows instead of cards.",
+      "One explorable block diagram as the signature figure.",
+      "Archivo's width axis does the hierarchy: expanded display, condensed table heads.",
+      "State is drawn by stroke pattern plus text, never colour alone.",
+      "Amber is rare: signal path, selection, focus."
+    ],
+    "rules": [
+      { "name": "The Signal-Only Amber Rule", "body": "Amber marks where the signal is or where focus is. Primary actions are filled with ink, not amber.", "section": "colors" },
+      { "name": "The Stroke-Not-Colour Rule", "body": "Solid means always runs or done; dashed means depends on input or still open; dotted frames the per-claim loop. Every such mark also carries a text label.", "section": "colors" },
+      { "name": "The Literal Mono Rule", "body": "Monospace is for file names, function names and status codes only. Connecting words stay in Archivo. Paths may break only after \"/\".", "section": "typography" },
+      { "name": "The No-Eyebrow Rule", "body": "No label above a heading. Headings stand alone; sentence case throughout.", "section": "typography" }
+    ],
+    "dos": [
+      "Do put every claim beside its evidence: a file, a test, or a figure.",
+      "Do keep amber to the signal path, selection and focus.",
+      "Do draw state with stroke pattern and label it in text.",
+      "Do use ruled tables for anything that has parameters and values.",
+      "Do gate entrance motion behind prefers-reduced-motion: no-preference; with reduced motion, animations are removed, not shortened."
+    ],
+    "donts": [
+      "Don't fill buttons or large areas with amber.",
+      "Don't use cards, card grids, or big-number stat rows.",
+      "Don't put a label or eyebrow above a heading.",
+      "Don't set prose in monospace.",
+      "Don't add neon, gradients, glass, blobs, stock imagery, fake terminals, emoji or skill scores."
+    ]
+  }
+}

@@ -1,0 +1,390 @@
+/* TND pipeline: block diagram on wide containers, ordered list on narrow ones. */
+
+.pipeline {
+  margin: 0;
+  container: pipeline / inline-size;
+}
+
+.pipeline__graph {
+  position: relative;
+  aspect-ratio: 600 / 470;
+}
+
+.pipeline__lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.pipeline__loop {
+  fill: none;
+  stroke: var(--rule-strong);
+  stroke-width: 1;
+  stroke-dasharray: 2 4;
+  vector-effect: non-scaling-stroke;
+}
+
+.pipeline__edge {
+  fill: none;
+  stroke: var(--rule-strong);
+  stroke-width: 1.5;
+  transition: stroke var(--duration-fast) var(--ease-smooth-out);
+}
+
+.pipeline__edge.is-conditional {
+  stroke-dasharray: 6 4;
+}
+
+.pipeline__edge.is-active {
+  stroke: var(--accent);
+}
+
+/* The one authored load moment: a signal travels the request path once. */
+.pipeline__signal {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .pipeline--animate .pipeline__signal {
+    animation:
+      signal-draw 420ms var(--ease-smooth-out) forwards,
+      signal-fade var(--duration-very-slow) var(--ease-in-out) forwards;
+    animation-delay: calc(var(--i) * 150ms + 350ms), calc(var(--i) * 150ms + 1700ms);
+  }
+
+  .pipeline--animate .pipeline__graph .stage {
+    animation: stage-arrive var(--duration-very-slow) var(--ease-smooth-out) both;
+    animation-delay: calc(var(--i) * 150ms + 300ms);
+  }
+}
+
+@keyframes signal-draw {
+  from {
+    opacity: 1;
+    stroke-dashoffset: 1;
+  }
+  to {
+    opacity: 1;
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes signal-fade {
+  from {
+    opacity: 1;
+    stroke-dashoffset: 0;
+  }
+  to {
+    opacity: 0;
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes stage-arrive {
+  0% {
+    border-color: var(--rule-strong);
+  }
+  30% {
+    border-color: var(--accent);
+  }
+}
+
+.pipeline__tag {
+  position: absolute;
+  padding-inline: 2px;
+  background: var(--ground);
+  color: var(--ink-2);
+  font-size: clamp(0.6875rem, 1.9cqi, 0.8125rem);
+  font-stretch: var(--narrow);
+  font-weight: 560;
+  line-height: 1.2;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.pipeline__slot {
+  display: contents;
+}
+
+.stage {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.15em;
+  margin: 0;
+  padding: 0 0.75em;
+  border: var(--hair-strong);
+  border-radius: var(--radius);
+  background: var(--sheet);
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color var(--duration-quick) var(--ease-smooth-out),
+    background-color var(--duration-quick) var(--ease-smooth-out),
+    box-shadow var(--duration-quick) var(--ease-smooth-out);
+}
+
+.pipeline__graph .stage {
+  position: absolute;
+  font-size: clamp(0.75rem, 2.45cqi, 0.96875rem);
+}
+
+.stage:hover {
+  border-color: var(--ink-2);
+  background: var(--sheet-2);
+}
+
+/* Selected: heavier border plus a filled marker, so selection never relies on colour. */
+.stage[aria-pressed='true'] {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.stage__label {
+  display: flex;
+  align-items: center;
+  gap: 0.45em;
+  font-weight: 620;
+  line-height: 1.15;
+}
+
+.stage__label::before {
+  content: '';
+  flex: none;
+  width: 0.5em;
+  height: 0.5em;
+  border: 1.5px solid var(--ink-2);
+}
+
+.stage[aria-pressed='true'] .stage__label::before {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+
+.stage__sub {
+  padding-left: 0.95em;
+  color: var(--ink-2);
+  font-size: 0.86em;
+  font-stretch: var(--narrow);
+  line-height: 1.2;
+}
+
+/* Detail panel */
+.pipeline__detail {
+  min-height: 11.5rem;
+  margin-top: var(--space-5);
+  padding-top: var(--space-4);
+  border-top: var(--hair-strong);
+}
+
+.pipeline__detail-title {
+  font-size: var(--step-1);
+  font-stretch: var(--wide);
+  letter-spacing: -0.01em;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .stage-spec {
+    animation: spec-swap var(--duration-quick) var(--ease-in-out);
+  }
+}
+
+@keyframes spec-swap {
+  from {
+    opacity: 0;
+    filter: blur(var(--blur-small));
+    transform: translateY(var(--distance-micro));
+  }
+}
+
+.stage-spec__specs {
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--step--1);
+}
+
+.stage-spec__specs li {
+  position: relative;
+  padding-left: var(--space-5);
+}
+
+.stage-spec__specs li + li {
+  margin-top: var(--space-2);
+}
+
+.stage-spec__specs li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.78em;
+  width: 0.75rem;
+  border-top: 1px solid var(--ink-2);
+}
+
+.stage-spec__files {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-4);
+  margin-top: var(--space-3);
+  color: var(--ink-2);
+}
+
+.stage-spec__files code {
+  font-size: 0.78rem;
+}
+
+.pipeline__caption {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-5);
+  margin-top: var(--space-4);
+  color: var(--ink-2);
+  font-size: var(--step--1);
+}
+
+.pipeline__legend {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.legend-line {
+  display: inline-block;
+  width: 1.75rem;
+  border-top: 1.5px solid var(--ink-2);
+}
+
+.legend-line + .legend-line,
+.pipeline__legend .legend-line:not(:first-child) {
+  margin-left: var(--space-3);
+}
+
+.legend-line--dashed {
+  border-top-style: dashed;
+}
+
+/* List layout */
+.pipeline__list {
+  display: none;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: stage;
+}
+
+.pipeline__list > li {
+  position: relative;
+  padding-left: var(--space-5);
+}
+
+/* The connecting rule between stages. */
+.pipeline__list > li::before {
+  content: '';
+  position: absolute;
+  left: 0.3rem;
+  top: 0;
+  bottom: calc(-1 * var(--space-2));
+  border-left: 1.5px solid var(--rule-strong);
+}
+
+/* A tick joins the rule to each stage. */
+.pipeline__list > li::after {
+  content: '';
+  position: absolute;
+  left: 0.3rem;
+  top: 1.6rem;
+  width: calc(var(--space-5) - 0.3rem);
+  border-top: 1.5px solid var(--rule-strong);
+}
+
+.pipeline__list > li:first-child::before {
+  top: 1.6rem;
+}
+
+.pipeline__list > li:last-child::before {
+  bottom: auto;
+  height: 1.6rem;
+}
+
+.pipeline__list > li + li {
+  margin-top: var(--space-2);
+}
+
+.pipeline__list .stage {
+  width: 100%;
+  min-height: 3.25rem;
+  padding-block: var(--space-2);
+  font-size: var(--step--1);
+}
+
+/* Inline specs hang from the selected stage as its body, clear of the rail. */
+.pipeline__list .stage-spec {
+  margin-bottom: var(--space-2);
+  padding: var(--space-2) var(--space-4) var(--space-4);
+  border: var(--hair-strong);
+  border-top: 0;
+  background: var(--sheet);
+}
+
+.pipeline__list .is-selected .stage {
+  border-bottom-color: var(--rule);
+}
+
+/* Input-dependent stages get a dashed rail, matching the legend. */
+/* Only the drawn sides: a bare border-style would also draw the unset sides. */
+.pipeline__list > li[data-conditional]::before {
+  border-left-style: dashed;
+}
+
+.pipeline__list > li[data-conditional]::after {
+  border-top-style: dashed;
+}
+
+/* The per-claim loop: a dotted bracket, as in the diagram's loop frame. */
+.pipeline__list > li[data-loop] {
+  padding-right: var(--space-3);
+  border-right: 1px dotted var(--rule-strong);
+}
+
+.pipeline__list > li[data-loop='first'] {
+  padding-top: var(--space-5);
+  border-top: 1px dotted var(--rule-strong);
+}
+
+.pipeline__list > li[data-loop='last'] {
+  padding-bottom: var(--space-3);
+  border-bottom: 1px dotted var(--rule-strong);
+}
+
+.pipeline__loop-label {
+  position: absolute;
+  top: var(--space-1);
+  left: var(--space-5);
+  color: var(--ink-2);
+  font-size: 0.75rem;
+  font-stretch: var(--narrow);
+  font-weight: 560;
+}
+
+@container pipeline (max-width: 479.98px) {
+  .pipeline__graph,
+  .pipeline__detail {
+    display: none;
+  }
+
+  .pipeline__list {
+    display: block;
+  }
+}

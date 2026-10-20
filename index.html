@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Lloyd D'Souza · AI/ML engineering student</title>
+    <meta
+      name="description"
+      content="Lloyd D'Souza is an AI/ML engineering student building applied AI and backend systems. Projects: TND, which checks news claims against retrieved evidence, and DataSentry, which finds and explains problems in ML training datasets."
+    />
+    <meta name="author" content="Lloyd D'Souza" />
+    <meta name="robots" content="index, follow" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="theme-color" content="#16161a" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="me" href="https://github.com/lloydaq" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Lloyd D'Souza" />
+    <meta property="og:title" content="Lloyd D'Souza · AI/ML engineering student" />
+    <meta
+      property="og:description"
+      content="Applied AI and backend systems. TND checks news claims against retrieved evidence; DataSentry explains the problems in a training dataset before a model learns them."
+    />
+    <!--seo:absolute-->
+    <script>
+      (function () {
+        var t = null;
+        try { t = localStorage.getItem('theme'); } catch (e) {}
+        if (t !== 'light' && t !== 'dark') {
+          t = window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        }
+        document.documentElement.dataset.theme = t;
+        if (t === 'light') document.querySelector('meta[name="theme-color"]').setAttribute('content', '#f2eee6');
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>
+      <p style="padding: 2rem">
+        Lloyd D'Souza, AI/ML engineering student. This site needs JavaScript. Email
+        lloyd25dsouza@gmail.com or see https://github.com/lloydaq.
+      </p>
+    </noscript>
+    <script type="module" src="/src/main-home.tsx"></script>
+  </body>
+</html>

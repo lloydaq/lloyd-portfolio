@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TND: Trustworthy News Detector · Case study · Lloyd D'Souza</title>
+    <meta
+      name="description"
+      content="How TND works: a FastAPI service with a local Ollama model that extracts claims, retrieves evidence from GNews and GDELT, verifies each claim, and returns an explainable heuristic risk score."
+    />
+    <meta name="author" content="Lloyd D'Souza" />
+    <meta name="robots" content="index, follow" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="theme-color" content="#16161a" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Lloyd D'Souza" />
+    <meta property="og:title" content="TND: Trustworthy News Detector · Case study" />
+    <meta
+      property="og:description"
+      content="Claim extraction with a local model, evidence retrieval, per-claim verification and an explainable risk score that never treats missing evidence as proof."
+    />
+    <!--seo:absolute-->
+    <script>
+      (function () {
+        var t = null;
+        try { t = localStorage.getItem('theme'); } catch (e) {}
+        if (t !== 'light' && t !== 'dark') {
+          t = window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        }
+        document.documentElement.dataset.theme = t;
+        if (t === 'light') document.querySelector('meta[name="theme-color"]').setAttribute('content', '#f2eee6');
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>
+      <p style="padding: 2rem">
+        TND case study by Lloyd D'Souza. This page needs JavaScript. The source is at
+        https://github.com/lloydaq/TND-The-News-Detector.
+      </p>
+    </noscript>
+    <script type="module" src="/src/main-tnd.tsx"></script>
+  </body>
+</html>

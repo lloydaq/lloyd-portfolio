@@ -1,0 +1,322 @@
+/* ---------- Hero ---------- */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: var(--space-7) clamp(2rem, 1rem + 3vw, 4.5rem);
+  align-items: start;
+  padding-block: clamp(2.5rem, 1.5rem + 4vw, 5.5rem) var(--space-9);
+}
+
+.hero__intro {
+  padding-top: var(--space-2);
+}
+
+/* The name set like a part number: wide, heavy, tight. */
+.hero__name {
+  font-size: var(--step-4);
+  font-stretch: 125%;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 0.92;
+}
+
+.hero__statement {
+  margin-top: var(--space-6);
+  padding-top: var(--space-4);
+  border-top: var(--hair-strong);
+  font-size: var(--step-2);
+  font-weight: 560;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+.hero__desc {
+  margin-top: var(--space-4);
+  max-width: 46ch;
+  color: var(--ink-2);
+}
+
+/* The three actions as one ruled strip. */
+.hero__actions {
+  align-items: center;
+  gap: var(--space-3) var(--space-4);
+  margin-top: var(--space-6);
+  padding-block: var(--space-4);
+  border-top: var(--hair);
+  border-bottom: var(--hair);
+}
+
+.hero__figure {
+  padding: clamp(1rem, 0.5rem + 1.5vw, 1.75rem);
+  border: var(--hair);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--sheet) 55%, var(--ground));
+}
+
+@media (max-width: 63.99rem) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .hero__desc {
+    max-width: 60ch;
+  }
+}
+
+/* ---------- Projects ---------- */
+
+/* Each project is a datasheet entry separated by a strong rule, not a card. */
+.project {
+  padding-top: var(--space-7);
+  border-top: 2px solid var(--ink);
+  scroll-margin-top: 5rem;
+}
+
+.project + .project {
+  margin-top: var(--space-9);
+}
+
+.project__head {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: var(--space-4) clamp(2rem, 1rem + 3vw, 4.5rem);
+  margin-bottom: var(--space-7);
+}
+
+.project__title {
+  font-size: var(--step-2);
+  font-stretch: var(--wide);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.project__summary {
+  max-width: 62ch;
+  margin: 0;
+  color: var(--ink-2);
+}
+
+.project__shot {
+  margin-bottom: var(--space-8);
+}
+
+/* Both projects' screenshots share one crop: the top of a 16:10 capture, down
+   to the end of the first meaningful block (TND's incomplete-analysis notice,
+   DataSentry's dataset overview). Each theme's file has the same framing, so a
+   theme switch never moves the layout. */
+.project__shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1440 / 780;
+  object-fit: cover;
+  object-position: top;
+}
+
+.project__shot .figure__frame {
+  transition: border-color var(--duration-quick) var(--ease-smooth-out);
+}
+
+.project:hover .project__shot .figure__frame {
+  border-color: var(--ink-2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project__shot .figure__frame {
+    transition: none;
+  }
+}
+
+.project__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
+  gap: var(--space-7) clamp(2rem, 1rem + 3vw, 4.5rem);
+}
+
+.sub-title {
+  margin-bottom: var(--space-4);
+  font-size: var(--step-1);
+  font-stretch: var(--wide);
+  letter-spacing: -0.01em;
+}
+
+.decision-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-bottom: var(--hair);
+  font-size: var(--step--1);
+}
+
+.decision-list li {
+  padding-block: var(--space-3);
+  border-top: var(--hair);
+  color: var(--ink-2);
+}
+
+.decision-list strong {
+  color: var(--ink);
+  font-weight: 620;
+}
+
+.project__note {
+  max-width: 70ch;
+  margin-top: var(--space-7);
+  padding: var(--space-4) 0 0;
+  border-top: 2px solid var(--ink);
+  font-size: var(--step--1);
+}
+
+.project__actions {
+  margin-top: var(--space-6);
+}
+
+@media (max-width: 55.99rem) {
+  .project__head,
+  .project__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- Engineering ---------- */
+
+.principles tbody th {
+  width: 22%;
+  white-space: normal;
+}
+
+.principles td:last-child {
+  width: 30%;
+}
+
+.toolchain {
+  margin-top: var(--space-8);
+}
+
+.toolchain__note {
+  margin-top: calc(-1 * var(--space-2));
+  margin-bottom: var(--space-5);
+  font-size: var(--step--1);
+}
+
+.toolchain__groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: var(--space-5) var(--space-6);
+  margin: 0;
+}
+
+.toolchain__group {
+  padding-top: var(--space-3);
+  border-top: var(--hair-strong);
+}
+
+.toolchain__group dt {
+  margin-bottom: var(--space-2);
+  font-weight: 620;
+}
+
+.toolchain__group dd {
+  margin: 0;
+  padding-block: 0.2rem;
+  color: var(--ink-2);
+  font-size: var(--step--1);
+  line-height: 1.45;
+}
+
+/* ---------- About ---------- */
+
+.about {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: var(--space-5) var(--space-7);
+}
+
+.about__body {
+  font-size: var(--step-1);
+  line-height: 1.55;
+}
+
+@media (max-width: 55.99rem) {
+  .about {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- Contact ---------- */
+
+.contact__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-bottom: var(--hair-strong);
+}
+
+.contact__row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.5rem 7rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-4);
+  min-height: 4.5rem;
+  padding-block: var(--space-3);
+  border-top: var(--hair-strong);
+}
+
+.contact__row > svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--ink-2);
+}
+
+.contact__kind {
+  color: var(--ink-2);
+  font-size: var(--step--1);
+  font-weight: 600;
+  font-stretch: var(--narrow);
+}
+
+.contact__link {
+  font-size: var(--step-2);
+  font-weight: 560;
+  letter-spacing: -0.015em;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.contact__link:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+}
+
+.contact__status {
+  position: absolute;
+  right: 0;
+  bottom: -0.35rem;
+  color: var(--ink-2);
+  font-size: 0.8125rem;
+}
+
+@media (max-width: 39.99rem) {
+  .contact__row {
+    grid-template-columns: 1.25rem minmax(0, 1fr) auto;
+    row-gap: var(--space-1);
+  }
+
+  .contact__kind {
+    grid-column: 2;
+  }
+
+  .contact__link {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    font-size: var(--step-1);
+  }
+
+  .contact__row .icon-button {
+    grid-column: 3;
+    grid-row: 1;
+  }
+}
