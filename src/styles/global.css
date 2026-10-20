@@ -452,6 +452,15 @@ code,
   text-decoration-color: var(--accent);
 }
 
+/* Phones: buttons in an action row share its width and wrap to full width,
+   instead of stacking at their own content widths. */
+@media (max-width: 47.99rem) {
+  .actions .button:not(.button--text) {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+}
+
 .button svg {
   width: 1rem;
   height: 1rem;
@@ -659,6 +668,34 @@ code,
 .figure figcaption b {
   color: var(--ink);
   font-weight: 600;
+}
+
+/* A screenshot shrunk to phone width is too small to read, so phones get a
+   link to the full-size file for pinch-zoom. Wider screens show the figure
+   large enough already. */
+.figure__full {
+  display: none;
+}
+
+@media (max-width: 47.99rem) {
+  .figure__full {
+    display: flex;
+    width: fit-content;
+    align-items: center;
+    gap: var(--space-1);
+    min-height: 2.75rem;
+    color: var(--ink);
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: var(--rule-strong);
+    text-underline-offset: 0.3em;
+  }
+
+  .figure__full svg {
+    width: 1rem;
+    height: 1rem;
+    flex: none;
+  }
 }
 
 /* Status marks: meaning carried by stroke pattern and text, never colour alone. */

@@ -299,12 +299,18 @@
   border-left: 1.5px solid var(--rule-strong);
 }
 
-/* A tick joins the rule to each stage. */
-.pipeline__list > li::after {
+/* A tick joins the rule to each stage. It hangs from the stage itself, so it
+   stays level with the stage whatever sits above it in the item (the loop
+   label). Offsets are from the stage's padding box, inside its 1px border. */
+.pipeline__list .stage {
+  position: relative;
+}
+
+.pipeline__list .stage::after {
   content: '';
   position: absolute;
-  left: 0.3rem;
-  top: 1.6rem;
+  left: calc(0.3rem - var(--space-5) - 1px);
+  top: calc(1.6rem - 1px);
   width: calc(var(--space-5) - 0.3rem);
   border-top: 1.5px solid var(--rule-strong);
 }
@@ -348,7 +354,7 @@
   border-left-style: dashed;
 }
 
-.pipeline__list > li[data-conditional]::after {
+.pipeline__list > li[data-conditional] > .stage::after {
   border-top-style: dashed;
 }
 
@@ -359,7 +365,7 @@
 }
 
 .pipeline__list > li[data-loop='first'] {
-  padding-top: var(--space-5);
+  padding-top: var(--space-1);
   border-top: 1px dotted var(--rule-strong);
 }
 
@@ -369,9 +375,8 @@
 }
 
 .pipeline__loop-label {
-  position: absolute;
-  top: var(--space-1);
-  left: var(--space-5);
+  display: block;
+  margin-bottom: var(--space-2);
   color: var(--ink-2);
   font-size: 0.75rem;
   font-stretch: var(--narrow);

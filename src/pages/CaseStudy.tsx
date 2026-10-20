@@ -4,7 +4,7 @@ import { Header } from '../components/Header';
 import { KineticGrid } from '../components/KineticGrid';
 import { ArrowLeft, ArrowUpRight, GitHub } from '../components/Icons';
 import { PipelineDiagram } from '../components/PipelineDiagram';
-import { ThemedShot } from '../components/ThemedShot';
+import { FullSizeLink, ThemedShot } from '../components/ThemedShot';
 import { useActiveSection } from '../components/useActiveSection';
 import { tndRepo } from '../content/site';
 import {
@@ -367,6 +367,7 @@ export function CaseStudy() {
                       </div>
                       <figcaption>
                         <b>Figure {i + 2}.</b> {shot.caption}
+                        <FullSizeLink shot={shot} />
                       </figcaption>
                     </figure>
                   ) : null,

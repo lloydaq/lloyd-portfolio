@@ -3,7 +3,7 @@ import { Footer } from '../components/Footer';
 import { Header } from '../components/Header';
 import { KineticGrid } from '../components/KineticGrid';
 import { ArrowLeft, ArrowUpRight, GitHub } from '../components/Icons';
-import { ThemedShot } from '../components/ThemedShot';
+import { FullSizeLink, ThemedShot } from '../components/ThemedShot';
 import { useActiveSection } from '../components/useActiveSection';
 import {
   dataSentry,
@@ -241,6 +241,7 @@ export function DataSentryStudy() {
                       </div>
                       <figcaption>
                         <b>Figure {i + 1}.</b> {shot.caption}
+                        <FullSizeLink shot={shot} />
                       </figcaption>
                     </figure>
                   ) : null,

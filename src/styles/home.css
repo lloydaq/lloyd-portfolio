@@ -226,6 +226,27 @@
   line-height: 1.45;
 }
 
+/* Phones get one column, so each group runs its items together instead of
+   one short item per line. */
+@media (max-width: 47.99rem) {
+  .toolchain__group {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: var(--space-2);
+  }
+
+  .toolchain__group dt {
+    flex-basis: 100%;
+  }
+
+  .toolchain__group dd:not(:last-of-type)::after {
+    content: '·';
+    content: '·' / '';
+    margin-left: var(--space-2);
+    color: var(--rule-strong);
+  }
+}
+
 /* ---------- About ---------- */
 
 .about {

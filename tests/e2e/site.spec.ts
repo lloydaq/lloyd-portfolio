@@ -244,6 +244,42 @@ test.describe('project screenshots', () => {
   });
 });
 
+test.describe('phone layout', () => {
+  test.use({ viewport: { width: 320, height: 800 } });
+
+  test('screenshots offer the full-size file for the current theme', async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'light' });
+    await page.goto('/');
+    const links = page.locator('#projects').getByRole('link', { name: 'Open full-size screenshot' });
+    await expect(links).toHaveCount(2);
+    await expect(links.first()).toBeVisible();
+    await expect(links.first()).toHaveAttribute('href', '/tnd/tnd-results-light.png');
+    await page.getByRole('button', { name: 'Switch to dark theme' }).click();
+    await expect(links.first()).toHaveAttribute('href', '/tnd/tnd-results-dark.png');
+  });
+
+  test('the pipeline loop label does not overlap the first loop stage', async ({ page }) => {
+    await page.goto('/');
+    const list = page.getByRole('list', { name: 'TND analysis pipeline' });
+    const label = await list.locator('.pipeline__loop-label').boundingBox();
+    const stage = await list.getByRole('button', { name: /Evidence search/ }).boundingBox();
+    expect(label!.y + label!.height).toBeLessThanOrEqual(stage!.y);
+  });
+
+  test('action buttons share each row instead of stacking at uneven widths', async ({ page }) => {
+    await page.goto('/');
+    const actions = page.locator('#tnd .project__actions .button');
+    const [a, b] = await Promise.all([actions.nth(0).boundingBox(), actions.nth(1).boundingBox()]);
+    expect(Math.round(a!.width)).toBe(Math.round(b!.width));
+  });
+});
+
+test('full-size screenshot links stay hidden on wider screens', async ({ page }) => {
+  await page.setViewportSize({ width: 1024, height: 800 });
+  await page.goto('/');
+  await expect(page.locator('.figure__full').first()).toBeHidden();
+});
+
 test.describe('mobile navigation', () => {
   test.use({ viewport: { width: 390, height: 844 } });
 
@@ -314,9 +350,14 @@ test.describe('responsive layout', () => {
   const viewports = [
     [1440, 900],
     [1280, 800],
+    [1024, 768],
     [768, 1024],
+    [767, 1024],
+    [430, 932],
     [390, 844],
+    [375, 812],
     [360, 800],
+    [320, 800],
   ] as const;
 
   for (const [width, height] of viewports) {

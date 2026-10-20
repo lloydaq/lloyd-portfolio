@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { Screenshot } from '../content/site';
+import { ArrowUpRight } from './Icons';
 import { useTheme } from './theme';
 
 interface ThemedShotProps {
@@ -36,5 +37,15 @@ export function ThemedShot({ shot, className, loading = 'lazy' }: ThemedShotProp
       decoding="async"
       onLoad={() => setLoaded(true)}
     />
+  );
+}
+
+/** Opens the full-size file for the current theme; shown on phones only (see .figure__full). */
+export function FullSizeLink({ shot }: { shot: Screenshot }) {
+  const theme = useTheme();
+  return (
+    <a className="figure__full" href={shot[theme]}>
+      Open full-size screenshot <ArrowUpRight />
+    </a>
   );
 }

@@ -5,7 +5,7 @@ import { Header } from '../components/Header';
 import { KineticGrid } from '../components/KineticGrid';
 import { ArrowDown, ArrowUpRight, Check, Copy, GitHub, LinkedIn, Mail } from '../components/Icons';
 import { PipelineDiagram } from '../components/PipelineDiagram';
-import { ThemedShot } from '../components/ThemedShot';
+import { FullSizeLink, ThemedShot } from '../components/ThemedShot';
 import { useActiveSection } from '../components/useActiveSection';
 import * as ds from '../content/datasentry';
 import {
@@ -80,6 +80,7 @@ function Project({ id, title, summary, shot, figure, features, decisions, note, 
         </div>
         <figcaption>
           <b>Figure {figure}.</b> {shot.caption}
+          <FullSizeLink shot={shot} />
         </figcaption>
       </figure>
 
