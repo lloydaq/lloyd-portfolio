@@ -18,6 +18,8 @@
   "dependencies": {
     "@fontsource-variable/archivo": "^5.3.0",
     "@fontsource-variable/jetbrains-mono": "^5.3.0",
+    "gsap": "^3.15.1",
+    "modern-screenshot": "^4.7.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1"
   },

@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type MouseEvent } from 'react';
 import { homeSections, profile } from '../content/site';
 import { Close, Menu, Moon, Sun } from './Icons';
 import { applyTheme, readStoredTheme, systemTheme, useTheme } from './theme';
+import { prepareThemeSwitch, switchTheme } from './themeSwitch';
 
 interface HeaderProps {
   /** Prefix for section links: '' on the home page, '/' elsewhere. */
@@ -48,7 +49,9 @@ export function Header({ base, activeId }: HeaderProps) {
     };
   }, [open]);
 
-  const toggleTheme = () => applyTheme(theme === 'dark' ? 'light' : 'dark', true);
+  // Ink bleed from the click point; a keyboard press (detail 0) spreads from the button.
+  const toggleTheme = (event: MouseEvent<HTMLButtonElement>) =>
+    switchTheme(event.currentTarget, event.detail === 0 ? undefined : { x: event.clientX, y: event.clientY });
 
   return (
     <header className="site-header">
@@ -85,7 +88,10 @@ export function Header({ base, activeId }: HeaderProps) {
           type="button"
           className="icon-button theme-toggle"
           onClick={toggleTheme}
+          onPointerEnter={prepareThemeSwitch}
+          onFocus={prepareThemeSwitch}
           aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+          data-ink-live
         >
           <Moon />
           <Sun />

@@ -149,6 +149,38 @@ test.describe('home interactions', () => {
     await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#f2eee6');
   });
 
+  test('the theme switch inks over the page and hands it back', async ({ page }) => {
+    const errors = collectErrors(page);
+    await page.emulateMedia({ colorScheme: 'dark', reducedMotion: 'no-preference' });
+    await page.goto('/', { waitUntil: 'networkidle' });
+    const webgl2 = await page.evaluate(() => !!document.createElement('canvas').getContext('webgl2'));
+    await page.evaluate(() => {
+      const w = window as unknown as { inked: boolean };
+      w.inked = false;
+      new MutationObserver(() => {
+        if (document.querySelector('.ink-canvas.is-active')) w.inked = true;
+      }).observe(document.body, { subtree: true, childList: true, attributes: true, attributeFilter: ['class'] });
+    });
+
+    await page.getByRole('button', { name: 'Switch to light theme' }).click();
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+    // Without WebGL2 the switch falls back to a colour cross-fade.
+    expect(await page.evaluate(() => (window as unknown as { inked: boolean }).inked)).toBe(webgl2);
+    // The overlay ends hidden and the toggle's held colours are released.
+    await expect(page.locator('.ink-canvas.is-active')).toHaveCount(0);
+    await expect(page.getByRole('button', { name: 'Switch to dark theme' })).not.toHaveAttribute('style', /\S/);
+    expect(await page.evaluate(() => localStorage.getItem('theme'))).toBe('light');
+
+    // Straight back, then again mid-spread: the last press wins.
+    const toggle = page.locator('.theme-toggle');
+    await toggle.click();
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+    await toggle.click();
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+    await expect(page.locator('.ink-canvas.is-active')).toHaveCount(0);
+    expect(errors).toEqual([]);
+  });
+
   test('follows the system theme on first visit', async ({ page }) => {
     await page.emulateMedia({ colorScheme: 'light' });
     await page.goto('/');
