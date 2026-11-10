@@ -295,8 +295,11 @@ export function KineticGrid() {
       wake();
     };
 
+    // Redraw straight away (not on the next frame), so a theme switch's "after"
+    // snapshot already has the grid in the new colours.
     const onThemeChange = () => {
       readColours();
+      draw(performance.now());
       wake();
     };
 

@@ -768,32 +768,38 @@ code,
   min-height: 2.75rem;
 }
 
-/* ---------- Ink-bleed theme switch (src/ink) ---------- */
+/* ---------- Theme switch (src/components/themeSwitch.ts) ---------- */
 
-/* WebGL overlay: shows the old theme and turns transparent where the ink has spread. */
-.ink-canvas {
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  width: 100%;
-  height: 100%;
+/* Ink bleed: the browser snapshots the page before and after the switch; the old
+   snapshot holds still and the new one is revealed through a growing ink splat (the
+   mask is animated from script). Scoped to this transition only. */
+/* Clicks reach the page underneath, so the toggle can be pressed again mid-spread. */
+:root.ink-transition::view-transition {
   pointer-events: none;
-  visibility: hidden;
 }
 
-.ink-canvas.is-active {
-  visibility: visible;
+:root.ink-transition::view-transition-old(root),
+:root.ink-transition::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
 }
 
-/* The page switches under the overlay in one step; only the toggle's icon swap animates. */
-html.ink-switching,
-html.ink-switching *:not(.theme-toggle svg),
-html.ink-switching *::before,
-html.ink-switching *::after {
+:root.ink-transition::view-transition-new(root) {
+  /* Hidden until the splat animation starts, so the new theme never flashes in whole. */
+  mask-image: linear-gradient(transparent, transparent);
+  mask-repeat: no-repeat;
+}
+
+/* The theme is applied in one step for the snapshot: no colour transitions, no icon swap
+   mid-fade (the ink is the animation). */
+html.theme-switching,
+html.theme-switching *,
+html.theme-switching *::before,
+html.theme-switching *::after {
   transition: none !important;
 }
 
-/* Fallback when the ink can't run (no WebGL2, snapshot failed): a colour cross-fade,
+/* Fallback without View Transitions: a colour cross-fade,
    applied only for the length of the switch. Reduced motion keeps the instant switch. */
 @media (prefers-reduced-motion: no-preference) {
   html.theme-fade,
