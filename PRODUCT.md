@@ -36,7 +36,7 @@ Most student portfolios list many projects and claim skills. This one makes one 
 - Verified TND facts: FastAPI backend; local Ollama inference (`llama3.2:3b` default); Trafilatura article extraction; GNews + GDELT evidence retrieval; per-claim verification; deterministic 0–100 heuristic risk score; `COMPLETE`/`DEGRADED` status with listed reasons; vanilla HTML/CSS/JS frontend with light/dark/system themes; pytest backend suite (159 passed on 2026-10-19, re-run during this build) and Playwright UI suite.
 - TND has **no database**; results are held in browser `sessionStorage`. Never claim SQLite or persistence.
 - TND is not deployed; no live demo exists. Local development is its deployment assumption.
-- **CampusSignal must never appear** anywhere on the site, in copy, metadata, or fetched data. Because the owner's GitHub has only two public repos (TND and CampusSignal), the site must not list repositories dynamically.
+- Featured projects (owner, 2026-11-10): TND, DataSentry, **FlowCast** (https://github.com/lloydaq/flowcast, v1.0.0, public demo on GitHub Pages) and **CampusSignal** (https://github.com/lloydaq/CampusSignal-pro; not deployed, demo data only). Link CampusSignal only through `CampusSignal-pro`, never the older `lloydaq/CampusSignal` repository. The site still must not list repositories dynamically.
 - No other projects are featured.
 
 ## Brand Commitments

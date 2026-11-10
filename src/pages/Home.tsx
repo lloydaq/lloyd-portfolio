@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Ticks } from '../components/Code';
 import { Footer } from '../components/Footer';
 import { Header } from '../components/Header';
@@ -7,11 +7,17 @@ import { ArrowDown, ArrowUpRight, Check, Copy, GitHub, LinkedIn, Mail } from '..
 import { PipelineDiagram } from '../components/PipelineDiagram';
 import { FullSizeLink, ThemedShot } from '../components/ThemedShot';
 import { useActiveSection } from '../components/useActiveSection';
+import * as cs from '../content/campussignal';
 import * as ds from '../content/datasentry';
+import * as fc from '../content/flowcast';
 import {
+  campusSignalPath,
+  campusSignalRepo,
   caseStudyPath,
   dataSentryPath,
   dataSentryRepo,
+  flowCastPath,
+  flowCastRepo,
   homeSections,
   profile,
   skills,
@@ -59,11 +65,13 @@ interface ProjectProps {
   note: string;
   caseStudy: string;
   repo: string;
+  /** A public demo, when the project has one. */
+  demo?: string;
 }
 
 // One project as a datasheet entry: description, a real screenshot that
 // follows the site theme, characteristics, design rationale and links.
-function Project({ id, title, summary, shot, figure, features, decisions, note, caseStudy, repo }: ProjectProps) {
+function Project({ id, title, summary, shot, figure, features, decisions, note, caseStudy, repo, demo }: ProjectProps) {
   const titleId = `${id}-title`;
   return (
     <article className="project" id={id} aria-labelledby={titleId}>
@@ -118,6 +126,11 @@ function Project({ id, title, summary, shot, figure, features, decisions, note, 
         <a className="button" href={repo} rel="noopener" aria-label={`View the repository: ${title}`}>
           <GitHub /> View the repository <ArrowUpRight />
         </a>
+        {demo && (
+          <a className="button" href={demo} rel="noopener" aria-label={`Open the live demo: ${title}`}>
+            Open the live demo <ArrowUpRight />
+          </a>
+        )}
       </div>
     </article>
   );
@@ -125,6 +138,13 @@ function Project({ id, title, summary, shot, figure, features, decisions, note, 
 
 export function Home() {
   const active = useActiveSection(sectionIds);
+
+  // The page is rendered by script, after the browser's own jump to a #fragment, so a link
+  // such as /#flowcast (each case study's back link) would land at the top. Jump once on load.
+  useEffect(() => {
+    const id = decodeURIComponent(window.location.hash.slice(1));
+    if (id) document.getElementById(id)?.scrollIntoView({ block: 'start' });
+  }, []);
 
   return (
     <>
@@ -141,8 +161,9 @@ export function Home() {
             <p className="hero__desc">
               AI/ML engineering student working on applied machine learning and backend systems. TND checks
               the claims in a news article against evidence it retrieves, and says plainly when it cannot
-              tell. DataSentry finds problems in a training dataset and explains the evidence behind each
-              one.
+              tell. DataSentry explains the problems in a training dataset. FlowCast forecasts highway
+              traffic and checks every forecast against what happened. CampusSignal serves many colleges on
+              one platform without any of them seeing another’s data.
             </p>
             <div className="actions hero__actions">
               <a className="button button--primary" href="#projects">
@@ -176,8 +197,8 @@ export function Home() {
                 Projects
               </h2>
               <p className="section__lede">
-                Two tools, each built end to end: the service, the checks around it, the interface that
-                explains what it found, and the tests. Both run locally and neither is deployed.
+                Four projects, each built end to end: the service, the checks around it, the interface that
+                explains what it found, and the tests. FlowCast has a public demo; the others run locally.
               </p>
             </div>
 
@@ -204,6 +225,31 @@ export function Home() {
               note={ds.dataSentry.disclaimer}
               caseStudy={dataSentryPath}
               repo={dataSentryRepo}
+            />
+            <Project
+              id="flowcast"
+              title={fc.flowCast.name}
+              summary={fc.flowCast.summary}
+              shot={fc.screenshots[0]!}
+              figure={4}
+              features={fc.features}
+              decisions={fc.decisions}
+              note={fc.flowCast.disclaimer}
+              caseStudy={flowCastPath}
+              repo={flowCastRepo}
+              demo={fc.flowCast.demo}
+            />
+            <Project
+              id="campussignal"
+              title={cs.campusSignal.name}
+              summary={cs.campusSignal.summary}
+              shot={cs.screenshots[0]!}
+              figure={5}
+              features={cs.features}
+              decisions={cs.decisions}
+              note={cs.campusSignal.disclaimer}
+              caseStudy={campusSignalPath}
+              repo={campusSignalRepo}
             />
           </div>
         </section>
@@ -244,7 +290,7 @@ export function Home() {
             <div className="toolchain">
               <h3 className="sub-title">Toolchain</h3>
               <p className="muted toolchain__note">
-                Listed where there is code to point at, in TND, DataSentry or this site.
+                Listed where there is code to point at, in these four projects or this site.
               </p>
               <dl className="toolchain__groups">
                 {skills.map((group) => (
@@ -283,6 +329,12 @@ export function Home() {
                 leakage and label problems, and reports each finding with its evidence and its limits,
                 instead of a single score that could hide the one problem that matters.
               </p>
+              <p>
+                FlowCast is the same habit applied to model evaluation: every model scored on identical
+                rows, features tested so they cannot see the future, and a bootstrap that says where the
+                best model is not actually better. CampusSignal is a larger system, many colleges on one
+                platform, where the hard part is making sure none of them can ever see another’s data.
+              </p>
             </div>
           </div>
         </section>
@@ -295,7 +347,7 @@ export function Home() {
                 Contact
               </h2>
               <p className="section__lede">
-                Email is the quickest way to reach me. I’m glad to talk about TND, DataSentry, applied AI,
+                Email is the quickest way to reach me. I’m glad to talk about any of these projects, applied AI,
                 or backend work.
               </p>
             </div>

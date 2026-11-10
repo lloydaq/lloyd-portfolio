@@ -1,13 +1,16 @@
 # Lloyd D'Souza — portfolio
 
-Personal portfolio of Lloyd D'Souza, AI/ML engineering student. It has three
+Personal portfolio of Lloyd D'Souza, AI/ML engineering student. It has five
 static pages:
 
-- `/` — home: introduction, both projects, engineering principles, toolchain,
+- `/` — home: introduction, four projects, engineering principles, toolchain,
   about, contact.
 - `/work/tnd/` — case study of **TND (Trustworthy News Detector)**.
 - `/work/datasentry/` — case study of **DataSentry**, a dataset diagnostics
   tool.
+- `/work/flowcast/` — case study of **FlowCast**, highway traffic forecasting.
+- `/work/campussignal/` — case study of **CampusSignal**, a multi-college
+  campus platform.
 
 Built with React 19, TypeScript and Vite. No backend, no analytics, no
 cookies, no third-party requests at runtime (fonts are self-hosted).
@@ -76,11 +79,18 @@ All copy and facts live in three files:
 - `src/content/datasentry.ts` — everything about DataSentry, checked against
   its repository (<https://github.com/lloydaq/DataSentry>) at commit
   `ae58615`.
+- `src/content/flowcast.ts` — everything about FlowCast, checked against its
+  repository (<https://github.com/lloydaq/flowcast>) at `adf1299` (v1.0.0);
+  error figures come from its committed `models/metrics/` JSON.
+- `src/content/campussignal.ts` — everything about CampusSignal, checked
+  against <https://github.com/lloydaq/CampusSignal-pro> at `618458d`. Its
+  README's feature table lags the code; the code and `Phases.md` win.
 
 Every TND detail was checked against the TND repository at v1.0.0
 (<https://github.com/lloydaq/TND-The-News-Detector>). When TND changes,
 update `tnd.ts` from its code and README, not from memory. The unit tests fail
-if CampusSignal or a database claim appears anywhere in the source.
+if a database claim appears anywhere in the source, or if any link points at
+the older `lloydaq/CampusSignal` repository instead of `CampusSignal-pro`.
 
 ### Project screenshots
 
@@ -91,19 +101,29 @@ themes, captured from the running application with the same data, viewport
 ```text
 public/tnd/tnd-{results,evidence,home}-{light,dark}.png
 public/datasentry/datasentry-{overview,findings,ml-checks}-{light,dark}.png
+public/flowcast/flowcast-{network,forecast,models}-{light,dark}.png
+public/campussignal/campussignal-{home,issue,notices}-{light,dark}.png
 ```
+
+FlowCast's network and sensor views are FlowCast's own captures (1440 x 900 at
+1x, from its `docs/assets/screens/`), because they show OpenStreetMap tiles;
+its models view is captured here like the rest.
 
 The site shows the file that matches its own theme (`ThemedShot`, driven by
 `useTheme()` in `src/components/theme.ts`, which follows the `data-theme`
 attribute on `<html>`). A theme switch swaps the image without a reload; the
 other theme's file is fetched in the background after the first one loads.
-A unit test fails if a screenshot's two files are the same or missing.
+A unit test fails if a screenshot's two files are the same or missing, and a
+browser test fails unless every dark file is dark and every light file is
+light.
 
 To recapture, start the applications and run `node scripts/project-shots.mjs`
 (see the comment at the top of the script for ports). TND needs Ollama and
 its backend; the script runs one real analysis, saves it to
 `.impeccable/tnd-result.json`, and renders that same result in both themes.
-Delete the file to analyse again.
+Delete the file to analyse again. FlowCast is captured from its static demo
+build (the `gh-pages` branch) and CampusSignal from a local run with its
+`seed-demo` data; `CHROME_PATH` points the script at an installed browser.
 
 `public/og.png` is rendered by `node scripts/make-og.mjs`.
 
