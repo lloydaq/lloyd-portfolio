@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type MouseEvent } from 'react';
 import { homeSections, profile } from '../content/site';
 import { Close, Menu, Moon, Sun } from './Icons';
 import { applyTheme, readStoredTheme, systemTheme, useTheme } from './theme';
-import { prepareThemeSwitch, switchTheme } from './themeSwitch';
+import { switchTheme } from './themeSwitch';
 
 interface HeaderProps {
   /** Prefix for section links: '' on the home page, '/' elsewhere. */
@@ -88,10 +88,7 @@ export function Header({ base, activeId }: HeaderProps) {
           type="button"
           className="icon-button theme-toggle"
           onClick={toggleTheme}
-          onPointerEnter={prepareThemeSwitch}
-          onFocus={prepareThemeSwitch}
           aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
-          data-ink-live
         >
           <Moon />
           <Sun />

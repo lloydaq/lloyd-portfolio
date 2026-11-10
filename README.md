@@ -114,8 +114,7 @@ index.html, work/*/index.html     page entries with metadata
 src/
   main-*.tsx                      page bootstraps
   pages/                          Home, CaseStudy (TND), DataSentryStudy
-  components/                     Header, Footer, PipelineDiagram, ThemedShot, icons, theme, themeSwitch
-  ink/                            ink-bleed theme transition (WebGL shader, snapshot, orchestration)
+  components/                     Header, Footer, PipelineDiagram, ThemedShot, icons, theme, themeSwitch, inkSplat
   content/                        site.ts, tnd.ts, datasentry.ts (+ content tests)
   styles/                         global (tokens), pipeline, home, case
 public/                           favicon, og image, robots.txt, project screenshots
@@ -125,20 +124,20 @@ scripts/                          link check, page review shots, project screens
 
 ## Theme switch
 
-The theme toggle bleeds ink across the page from where it was pressed. The
-effect is adapted from
-[ink-bleed-theme-changer](https://github.com/codemure-official/ink-bleed-theme-changer)
-(its WebGL2 shader, spread timing, interrupt handling and toggle colour
-hand-over) and lives in `src/ink/`, loaded only when the toggle is first
-hovered, focused or pressed.
+The theme toggle bleeds ink across the page from where it was pressed
+(`src/components/themeSwitch.ts`, `src/components/inkSplat.ts`).
 
-How it works on this site: when the toggle is pressed, the visible part of the
-page is snapshotted with `modern-screenshot` (rendered by the browser itself,
-so `font-stretch` and `color-mix()` come out exactly); the snapshot covers the
-page, the real page switches theme underneath, and the shader dissolves the
-snapshot so the live page shows through the spreading ink. Pressing again
-mid-spread freezes the current frame and spreads the next ink over it. Without
-WebGL2, or if the snapshot fails, the colours cross-fade; with
+It uses the browser's View Transitions API: the browser snapshots the whole
+screen before and after the switch, so everything (sticky header, background
+grid, screenshots) changes together and exactly as it will look. The new theme
+is revealed through an ink splat, an SVG mask generated fresh for each press (an
+irregular drop with tendrils and droplets), that grows from the press point.
+Two splats grow at slightly different rates, so the outline keeps changing as it
+spreads, and the final size is computed so the ink always covers every corner
+of the viewport. Pressing again mid-spread pulls the ink back and keeps the
+previous theme.
+
+Browsers without View Transitions get a colour cross-fade; with
 `prefers-reduced-motion: reduce` the switch is instant.
 
 Design tokens (colour, type scale, spacing, motion) are CSS custom properties

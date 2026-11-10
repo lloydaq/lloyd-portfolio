@@ -149,36 +149,56 @@ test.describe('home interactions', () => {
     await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#f2eee6');
   });
 
-  test('the theme switch inks over the page and hands it back', async ({ page }) => {
+  test('the theme switch bleeds ink across the whole page', async ({ page }) => {
     const errors = collectErrors(page);
     await page.emulateMedia({ colorScheme: 'dark', reducedMotion: 'no-preference' });
     await page.goto('/', { waitUntil: 'networkidle' });
-    const webgl2 = await page.evaluate(() => !!document.createElement('canvas').getContext('webgl2'));
-    await page.evaluate(() => {
-      const w = window as unknown as { inked: boolean };
-      w.inked = false;
-      new MutationObserver(() => {
-        if (document.querySelector('.ink-canvas.is-active')) w.inked = true;
-      }).observe(document.body, { subtree: true, childList: true, attributes: true, attributeFilter: ['class'] });
-    });
+    const supported = await page.evaluate(
+      () => typeof document.startViewTransition === 'function' && 'pseudoElement' in KeyframeEffect.prototype,
+    );
+    // Click by position: a locator click would scroll the sticky header first.
+    const box = (await page.locator('.theme-toggle').boundingBox())!;
+    const press = () => page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
+    const settled = () => expect(page.locator('html')).not.toHaveClass(/ink-transition/);
 
-    await page.getByRole('button', { name: 'Switch to light theme' }).click();
+    await press();
+    if (supported) {
+      // The splat mask animates the new snapshot and covers the viewport by the end.
+      const ink = await page.waitForFunction(() => {
+        const a = document.getAnimations().find((x) => (x.effect as KeyframeEffect | null)?.pseudoElement === '::view-transition-new(root)');
+        if (!a) return null;
+        const frames = (a.effect as KeyframeEffect).getKeyframes();
+        return { layers: String(frames.at(-1)?.maskSize).split(',').length, duration: a.effect?.getTiming().duration };
+      });
+      expect(await ink.jsonValue()).toEqual({ layers: 2, duration: 1100 });
+    }
+    await settled();
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
-    // Without WebGL2 the switch falls back to a colour cross-fade.
-    expect(await page.evaluate(() => (window as unknown as { inked: boolean }).inked)).toBe(webgl2);
-    // The overlay ends hidden and the toggle's held colours are released.
-    await expect(page.locator('.ink-canvas.is-active')).toHaveCount(0);
-    await expect(page.getByRole('button', { name: 'Switch to dark theme' })).not.toHaveAttribute('style', /\S/);
     expect(await page.evaluate(() => localStorage.getItem('theme'))).toBe('light');
 
-    // Straight back, then again mid-spread: the last press wins.
-    const toggle = page.locator('.theme-toggle');
-    await toggle.click();
-    await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
-    await toggle.click();
+    // Pressed again mid-spread, the ink pulls back and the old theme stays.
+    await press();
+    await page.waitForTimeout(300);
+    await press();
+    await settled();
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
-    await expect(page.locator('.ink-canvas.is-active')).toHaveCount(0);
+
+    // Three quick presses end on the other theme.
+    await press();
+    await press();
+    await press();
+    await settled();
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+    expect(await page.evaluate(() => localStorage.getItem('theme'))).toBe('dark');
     expect(errors).toEqual([]);
+  });
+
+  test('with reduced motion the theme switches at once', async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'dark', reducedMotion: 'reduce' });
+    await page.goto('/');
+    await page.getByRole('button', { name: 'Switch to light theme' }).click();
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+    await expect(page.locator('html')).not.toHaveClass(/ink-transition|theme-fade/);
   });
 
   test('follows the system theme on first visit', async ({ page }) => {
