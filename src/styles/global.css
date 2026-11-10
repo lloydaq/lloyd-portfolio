@@ -768,6 +768,48 @@ code,
   min-height: 2.75rem;
 }
 
+/* ---------- Ink-bleed theme switch (src/ink) ---------- */
+
+/* WebGL overlay: shows the old theme and turns transparent where the ink has spread. */
+.ink-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.ink-canvas.is-active {
+  visibility: visible;
+}
+
+/* The page switches under the overlay in one step; only the toggle's icon swap animates. */
+html.ink-switching,
+html.ink-switching *:not(.theme-toggle svg),
+html.ink-switching *::before,
+html.ink-switching *::after {
+  transition: none !important;
+}
+
+/* Fallback when the ink can't run (no WebGL2, snapshot failed): a colour cross-fade,
+   applied only for the length of the switch. Reduced motion keeps the instant switch. */
+@media (prefers-reduced-motion: no-preference) {
+  html.theme-fade,
+  html.theme-fade *:not(.theme-toggle svg),
+  html.theme-fade *::before,
+  html.theme-fade *::after {
+    transition:
+      background-color var(--theme-fade, 0.45s) ease,
+      border-color var(--theme-fade, 0.45s) ease,
+      color var(--theme-fade, 0.45s) ease,
+      fill var(--theme-fade, 0.45s) ease,
+      stroke var(--theme-fade, 0.45s) ease,
+      box-shadow var(--theme-fade, 0.45s) ease !important;
+  }
+}
+
 /* ---------- Reduced motion ---------- */
 
 /* Remove animations outright rather than shortening them: a shortened

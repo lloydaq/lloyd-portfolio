@@ -173,7 +173,7 @@ Square corners: 2px radius everywhere, essentially a softened hairline corner. B
 - **Icons:** trailing arrows nudge 2px on hover in the direction they point.
 
 ### Navigation
-Sticky top bar on the ground colour with a hairline below. Links are muted ink at 0.875rem and go to ink on hover or when their section is in view. Below 48rem, the links fold into a menu button that opens a full-width ruled list (Escape and outside-click close it, focus returns to the button). The theme toggle is a square icon button that cross-fades moon and sun.
+Sticky top bar on the ground colour with a hairline below. Links are muted ink at 0.875rem and go to ink on hover or when their section is in view. Below 48rem, the links fold into a menu button that opens a full-width ruled list (Escape and outside-click close it, focus returns to the button). The theme toggle is a square icon button that cross-fades moon and sun. Switching theme bleeds ink from the press point across the page (WebGL, adapted from ink-bleed-theme-changer; see `src/ink/`): the old theme is a snapshot that dissolves in an irregular, tendrilled front with a darker rim, revealing the live page already in the new theme. Without WebGL2 the colours cross-fade; with reduced motion the switch is instant.
 
 ### Ruled tables and key/value rows
 Hairline top border per row, strong hairline above and below the head, condensed sentence-case heads, tabular numerals right-aligned. Below 40rem rows stack with each cell labelled from `data-label`.

@@ -114,13 +114,32 @@ index.html, work/*/index.html     page entries with metadata
 src/
   main-*.tsx                      page bootstraps
   pages/                          Home, CaseStudy (TND), DataSentryStudy
-  components/                     Header, Footer, PipelineDiagram, ThemedShot, icons, theme
+  components/                     Header, Footer, PipelineDiagram, ThemedShot, icons, theme, themeSwitch
+  ink/                            ink-bleed theme transition (WebGL shader, snapshot, orchestration)
   content/                        site.ts, tnd.ts, datasentry.ts (+ content tests)
   styles/                         global (tokens), pipeline, home, case
 public/                           favicon, og image, robots.txt, project screenshots
 tests/e2e/                        Playwright suite
 scripts/                          link check, page review shots, project screenshots, og image
 ```
+
+## Theme switch
+
+The theme toggle bleeds ink across the page from where it was pressed. The
+effect is adapted from
+[ink-bleed-theme-changer](https://github.com/codemure-official/ink-bleed-theme-changer)
+(its WebGL2 shader, spread timing, interrupt handling and toggle colour
+hand-over) and lives in `src/ink/`, loaded only when the toggle is first
+hovered, focused or pressed.
+
+How it works on this site: when the toggle is pressed, the visible part of the
+page is snapshotted with `modern-screenshot` (rendered by the browser itself,
+so `font-stretch` and `color-mix()` come out exactly); the snapshot covers the
+page, the real page switches theme underneath, and the shader dissolves the
+snapshot so the live page shows through the spreading ink. Pressing again
+mid-spread freezes the current frame and spreads the next ink over it. Without
+WebGL2, or if the snapshot fails, the colours cross-fade; with
+`prefers-reduced-motion: reduce` the switch is instant.
 
 Design tokens (colour, type scale, spacing, motion) are CSS custom properties
 at the top of `src/styles/global.css`; the light theme overrides the colours
