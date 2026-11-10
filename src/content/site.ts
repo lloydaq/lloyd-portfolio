@@ -9,9 +9,13 @@ export const profile = {
 
 export const tndRepo = 'https://github.com/lloydaq/TND-The-News-Detector';
 export const dataSentryRepo = 'https://github.com/lloydaq/DataSentry';
+export const flowCastRepo = 'https://github.com/lloydaq/flowcast';
+export const campusSignalRepo = 'https://github.com/lloydaq/CampusSignal-pro';
 
 export const caseStudyPath = '/work/tnd/';
 export const dataSentryPath = '/work/datasentry/';
+export const flowCastPath = '/work/flowcast/';
+export const campusSignalPath = '/work/campussignal/';
 
 /**
  * A real screenshot of a project, captured in both of its own themes from the
@@ -41,8 +45,8 @@ export interface SkillGroup {
   items: string[];
 }
 
-// Only tools with code to point at: TND's and DataSentry's backends, frontends
-// and tests, and this portfolio's own source.
+// Only tools with code to point at: the backends, frontends and tests of TND,
+// DataSentry, FlowCast and CampusSignal, and this portfolio's own source.
 export const skills: SkillGroup[] = [
   { name: 'Languages', items: ['Python', 'JavaScript', 'TypeScript', 'HTML', 'CSS'] },
   {
@@ -61,15 +65,33 @@ export const skills: SkillGroup[] = [
       'scikit-learn',
       'Cross-validation with preprocessing fitted inside each fold',
       'Leakage and label-quality screening',
+      'LightGBM',
+      'PyTorch',
+      'Graph neural networks for forecasting (DCRNN)',
+      'Day-block bootstrap for comparing models',
     ],
   },
   {
     name: 'Backend',
-    items: ['FastAPI', 'Pydantic', 'HTTPX', 'Uvicorn', 'Trafilatura', 'Beautiful Soup'],
+    items: [
+      'FastAPI',
+      'Pydantic',
+      'HTTPX',
+      'Uvicorn',
+      'Trafilatura',
+      'Beautiful Soup',
+      'PostgreSQL',
+      'SQLAlchemy',
+      'Alembic',
+      'Multi-tenant isolation and server-side sessions',
+    ],
   },
-  { name: 'Frontend', items: ['React', 'Vite', 'Vanilla JavaScript', 'Responsive CSS'] },
+  {
+    name: 'Frontend',
+    items: ['React', 'Vite', 'TanStack Query', 'React Router', 'Tailwind CSS', 'Leaflet', 'Vanilla JavaScript', 'Responsive CSS'],
+  },
   {
     name: 'Testing and tooling',
-    items: ['pytest', 'Playwright', 'Vitest', 'Git', 'GitHub Actions'],
+    items: ['pytest', 'Playwright', 'Vitest', 'axe accessibility checks', 'Ruff', 'Git', 'GitHub Actions'],
   },
 ];

@@ -64,6 +64,8 @@
   font-weight: 700;
   letter-spacing: -0.035em;
   line-height: 0.95;
+  /* A long project name must never push the page sideways on a narrow phone. */
+  overflow-wrap: break-word;
 }
 
 .case__summary {

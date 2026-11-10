@@ -29,7 +29,7 @@ function absoluteSeo(): Plugin {
   };
 }
 
-// Static pages (multi-page build), so /work/tnd/ and /work/datasentry/ deep-link on any static
+// Static pages (multi-page build), so every /work/<project>/ page deep-links on any static
 // host without rewrite rules, and in-page #anchors keep working.
 export default defineConfig({
   plugins: [react(), absoluteSeo()],
@@ -39,6 +39,8 @@ export default defineConfig({
         home: resolve(import.meta.dirname, 'index.html'),
         tnd: resolve(import.meta.dirname, 'work/tnd/index.html'),
         datasentry: resolve(import.meta.dirname, 'work/datasentry/index.html'),
+        flowcast: resolve(import.meta.dirname, 'work/flowcast/index.html'),
+        campussignal: resolve(import.meta.dirname, 'work/campussignal/index.html'),
       },
     },
   },

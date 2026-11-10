@@ -8,10 +8,23 @@
 //     run one real analysis, which is saved to TND_RESULT and reused for both
 //     themes. Delete that file to analyse again.
 //
-//   node scripts/project-shots.mjs [datasentry] [tnd]
+//   FlowCast: serve its gh-pages branch (the static demo) under /flowcast/, e.g.
+//     a folder holding a `flowcast` link to the checkout: python -m http.server 4310
+//     Only the models view is captured here. The network and sensor views are
+//     FlowCast's own captures (docs/assets/screens/, copied to public/flowcast/),
+//     because they show OpenStreetMap tiles.
+//   CampusSignal: run its backend and `npm run dev` against a disposable database
+//     with `seed-demo`, then create the demo student, notices, issue and posts
+//     through its API (see the comment in src/content/campussignal.ts). Signs in as
+//     CS_EMAIL with CS_PASSWORD.
+//
+//   node scripts/project-shots.mjs [datasentry] [tnd] [flowcast] [campussignal]
 //
 // Env: DS_URL (http://127.0.0.1:8001), TND_URL (http://127.0.0.1:5500),
-// TND_API (http://127.0.0.1:8000), TND_RESULT (.impeccable/tnd-result.json).
+// TND_API (http://127.0.0.1:8000), TND_RESULT (.impeccable/tnd-result.json),
+// FC_URL (http://127.0.0.1:4310/flowcast), CS_URL (http://localhost:5173),
+// CS_EMAIL (mite-cse-001@mite.example), CS_PASSWORD (required for campussignal),
+// CHROME_PATH (optional browser executable).
 import { existsSync } from 'node:fs';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname } from 'node:path';
@@ -21,13 +34,18 @@ const DS_URL = process.env.DS_URL ?? 'http://127.0.0.1:8001';
 const TND_URL = process.env.TND_URL ?? 'http://127.0.0.1:5500';
 const TND_API = process.env.TND_API ?? 'http://127.0.0.1:8000';
 const TND_RESULT = process.env.TND_RESULT ?? '.impeccable/tnd-result.json';
+const FC_URL = process.env.FC_URL ?? 'http://127.0.0.1:4310/flowcast';
+const CS_URL = process.env.CS_URL ?? 'http://localhost:5173';
+const CS_EMAIL = process.env.CS_EMAIL ?? 'mite-cse-001@mite.example';
+const CS_PASSWORD = process.env.CS_PASSWORD;
 const THEMES = ['light', 'dark'];
 const VIEWPORT = { width: 1440, height: 900 };
 
 const targets = process.argv.slice(2);
 const want = (name) => targets.length === 0 || targets.includes(name);
 
-const browser = await chromium.launch();
+// CHROME_PATH: use an installed Chrome or Chromium instead of Playwright's own download.
+const browser = await chromium.launch(process.env.CHROME_PATH ? { executablePath: process.env.CHROME_PATH } : {});
 
 async function newPage(theme, init) {
   const context = await browser.newContext({
@@ -146,6 +164,43 @@ async function tnd() {
   }
 }
 
+// ---------- FlowCast ----------
+// The replay moment FlowCast's own screenshots use: Tuesday 12 June 2012, 16:30, 30 minutes.
+async function flowCast() {
+  for (const theme of THEMES) {
+    const page = await newPage(theme);
+    await page.goto(`${FC_URL}/models?t=2012-06-12T16:30&h=30&theme=${theme}`, { waitUntil: 'networkidle' });
+    await page.waitForTimeout(2000); // entrance animations
+    await shot(page, `public/flowcast/flowcast-models-${theme}.png`);
+    await page.context().close();
+  }
+}
+
+// ---------- CampusSignal ----------
+// The demo student's view: home, their issue, and the notices list.
+async function campusSignal() {
+  if (!CS_PASSWORD) throw new Error('Set CS_PASSWORD to the demo accounts\' password.');
+  for (const theme of THEMES) {
+    const page = await newPage(theme, { fn: (t) => localStorage.setItem('campussignal.theme', t), arg: theme });
+    await page.goto(`${CS_URL}/sign-in`, { waitUntil: 'networkidle' });
+    await page.getByLabel('Email').fill(CS_EMAIL);
+    await page.getByLabel('Password').fill(CS_PASSWORD);
+    await page.getByRole('button', { name: 'Sign in' }).click();
+    await page.waitForURL(/\/home/);
+    const issueId = await page.evaluate(async () => (await (await fetch('/api/v1/campus/issues')).json()).items[0].id);
+    for (const [name, path] of [
+      ['home', '/home'],
+      ['issue', `/issues/${issueId}`],
+      ['notices', '/notices'],
+    ]) {
+      await page.goto(`${CS_URL}${path}`, { waitUntil: 'networkidle' });
+      await page.waitForTimeout(500);
+      await shot(page, `public/campussignal/campussignal-${name}-${theme}.png`);
+    }
+    await page.context().close();
+  }
+}
+
 if (want('datasentry')) {
   console.log('DataSentry');
   await dataSentry();
@@ -153,5 +208,13 @@ if (want('datasentry')) {
 if (want('tnd')) {
   console.log('TND');
   await tnd();
+}
+if (want('flowcast')) {
+  console.log('FlowCast');
+  await flowCast();
+}
+if (want('campussignal')) {
+  console.log('CampusSignal');
+  await campusSignal();
 }
 await browser.close();

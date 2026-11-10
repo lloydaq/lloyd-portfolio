@@ -5,6 +5,8 @@ const pages = [
   { name: 'home', path: '/' },
   { name: 'case study', path: '/work/tnd/' },
   { name: 'DataSentry case study', path: '/work/datasentry/' },
+  { name: 'FlowCast case study', path: '/work/flowcast/' },
+  { name: 'CampusSignal case study', path: '/work/campussignal/' },
 ];
 
 function collectErrors(page: Page) {
@@ -58,11 +60,15 @@ for (const { name, path } of pages) {
       expect(missing).toEqual([]);
     });
 
-    test('never mentions CampusSignal', async ({ page }) => {
+    test('links CampusSignal only through its current repository', async ({ page }) => {
       await page.goto(path);
-      const html = (await page.content()).toLowerCase();
-      expect(html).not.toContain('campussignal');
-      expect(html).not.toContain('campus signal');
+      const hrefs = await page.$$eval('a[href]', (links) => links.map((a) => a.getAttribute('href') ?? ''));
+      // The older lloydaq/CampusSignal repository is not part of the portfolio.
+      for (const href of hrefs) {
+        if (/github\.com\/lloydaq\/campussignal/i.test(href)) {
+          expect(href).toBe('https://github.com/lloydaq/CampusSignal-pro');
+        }
+      }
     });
 
     for (const theme of ['dark', 'light'] as const) {
@@ -94,6 +100,18 @@ test.describe('home interactions', () => {
     await expect(page.getByRole('link', { name: /View the repository: DataSentry/ })).toHaveAttribute(
       'href',
       'https://github.com/lloydaq/DataSentry',
+    );
+    await expect(page.getByRole('link', { name: /View the repository: FlowCast/ })).toHaveAttribute(
+      'href',
+      'https://github.com/lloydaq/flowcast',
+    );
+    await expect(page.getByRole('link', { name: /Open the live demo: FlowCast/ })).toHaveAttribute(
+      'href',
+      'https://lloydaq.github.io/flowcast/',
+    );
+    await expect(page.getByRole('link', { name: /View the repository: CampusSignal/ })).toHaveAttribute(
+      'href',
+      'https://github.com/lloydaq/CampusSignal-pro',
     );
     await expect(page.getByRole('link', { name: 'lloyd25dsouza@gmail.com' })).toHaveAttribute(
       'href',
@@ -218,51 +236,65 @@ test.describe('home interactions', () => {
 });
 
 test.describe('project screenshots', () => {
+  const homeShots = (theme: 'dark' | 'light') => [
+    `/tnd/tnd-results-${theme}.png`,
+    `/datasentry/datasentry-overview-${theme}.png`,
+    `/flowcast/flowcast-network-${theme}.png`,
+    `/campussignal/campussignal-home-${theme}.png`,
+  ];
+  const DARK = homeShots('dark');
+  const LIGHT = homeShots('light');
   const shots = (page: Page) => page.locator('.project__shot img');
   const sources = (page: Page) => shots(page).evaluateAll((imgs) => imgs.map((i) => i.getAttribute('src')));
 
-  test('both projects are listed with their case studies', async ({ page }) => {
-    await page.goto('/');
-    const projects = page.locator('#projects');
-    await expect(projects.getByRole('heading', { name: 'Trustworthy News Detector', level: 3 })).toBeVisible();
-    await expect(projects.getByRole('heading', { name: 'DataSentry', level: 3 })).toBeVisible();
-    await page.getByRole('link', { name: 'Read the case study: DataSentry' }).click();
-    await expect(page).toHaveURL(/\/work\/datasentry\/$/);
-    await expect(page.getByRole('heading', { level: 1 })).toContainText('DataSentry');
+  test('all four projects are listed with their case studies', async ({ page }) => {
+    const projectPages = [
+      ['Trustworthy News Detector', /\/work\/tnd\/$/, 'TND'],
+      ['DataSentry', /\/work\/datasentry\/$/, 'DataSentry'],
+      ['FlowCast', /\/work\/flowcast\/$/, 'FlowCast'],
+      ['CampusSignal', /\/work\/campussignal\/$/, 'CampusSignal'],
+    ] as const;
+    for (const [name, url, h1] of projectPages) {
+      await page.goto('/');
+      await expect(page.locator('#projects').getByRole('heading', { name, level: 3 })).toBeVisible();
+      await page.getByRole('link', { name: `Read the case study: ${name}` }).click();
+      await expect(page).toHaveURL(url);
+      await expect(page.getByRole('heading', { level: 1 })).toContainText(h1);
+    }
+  });
+
+  test('each case study links back to its own project on the home page', async ({ page }) => {
+    for (const id of ['flowcast', 'campussignal']) {
+      await page.goto(`/work/${id}/`);
+      await page.getByRole('link', { name: 'Back to the portfolio' }).click();
+      await expect(page).toHaveURL(new RegExp(`/#${id}$`));
+      await expect(page.locator(`#${id}`)).toBeInViewport();
+    }
   });
 
   test('switch with the theme toggle, without a reload, and persist', async ({ page }) => {
     await page.emulateMedia({ colorScheme: 'dark' });
     await page.goto('/');
-    expect(await sources(page)).toEqual(['/tnd/tnd-results-dark.png', '/datasentry/datasentry-overview-dark.png']);
+    expect(await sources(page)).toEqual(DARK);
 
     const navigations: string[] = [];
     page.on('framenavigated', (f) => f === page.mainFrame() && navigations.push(f.url()));
     await page.getByRole('button', { name: 'Switch to light theme' }).click();
-    await expect.poll(() => sources(page)).toEqual([
-      '/tnd/tnd-results-light.png',
-      '/datasentry/datasentry-overview-light.png',
-    ]);
+    await expect.poll(() => sources(page)).toEqual(LIGHT);
     expect(navigations).toEqual([]);
 
     await page.reload();
-    expect(await sources(page)).toEqual(['/tnd/tnd-results-light.png', '/datasentry/datasentry-overview-light.png']);
+    expect(await sources(page)).toEqual(LIGHT);
     await page.getByRole('button', { name: 'Switch to dark theme' }).click();
-    await expect.poll(() => sources(page)).toEqual([
-      '/tnd/tnd-results-dark.png',
-      '/datasentry/datasentry-overview-dark.png',
-    ]);
+    await expect.poll(() => sources(page)).toEqual(DARK);
   });
 
   test('follow the system theme until the visitor chooses', async ({ page }) => {
     await page.emulateMedia({ colorScheme: 'light' });
     await page.goto('/');
-    expect(await sources(page)).toEqual(['/tnd/tnd-results-light.png', '/datasentry/datasentry-overview-light.png']);
+    expect(await sources(page)).toEqual(LIGHT);
     await page.emulateMedia({ colorScheme: 'dark' });
-    await expect.poll(() => sources(page)).toEqual([
-      '/tnd/tnd-results-dark.png',
-      '/datasentry/datasentry-overview-dark.png',
-    ]);
+    await expect.poll(() => sources(page)).toEqual(DARK);
   });
 
   test('keep their size when the theme changes', async ({ page }) => {
@@ -279,8 +311,40 @@ test.describe('project screenshots', () => {
     expect(await size()).toEqual(before);
   });
 
+  test('every screenshot is dark for the dark theme and light for the light theme', async ({ page }) => {
+    await page.goto('/');
+    const pairs = [
+      ['tnd', ['tnd-home', 'tnd-results', 'tnd-evidence']],
+      ['datasentry', ['datasentry-overview', 'datasentry-findings', 'datasentry-ml-checks']],
+      ['flowcast', ['flowcast-network', 'flowcast-forecast', 'flowcast-models']],
+      ['campussignal', ['campussignal-home', 'campussignal-issue', 'campussignal-notices']],
+    ].flatMap(([dir, names]) => (names as string[]).map((n) => `/${dir}/${n}`));
+    // Mean luminance (0-255) of each file, measured in the browser.
+    const luminance = (src: string) =>
+      page.evaluate(async (url) => {
+        const img = new Image();
+        img.src = url;
+        await img.decode();
+        const canvas = document.createElement('canvas');
+        canvas.width = 160;
+        canvas.height = 100;
+        const ctx = canvas.getContext('2d')!;
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        let sum = 0;
+        for (let i = 0; i < data.length; i += 4) sum += 0.2126 * data[i]! + 0.7152 * data[i + 1]! + 0.0722 * data[i + 2]!;
+        return sum / (data.length / 4);
+      }, src);
+    for (const base of pairs) {
+      const dark = await luminance(`${base}-dark.png`);
+      const light = await luminance(`${base}-light.png`);
+      expect(dark, `${base}-dark.png`).toBeLessThan(90);
+      expect(light, `${base}-light.png`).toBeGreaterThan(165);
+    }
+  });
+
   test('case study galleries follow the theme too', async ({ page }) => {
-    for (const path of ['/work/tnd/', '/work/datasentry/']) {
+    for (const path of ['/work/tnd/', '/work/datasentry/', '/work/flowcast/', '/work/campussignal/']) {
       await page.emulateMedia({ colorScheme: 'dark' });
       await page.goto(path);
       const imgs = page.locator('.case__gallery img');
@@ -303,7 +367,7 @@ test.describe('phone layout', () => {
     await page.emulateMedia({ colorScheme: 'light' });
     await page.goto('/');
     const links = page.locator('#projects').getByRole('link', { name: 'Open full-size screenshot' });
-    await expect(links).toHaveCount(2);
+    await expect(links).toHaveCount(4);
     await expect(links.first()).toBeVisible();
     await expect(links.first()).toHaveAttribute('href', '/tnd/tnd-results-light.png');
     await page.getByRole('button', { name: 'Switch to dark theme' }).click();
@@ -443,7 +507,7 @@ test('reduced motion leaves all content visible', async ({ page }) => {
 });
 
 test('background grid sits behind content and ignores the pointer', async ({ page }) => {
-  for (const path of ['/', '/work/tnd/', '/work/datasentry/']) {
+  for (const path of ['/', '/work/tnd/', '/work/datasentry/', '/work/flowcast/', '/work/campussignal/']) {
     await page.goto(path);
     const grid = page.locator('canvas.kinetic-grid');
     await expect(grid).toHaveAttribute('aria-hidden', 'true');
