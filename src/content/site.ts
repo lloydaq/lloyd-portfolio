@@ -57,6 +57,7 @@ export const homeSections = [
   { id: 'projects', label: 'Projects' },
   { id: 'engineering', label: 'Engineering' },
   { id: 'about', label: 'About' },
+  { id: 'resume', label: 'Résumé' },
   { id: 'contact', label: 'Contact' },
 ] as const;
 

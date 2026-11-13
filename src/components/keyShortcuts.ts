@@ -17,6 +17,7 @@ const GO_TO: Record<string, { id: string; label: string }> = {
   p: { id: 'projects', label: 'Go to Projects' },
   e: { id: 'engineering', label: 'Go to Engineering' },
   a: { id: 'about', label: 'Go to About' },
+  r: { id: 'resume', label: 'Go to Résumé' },
   c: { id: 'contact', label: 'Go to Contact' },
 };
 

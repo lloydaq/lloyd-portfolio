@@ -34,6 +34,12 @@ export const ArrowRight = (p: IconProps) => (
   </Base>
 );
 
+export const Download = (p: IconProps) => (
+  <Base data-icon="download" {...p}>
+    <path d="M12 4v11M7 10l5 5 5-5M5 20h14" />
+  </Base>
+);
+
 export const ArrowDown = (p: IconProps) => (
   <Base data-icon="arrow-down" {...p}>
     <path d="M12 5v14M6 13l6 6 6-6" />

@@ -51,7 +51,8 @@ Most student portfolios list many projects and claim skills. This one makes one 
 
 - TND screenshots: `docs/assets/tnd-home.png`, `tnd-results.png`, `tnd-evidence.png` (real output, 1920×1200 / 1824×1244).
 - TND README, release notes, architecture SVG, test suites.
-- Absent and never to be fabricated: education details, employment, internships, awards, user counts, accuracy figures, stars, contribution graphs, testimonials, a résumé file.
+- Résumé (owner, 2026-11-13, from his résumé and NPTEL certificate): BE in AI & ML at MITE, CGPA 8.43, expected 2028; PU (Science) Christ King PU College 86%; SSLC Christ King English Medium School 85%; hackathons JalSetu-Lite (Build for Billions, NITK) and FocusCut (Tech Fusion 2.0); conducted AIvibeX, a 5-hour hackathon at MITE; NPTEL Foundations of Virtual Reality (IIT Madras, Jul–Oct 2026, Elite, 67%); languages English, Hindi, Kannada; location Karkala, Karnataka. All in `src/content/resume.ts`. No phone number or address on the site.
+- Absent and never to be fabricated: employment, internships, awards beyond the above, hackathon placings, user counts, accuracy figures, stars, contribution graphs, testimonials.
 
 ## Product Principles
 

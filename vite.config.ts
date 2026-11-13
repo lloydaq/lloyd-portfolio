@@ -40,6 +40,7 @@ export default defineConfig({
         datasentry: resolve(import.meta.dirname, 'work/datasentry/index.html'),
         flowcast: resolve(import.meta.dirname, 'work/flowcast/index.html'),
         campussignal: resolve(import.meta.dirname, 'work/campussignal/index.html'),
+        resume: resolve(import.meta.dirname, 'resume/index.html'),
       },
     },
   },

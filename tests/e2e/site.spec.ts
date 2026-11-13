@@ -7,6 +7,7 @@ const pages = [
   { name: 'DataSentry case study', path: '/work/datasentry/' },
   { name: 'FlowCast case study', path: '/work/flowcast/' },
   { name: 'CampusSignal case study', path: '/work/campussignal/' },
+  { name: 'résumé', path: '/resume/' },
 ];
 
 function collectErrors(page: Page) {
@@ -686,5 +687,36 @@ test.describe('ink trail and keyboard shortcuts', () => {
     await page.keyboard.type('ink');
     await expect.poll(amberPixels).toBeGreaterThan(before + 500);
     expect(errors).toEqual([]);
+  });
+});
+
+test.describe('résumé', () => {
+  test('the home page has a résumé section with a working PDF download', async ({ page, request }) => {
+    await page.goto('/#resume');
+    const section = page.locator('#resume');
+    await expect(section.getByRole('heading', { name: 'Résumé', level: 2 })).toBeVisible();
+    await expect(section).toContainText('CGPA 8.43');
+    await expect(section).toContainText('AIvibeX');
+    await expect(section).toContainText('Foundations of Virtual Reality');
+    const pdf = section.getByRole('link', { name: /Download résumé/ });
+    await expect(pdf).toHaveAttribute('download', /\.pdf$/);
+    const response = await request.get((await pdf.getAttribute('href'))!);
+    expect(response.status()).toBe(200);
+    expect(response.headers()['content-type']).toContain('application/pdf');
+    expect((await response.body()).subarray(0, 5).toString()).toBe('%PDF-');
+  });
+
+  test('the printable page holds the whole résumé and prints only the sheet', async ({ page }) => {
+    await page.goto('/resume/');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText("Lloyd D'Souza");
+    for (const heading of ['Education', 'Projects', 'Hackathons', 'Leadership', 'Certification', 'Skills']) {
+      await expect(page.getByRole('heading', { name: heading, level: 2 })).toBeVisible();
+    }
+    // Public page: no phone number.
+    expect(await page.locator('main').innerText()).not.toMatch(/\+91|\d{10}/);
+    await page.emulateMedia({ media: 'print' });
+    await expect(page.locator('.site-header')).toBeHidden();
+    await expect(page.locator('.resume-page__bar')).toBeHidden();
+    await expect(page.locator('.cv-sheet')).toBeVisible();
   });
 });

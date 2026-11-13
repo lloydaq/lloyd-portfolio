@@ -865,6 +865,50 @@ code,
   min-height: 2.75rem;
 }
 
+/* ---------- Résumé entries (src/components/ResumeParts.tsx) ---------- */
+
+.cv-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cv-item + .cv-item {
+  margin-top: var(--space-4);
+}
+
+.cv-item__title {
+  font-weight: 620;
+  line-height: 1.35;
+}
+
+.cv-item__context {
+  color: var(--ink-2);
+  font-weight: 450;
+}
+
+.cv-item__meta {
+  margin-top: 0.15rem;
+  color: var(--ink-2);
+  font-size: var(--step--1);
+  line-height: 1.45;
+}
+
+.cv-points {
+  margin: var(--space-2) 0 0;
+  padding-left: 1.1rem;
+  font-size: var(--step--1);
+  line-height: 1.5;
+}
+
+.cv-points li + li {
+  margin-top: 0.2rem;
+}
+
+.cv-points li::marker {
+  color: var(--accent);
+}
+
 /* ---------- Ink trail (src/components/inkTrail.ts) ---------- */
 
 /* While drawing on the background, a drag must not select text on its way past. */

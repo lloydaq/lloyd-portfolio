@@ -1,0 +1,250 @@
+/* ---------- Printable résumé (/resume/) ---------- */
+
+.resume-page {
+  padding-block: var(--space-6) var(--space-9);
+}
+
+.resume-page__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+/* On screen the sheet is a page of paper in the current theme. */
+.cv-sheet {
+  max-width: 52rem;
+  margin-inline: auto;
+  padding: clamp(1.25rem, 0.5rem + 3.5vw, 3.5rem);
+  border: var(--hair-strong);
+  border-radius: var(--radius-lg);
+  background: var(--sheet);
+  box-shadow: var(--shadow);
+}
+
+.cv-sheet__name {
+  font-size: var(--step-3);
+  font-stretch: 122%;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.cv-sheet__headline {
+  margin-top: var(--space-2);
+  color: var(--accent-ink);
+  font-weight: 620;
+  font-stretch: var(--wide);
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  font-size: var(--step--1);
+}
+
+.cv-sheet__contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-4);
+  margin-top: var(--space-3);
+  padding-bottom: var(--space-4);
+  border-bottom: 2px solid var(--accent);
+  color: var(--ink-2);
+  font-size: var(--step--1);
+}
+
+.cv-sheet__contact a {
+  text-decoration: none;
+}
+
+.cv-section {
+  margin-top: var(--space-5);
+}
+
+.cv-section > p {
+  font-size: var(--step--1);
+  line-height: 1.55;
+}
+
+.cv-section__title {
+  margin-bottom: var(--space-3);
+  padding-bottom: var(--space-1);
+  border-bottom: var(--hair-strong);
+  font-size: 0.8125rem;
+  font-weight: 680;
+  font-stretch: var(--wide);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.cv-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 var(--space-6);
+}
+
+.cv-skills {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  font-size: var(--step--1);
+}
+
+.cv-skills > div {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr);
+  gap: var(--space-3);
+}
+
+.cv-skills dt {
+  font-weight: 620;
+}
+
+.cv-skills dd {
+  margin: 0;
+  color: var(--ink-2);
+}
+
+@media (max-width: 39.99rem) {
+  .cv-columns {
+    grid-template-columns: 1fr;
+  }
+
+  .cv-skills > div {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
+
+/* ---------- Print and PDF: one A4 page, light paper, the sheet only ---------- */
+
+@page {
+  size: A4;
+  margin: 10mm 12mm;
+}
+
+@media print {
+  :root,
+  :root[data-theme] {
+    --ground: #fff;
+    --sheet: #fff;
+    --ink: #17171b;
+    --ink-2: #4a463f;
+    --rule: #d9d3c7;
+    --rule-strong: #b3ac9f;
+    --accent: #a8690f;
+    --accent-ink: #7a4b08;
+    color-scheme: light;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+  }
+
+  .site-header,
+  .site-footer,
+  .kinetic-grid,
+  .resume-page__bar,
+  .skip-link,
+  .shortcuts {
+    display: none !important;
+  }
+
+  .resume-page {
+    max-width: none;
+    padding: 0;
+  }
+
+  .cv-sheet {
+    max-width: none;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+    font-size: 9.2pt;
+    line-height: 1.32;
+  }
+
+  .cv-sheet__name {
+    font-size: 21pt;
+  }
+
+  .cv-sheet__headline,
+  .cv-sheet__contact,
+  .cv-section > p,
+  .cv-item__meta,
+  .cv-points,
+  .cv-skills {
+    font-size: 8.6pt;
+  }
+
+  .cv-sheet__contact {
+    margin-top: 4pt;
+    padding-bottom: 6pt;
+  }
+
+  .cv-section {
+    margin-top: 8pt;
+  }
+
+  .cv-section__title {
+    break-after: avoid;
+  }
+
+  /* Education on one line per school: title left, school and grade right. */
+  .cv-list--edu .cv-item {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0 8pt;
+  }
+
+  .cv-list--edu .cv-item + .cv-item {
+    margin-top: 2pt;
+  }
+
+  .cv-list--edu .cv-item__meta {
+    margin-top: 0;
+  }
+
+  .cv-section__title {
+    margin-bottom: 5pt;
+    font-size: 8.6pt;
+  }
+
+  .cv-item + .cv-item {
+    margin-top: 5pt;
+  }
+
+  .cv-item__meta {
+    margin-top: 0;
+  }
+
+  .cv-points {
+    margin-top: 2pt;
+  }
+
+  .cv-points li + li {
+    margin-top: 1pt;
+  }
+
+  .cv-item {
+    break-inside: avoid;
+  }
+
+  .cv-columns {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .cv-skills {
+    grid-template-columns: 1fr 1fr;
+    gap: 2pt 14pt;
+  }
+
+  .cv-skills > div {
+    grid-template-columns: 5.2rem minmax(0, 1fr);
+    gap: 6pt;
+  }
+}

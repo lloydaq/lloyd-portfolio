@@ -41,7 +41,7 @@ describe('createKeyReader', () => {
   });
 
   it('lists every documented shortcut, and keeps the ink one secret', () => {
-    expect(SHORTCUTS.map((s) => s.keys.join(' '))).toEqual(['?', 't', 'g h', 'g p', 'g e', 'g a', 'g c', 'g n']);
+    expect(SHORTCUTS.map((s) => s.keys.join(' '))).toEqual(['?', 't', 'g h', 'g p', 'g e', 'g a', 'g r', 'g c', 'g n']);
   });
 });
 
