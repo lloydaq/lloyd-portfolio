@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState, type MouseEvent } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type MouseEvent } from 'react';
 import { homeSections, profile } from '../content/site';
 import { Close, Menu, Moon, Sun } from './Icons';
 import { applyTheme, readStoredTheme, systemTheme, useTheme } from './theme';
+import { initReveal } from './reveal';
 import { switchTheme } from './themeSwitch';
 
 interface HeaderProps {
@@ -15,6 +16,10 @@ export function Header({ base, activeId }: HeaderProps) {
   const theme = useTheme();
   const navRef = useRef<HTMLElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
+
+  // Scroll reveal for the whole page. Every page renders its header, and a layout effect
+  // runs after the page is in the DOM but before it is painted, so nothing flashes.
+  useLayoutEffect(() => initReveal(), []);
 
   // Follow the system theme until the visitor picks one.
   useEffect(() => {

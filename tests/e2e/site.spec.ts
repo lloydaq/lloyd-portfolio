@@ -518,3 +518,27 @@ test('background grid sits behind content and ignores the pointer', async ({ pag
     expect(style).toEqual({ position: 'fixed', zIndex: '-1', pointerEvents: 'none' });
   }
 });
+
+test.describe('scroll reveal', () => {
+  test('every block is shown once it has been scrolled past', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
+    for (const path of ['/', '/work/tnd/']) {
+      await page.goto(path, { waitUntil: 'networkidle' });
+      expect(await page.locator('[data-reveal]').count()).toBeGreaterThan(10);
+      const height = await page.evaluate(() => document.documentElement.scrollHeight);
+      for (let y = 0; y < height; y += 400) {
+        await page.mouse.wheel(0, 400);
+        await page.waitForTimeout(40);
+      }
+      await expect(page.locator('[data-reveal]')).toHaveCount(0, { timeout: 4000 });
+      await expect(page.locator('img[data-loaded="false"]')).toHaveCount(0);
+    }
+  });
+
+  test('with reduced motion nothing is hidden', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto('/');
+    await expect(page.locator('html')).not.toHaveClass(/reveal-on/);
+    await expect(page.locator('[data-reveal]')).toHaveCount(0);
+  });
+});
