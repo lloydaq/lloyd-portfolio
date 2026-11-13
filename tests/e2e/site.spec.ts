@@ -135,20 +135,20 @@ test.describe('home interactions', () => {
 
   test('the pipeline diagram works with the keyboard', async ({ page, isMobile }) => {
     test.skip(isMobile, 'Narrow screens use the list layout, covered below.');
-    await page.goto('/');
+    await page.goto('/work/tnd/');
     const graph = page.getByRole('group', { name: 'TND analysis pipeline' });
     const selected = graph.getByRole('button', { pressed: true });
-    await expect(selected).toContainText('Claim analysis');
+    await expect(selected).toContainText('Evidence search');
+    await expect(page.locator('.pipeline__detail')).toContainText('in parallel');
     await selected.focus();
     await page.keyboard.press('ArrowRight');
-    await expect(graph.getByRole('button', { pressed: true })).toContainText('Evidence search');
-    await expect(page.locator('.pipeline__detail-title')).toHaveText('Evidence search');
-    await expect(page.locator('.pipeline__detail')).toContainText('in parallel');
+    await expect(graph.getByRole('button', { pressed: true })).toContainText('Evidence text');
+    await expect(page.locator('.pipeline__detail-title')).toHaveText('Evidence text');
   });
 
   test('the pipeline list opens specs inline on narrow screens', async ({ page }) => {
     await page.setViewportSize({ width: 360, height: 800 });
-    await page.goto('/');
+    await page.goto('/work/tnd/');
     const list = page.getByRole('list', { name: 'TND analysis pipeline' });
     await expect(list).toBeVisible();
     await expect(page.getByRole('group', { name: 'TND analysis pipeline' })).toBeHidden();
@@ -188,7 +188,7 @@ test.describe('home interactions', () => {
         const frames = (a.effect as KeyframeEffect).getKeyframes();
         return { layers: String(frames.at(-1)?.maskSize).split(',').length, duration: a.effect?.getTiming().duration };
       });
-      expect(await ink.jsonValue()).toEqual({ layers: 2, duration: 1100 });
+      expect(await ink.jsonValue()).toEqual({ layers: 2, duration: 900 });
     }
     await settled();
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
@@ -375,7 +375,7 @@ test.describe('phone layout', () => {
   });
 
   test('the pipeline loop label does not overlap the first loop stage', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/work/tnd/');
     const list = page.getByRole('list', { name: 'TND analysis pipeline' });
     const label = await list.locator('.pipeline__loop-label').boundingBox();
     const stage = await list.getByRole('button', { name: /Evidence search/ }).boundingBox();
@@ -499,7 +499,7 @@ test.describe('responsive layout', () => {
 
 test('reduced motion leaves all content visible', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.goto('/');
+  await page.goto('/work/tnd/');
   const opacity = await page.locator('.pipeline__detail .stage-spec').evaluate((e) => getComputedStyle(e).opacity);
   expect(opacity).toBe('1');
   const running = await page.evaluate(() => document.getAnimations().length);

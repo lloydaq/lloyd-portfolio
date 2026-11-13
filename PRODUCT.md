@@ -27,7 +27,7 @@ Most student portfolios list many projects and claim skills. This one makes one 
 ## Operating Context
 
 - Visitors come from links on a résumé, LinkedIn, or GitHub; often on a phone.
-- No public URL exists yet; deployment target undecided. No canonical URL.
+- Deployed on Vercel at https://lloyd-portfolio-sand.vercel.app (the default canonical URL).
 - Content is static; no analytics, no forms, no backend.
 
 ## Capabilities and Constraints
@@ -44,7 +44,8 @@ Most student portfolios list many projects and claim skills. This one makes one 
 - Name: Lloyd D'Souza. Role: AI/ML engineering student.
 - Contact (confirmed for publication): GitHub https://github.com/lloydaq; email lloyd25dsouza@gmail.com; LinkedIn https://www.linkedin.com/in/lloyddso.
 - Voice: plain, specific, grounded. No hype, no "passionate", no expert claims.
-- Visual brief (owner-pinned): deep charcoal or near-black surfaces, warm white type, one restrained accent; no neon, no purple/blue AI gradients, no glassmorphism, no blobs, no stock photos, no fake terminals, no emoji, no skill percentages.
+- Visual brief (owner-pinned): deep charcoal or near-black surfaces, warm white type, one restrained accent; no neon, no purple/blue AI gradients, no blobs, no stock photos, no fake terminals, no emoji, no skill percentages.
+- Owner update (2026-11-13): rounded corners on boxes and figures, an amber hover glow on buttons, cards and screenshots, and glass (translucent, blurred) buttons and header. Glass stays on controls only, never on content panels.
 
 ## Evidence on Hand
 

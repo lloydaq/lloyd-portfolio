@@ -286,6 +286,8 @@ export function KineticGrid() {
     const onClick = (e: MouseEvent) => {
       // detail is 0 for keyboard-activated clicks, which have no meaningful position.
       if (reduce.matches || e.detail === 0) return;
+      // The theme toggle's ink is the animation there; a ripple would repaint under it every frame.
+      if (document.documentElement.classList.contains('ink-transition')) return;
       ripples.push({ x: e.clientX, y: e.clientY, radius: 0, opacity: 1, born: performance.now() });
       wake();
     };

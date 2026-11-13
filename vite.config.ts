@@ -3,13 +3,12 @@ import { resolve } from 'node:path';
 import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 
-/**
- * Canonical, og:url and og:image must be absolute URLs, and the site has no
- * public URL yet. Set SITE_URL (e.g. https://example.com) at build time to emit
- * them; without it they are left out rather than guessed.
- */
+/** The deployed site. SITE_URL overrides it (e.g. for a custom domain); SITE_URL="" leaves the tags out. */
+const DEFAULT_SITE_URL = 'https://lloyd-portfolio-sand.vercel.app';
+
+/** Canonical, og:url and og:image must be absolute URLs, so they are built from the site URL. */
 function absoluteSeo(): Plugin {
-  const site = process.env.SITE_URL?.replace(/\/+$/, '');
+  const site = (process.env.SITE_URL ?? DEFAULT_SITE_URL).replace(/\/+$/, '');
   return {
     name: 'absolute-seo',
     transformIndexHtml(html, ctx) {
