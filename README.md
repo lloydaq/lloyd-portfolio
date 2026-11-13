@@ -1,6 +1,6 @@
 # Lloyd D'Souza — portfolio
 
-Personal portfolio of Lloyd D'Souza, AI/ML engineering student. It has five
+Personal portfolio of Lloyd D'Souza, AI/ML engineering student. It has six
 static pages:
 
 - `/` — home: introduction with a project index, four projects, engineering principles, toolchain,
@@ -11,6 +11,8 @@ static pages:
 - `/work/flowcast/` — case study of **FlowCast**, highway traffic forecasting.
 - `/work/campussignal/` — case study of **CampusSignal**, a multi-college
   campus platform.
+- `/resume/` — the résumé as one printable A4 sheet; `public/lloyd-dsouza-resume.pdf`
+  is made from it with `npm run resume:pdf` (run after editing `src/content/resume.ts`).
 
 Built with React 19, TypeScript and Vite. No backend, no analytics, no
 cookies, no third-party requests at runtime (fonts are self-hosted).

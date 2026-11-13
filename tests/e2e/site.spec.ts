@@ -7,6 +7,7 @@ const pages = [
   { name: 'DataSentry case study', path: '/work/datasentry/' },
   { name: 'FlowCast case study', path: '/work/flowcast/' },
   { name: 'CampusSignal case study', path: '/work/campussignal/' },
+  { name: 'résumé', path: '/resume/' },
 ];
 
 function collectErrors(page: Page) {
@@ -598,5 +599,124 @@ test.describe('project summaries, next project and image weight', () => {
     const total = shots.reduce((sum, i) => sum + i.bytes, 0);
     expect(total, `screenshot bytes: ${JSON.stringify(shots)}`).toBeLessThan(700 * 1024);
     await context.close();
+  });
+});
+
+test.describe('ink trail and keyboard shortcuts', () => {
+  // Mean amber-ness of a small square of the background canvas, around a point.
+  const amberAt = (page: Page, x: number, y: number) =>
+    page.evaluate(
+      ([px, py]) => {
+        const canvas = document.querySelector<HTMLCanvasElement>('canvas.kinetic-grid')!;
+        const scale = canvas.width / window.innerWidth;
+        const ctx = canvas.getContext('2d')!;
+        const { data } = ctx.getImageData(Math.round((px! - 4) * scale), Math.round((py! - 4) * scale), Math.round(8 * scale), Math.round(8 * scale));
+        let amber = 0;
+        for (let i = 0; i < data.length; i += 4) if (data[i]! - data[i + 2]! > 60 && data[i + 3]! > 200) amber++;
+        return amber / (data.length / 4);
+      },
+      [x, y],
+    );
+
+  test('dragging on empty page leaves ink that dries away, without selecting text', async ({ page, isMobile }) => {
+    test.skip(isMobile, 'Drawing is for mouse and pen; touch scrolls.');
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.emulateMedia({ colorScheme: 'dark', reducedMotion: 'no-preference' });
+    await page.goto('/', { waitUntil: 'networkidle' });
+    // The left gutter, beside the hero text, is background.
+    const x = 14;
+    expect(await page.evaluate(([px]) => document.elementFromPoint(px!, 420)?.closest('p,h1,a,button') ?? null, [x])).toBeNull();
+    await page.mouse.move(x, 300);
+    await page.mouse.down();
+    for (let y = 300; y <= 560; y += 20) await page.mouse.move(x, y);
+    await page.mouse.up();
+    expect(await amberAt(page, x, 420)).toBeGreaterThan(0.3);
+    expect(await page.evaluate(() => String(window.getSelection()))).toBe('');
+    await expect.poll(() => amberAt(page, x, 420), { timeout: 6000 }).toBeLessThan(0.05);
+  });
+
+  test('? opens the shortcut sheet and Escape closes it', async ({ page, isMobile }) => {
+    test.skip(isMobile, 'Keyboard shortcuts need a keyboard.');
+    await page.goto('/', { waitUntil: 'networkidle' });
+    const sheet = page.getByRole('dialog', { name: 'Keyboard shortcuts' });
+    await expect(sheet).toBeHidden();
+    await page.keyboard.press('?');
+    await expect(sheet).toBeVisible();
+    await expect(sheet).toContainText('Go to Contact');
+    await page.keyboard.press('Escape');
+    await expect(sheet).toBeHidden();
+    await page.getByRole('button', { name: /for keyboard shortcuts/ }).click();
+    await expect(sheet).toBeVisible();
+    await page.getByRole('button', { name: 'Close' }).click();
+    await expect(sheet).toBeHidden();
+  });
+
+  test('t switches theme and g + letter jumps to a section or the next project', async ({ page, isMobile }) => {
+    test.skip(isMobile, 'Keyboard shortcuts need a keyboard.');
+    await page.emulateMedia({ colorScheme: 'dark', reducedMotion: 'reduce' });
+    await page.goto('/', { waitUntil: 'networkidle' });
+    await page.keyboard.press('t');
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+    await page.keyboard.press('g');
+    await page.keyboard.press('c');
+    await expect(page.getByRole('heading', { name: 'Contact', level: 2 })).toBeInViewport();
+    await page.goto('/work/tnd/', { waitUntil: 'networkidle' });
+    await page.keyboard.press('g');
+    await page.keyboard.press('n');
+    await expect(page).toHaveURL(/\/work\/datasentry\/$/);
+    await page.waitForLoadState('networkidle');
+    await page.keyboard.press('g');
+    await page.keyboard.press('a');
+    await expect(page).toHaveURL(/\/#about$/);
+  });
+
+  test('typing ink splashes the background without errors', async ({ page, isMobile }) => {
+    test.skip(isMobile, 'Keyboard shortcuts need a keyboard.');
+    const errors = collectErrors(page);
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
+    await page.goto('/', { waitUntil: 'networkidle' });
+    const amberPixels = () =>
+      page.evaluate(() => {
+        const c = document.querySelector<HTMLCanvasElement>('canvas.kinetic-grid')!;
+        const { data } = c.getContext('2d')!.getImageData(0, 0, c.width, c.height);
+        let n = 0;
+        for (let i = 0; i < data.length; i += 16) if (data[i]! - data[i + 2]! > 60 && data[i + 3]! > 200) n++;
+        return n;
+      });
+    const before = await amberPixels();
+    await page.keyboard.type('ink');
+    await expect.poll(amberPixels).toBeGreaterThan(before + 500);
+    expect(errors).toEqual([]);
+  });
+});
+
+test.describe('résumé', () => {
+  test('the home page has a résumé section with a working PDF download', async ({ page, request }) => {
+    await page.goto('/#resume');
+    const section = page.locator('#resume');
+    await expect(section.getByRole('heading', { name: 'Résumé', level: 2 })).toBeVisible();
+    await expect(section).toContainText('CGPA 8.43');
+    await expect(section).toContainText('AIvibeX');
+    await expect(section).toContainText('Foundations of Virtual Reality');
+    const pdf = section.getByRole('link', { name: /Download résumé/ });
+    await expect(pdf).toHaveAttribute('download', /\.pdf$/);
+    const response = await request.get((await pdf.getAttribute('href'))!);
+    expect(response.status()).toBe(200);
+    expect(response.headers()['content-type']).toContain('application/pdf');
+    expect((await response.body()).subarray(0, 5).toString()).toBe('%PDF-');
+  });
+
+  test('the printable page holds the whole résumé and prints only the sheet', async ({ page }) => {
+    await page.goto('/resume/');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText("Lloyd D'Souza");
+    for (const heading of ['Education', 'Projects', 'Hackathons', 'Leadership', 'Certification', 'Skills']) {
+      await expect(page.getByRole('heading', { name: heading, level: 2 })).toBeVisible();
+    }
+    // Public page: no phone number.
+    expect(await page.locator('main').innerText()).not.toMatch(/\+91|\d{10}/);
+    await page.emulateMedia({ media: 'print' });
+    await expect(page.locator('.site-header')).toBeHidden();
+    await expect(page.locator('.resume-page__bar')).toBeHidden();
+    await expect(page.locator('.cv-sheet')).toBeVisible();
   });
 });

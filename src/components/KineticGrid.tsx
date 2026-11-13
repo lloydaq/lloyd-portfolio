@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { INK_SPLASH_EVENT, InkLayer } from './inkTrail';
 
 interface Point {
   x: number;
@@ -14,6 +15,14 @@ interface Ripple {
 }
 
 type RGB = [number, number, number];
+
+/** Pressing on any of these is reading or using the page, not drawing on it. */
+const NOT_BACKGROUND =
+  'a,button,input,textarea,select,summary,label,details,dialog,img,picture,svg,p,h1,h2,h3,h4,h5,li,dt,dd,td,th,code,pre,figcaption,blockquote,span,kbd,.site-header,[role="button"],[contenteditable]';
+
+function isBackground(target: EventTarget | null): boolean {
+  return target instanceof Element && !target.closest(NOT_BACKGROUND);
+}
 
 interface GridNode {
   pt: Point;
@@ -123,11 +132,17 @@ export function KineticGrid() {
     let raf = 0;
     let ink: RGB = [237, 230, 218];
     let accent: RGB = [224, 168, 79];
+    let ground: RGB = [22, 22, 26];
+    const inkLayer = new InkLayer();
+    const root = document.documentElement;
+    /** Set when a drag drew ink, so the click that ends it does not also ripple. */
+    let drew = false;
 
     const readColours = () => {
       const style = getComputedStyle(document.documentElement);
       ink = hexToRgb(style.getPropertyValue('--ink'));
       accent = hexToRgb(style.getPropertyValue('--accent'));
+      ground = hexToRgb(style.getPropertyValue('--ground'));
     };
 
     const resize = () => {
@@ -141,6 +156,10 @@ export function KineticGrid() {
 
     const draw = (now: number) => {
       ctx.clearRect(0, 0, w, h);
+
+      // Ink first, so the grid prints over it.
+      inkLayer.update(now);
+      inkLayer.draw(ctx, now, accent, ground);
 
       ctx.fillStyle = rgba(ink, 0.05);
       ctx.beginPath();
@@ -247,6 +266,7 @@ export function KineticGrid() {
     };
 
     const moving = () =>
+      inkLayer.active() ||
       ripples.length > 0 || Math.abs(mouse.x - target.x) > 0.5 || Math.abs(mouse.y - target.y) > 0.5;
 
     const frame = (now: number) => {
@@ -266,6 +286,10 @@ export function KineticGrid() {
     };
 
     const onPointerMove = (e: PointerEvent) => {
+      if (inkLayer.drawing) {
+        inkLayer.move(e.clientX, e.clientY, performance.now());
+        wake();
+      }
       if (reduce.matches || e.pointerType === 'touch') return;
       // Enter at the pointer instead of sweeping in from the off-screen rest position.
       if (target.x === OFFSCREEN) {
@@ -283,7 +307,35 @@ export function KineticGrid() {
       wake();
     };
 
+    const onPointerDown = (e: PointerEvent) => {
+      if (reduce.matches || e.pointerType === 'touch' || e.button !== 0 || !isBackground(e.target)) return;
+      // No text selection while drawing.
+      root.classList.add('inking');
+      window.getSelection()?.removeAllRanges();
+      inkLayer.start(e.clientX, e.clientY, performance.now());
+      drew = false;
+      wake();
+    };
+
+    const onPointerUp = () => {
+      if (!inkLayer.drawing) return;
+      drew = inkLayer.travelled > 6;
+      inkLayer.end();
+      root.classList.remove('inking');
+      wake();
+    };
+
+    const onSplash = () => {
+      if (reduce.matches) return;
+      inkLayer.splash(w, h, performance.now());
+      wake();
+    };
+
     const onClick = (e: MouseEvent) => {
+      if (drew) {
+        drew = false;
+        return;
+      }
       // detail is 0 for keyboard-activated clicks, which have no meaningful position.
       if (reduce.matches || e.detail === 0) return;
       // The theme toggle's ink is the animation there; a ripple would repaint under it every frame.
@@ -308,6 +360,7 @@ export function KineticGrid() {
     const onMotionChange = () => {
       if (reduce.matches) {
         ripples.length = 0;
+        onPointerUp();
         onPointerLeave();
       }
     };
@@ -322,6 +375,11 @@ export function KineticGrid() {
     window.addEventListener('pointermove', onPointerMove, { passive: true });
     document.documentElement.addEventListener('pointerleave', onPointerLeave);
     window.addEventListener('click', onClick);
+    window.addEventListener('pointerdown', onPointerDown);
+    window.addEventListener('pointerup', onPointerUp);
+    window.addEventListener('pointercancel', onPointerUp);
+    window.addEventListener('blur', onPointerUp);
+    window.addEventListener(INK_SPLASH_EVENT, onSplash);
     reduce.addEventListener('change', onMotionChange);
 
     return () => {
@@ -330,6 +388,12 @@ export function KineticGrid() {
       window.removeEventListener('pointermove', onPointerMove);
       document.documentElement.removeEventListener('pointerleave', onPointerLeave);
       window.removeEventListener('click', onClick);
+      window.removeEventListener('pointerdown', onPointerDown);
+      window.removeEventListener('pointerup', onPointerUp);
+      window.removeEventListener('pointercancel', onPointerUp);
+      window.removeEventListener('blur', onPointerUp);
+      window.removeEventListener(INK_SPLASH_EVENT, onSplash);
+      root.classList.remove('inking');
       reduce.removeEventListener('change', onMotionChange);
       if (raf) cancelAnimationFrame(raf);
     };

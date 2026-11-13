@@ -3,6 +3,7 @@ import { homeSections, profile } from '../content/site';
 import { Close, Menu, Moon, Sun } from './Icons';
 import { applyTheme, readStoredTheme, systemTheme, useTheme } from './theme';
 import { initReveal } from './reveal';
+import { Shortcuts } from './Shortcuts';
 import { switchTheme } from './themeSwitch';
 
 interface HeaderProps {
@@ -110,6 +111,7 @@ export function Header({ base, activeId }: HeaderProps) {
           {open ? <Close /> : <Menu />}
         </button>
       </div>
+      <Shortcuts />
     </header>
   );
 }

@@ -24,7 +24,7 @@ const gz = async (file) => gzipSync(await readFile(file), { level: 9 }).length;
 const fmt = (n) => `${(n / KB).toFixed(1)} KB`;
 
 // ---------- Pages ----------
-const pages = ['index.html', ...(await readdir(join(DIST, 'work'))).map((d) => `work/${d}/index.html`)];
+const pages = ['index.html', 'resume/index.html', ...(await readdir(join(DIST, 'work'))).map((d) => `work/${d}/index.html`)];
 const rows = [];
 for (const page of pages) {
   const html = await readFile(join(DIST, page), 'utf8');
@@ -59,7 +59,7 @@ const manifest = JSON.parse(await readFile(new URL('../src/content/imageVariants
 let largestPhone = 0;
 for (const dir of await readdir(join(DIST))) {
   const full = join(DIST, dir);
-  if (dir === 'assets' || dir === 'work' || !(await stat(full)).isDirectory()) continue;
+  if (dir === 'assets' || dir === 'work' || dir === 'resume' || !(await stat(full)).isDirectory()) continue;
   for (const file of await readdir(full)) {
     if (!file.endsWith('.png')) continue;
     const png = `/${dir}/${file}`;

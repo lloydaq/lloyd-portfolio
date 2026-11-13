@@ -3,7 +3,8 @@ import { Ticks } from '../components/Code';
 import { Footer } from '../components/Footer';
 import { Header } from '../components/Header';
 import { KineticGrid } from '../components/KineticGrid';
-import { ArrowDown, ArrowUpRight, Check, Copy, GitHub, LinkedIn, Mail } from '../components/Icons';
+import { ArrowDown, ArrowUpRight, Check, Copy, Download, GitHub, LinkedIn, Mail } from '../components/Icons';
+import { CertificationList, EducationList, EntryList } from '../components/ResumeParts';
 import { FullSizeLink, ThemedShot } from '../components/ThemedShot';
 import { useActiveSection } from '../components/useActiveSection';
 import { useCopy } from '../components/useCopy';
@@ -25,6 +26,15 @@ import {
   tndRepo,
   type Screenshot,
 } from '../content/site';
+import {
+  RESUME_PAGE,
+  RESUME_PDF,
+  certifications,
+  education,
+  hackathons,
+  leadership,
+  spokenLanguages,
+} from '../content/resume';
 import * as tndContent from '../content/tnd';
 
 const { principles, tnd } = tndContent;
@@ -396,6 +406,54 @@ export function Home() {
                 best model is not actually better. CampusSignal is a larger system, many colleges on one
                 platform, where the hard part is making sure none of them can ever see another’s data.
               </p>
+            </div>
+          </div>
+        </section>
+
+        {/* ---------- Résumé ---------- */}
+        <section className="section" id="resume" aria-labelledby="resume-title">
+          <div className="container">
+            <div className="section__head">
+              <h2 id="resume-title" className="section__title">
+                Résumé
+              </h2>
+              <div>
+                <p className="section__lede">
+                  Education, hackathons and coursework. The projects above are the main evidence; the one-page
+                  résumé puts everything together.
+                </p>
+                <div className="actions resume__actions">
+                  <a className="button button--primary" href={RESUME_PDF} download="Lloyd-DSouza-Resume.pdf">
+                    <Download /> Download résumé (PDF)
+                  </a>
+                  <a className="button" href={RESUME_PAGE}>
+                    View the printable résumé <ArrowUpRight />
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div className="resume-grid">
+              <div className="resume-block">
+                <h3 className="sub-title">Education</h3>
+                <EducationList items={education} />
+              </div>
+              <div className="resume-block">
+                <h3 className="sub-title">Hackathons</h3>
+                <EntryList items={hackathons} />
+              </div>
+              <div className="resume-block">
+                <h3 className="sub-title">Leadership</h3>
+                <EntryList items={leadership} />
+              </div>
+              <div className="resume-block">
+                <h3 className="sub-title">Certification</h3>
+                <CertificationList items={certifications} />
+              </div>
+              <div className="resume-block">
+                <h3 className="sub-title">Languages</h3>
+                <p className="cv-item__meta">{spokenLanguages.join(', ')}</p>
+              </div>
             </div>
           </div>
         </section>
