@@ -705,6 +705,10 @@ code,
   margin: 0;
 }
 
+.figure__frame picture {
+  display: block;
+}
+
 .figure__frame {
   border: var(--hair-strong);
   border-radius: var(--radius-lg);

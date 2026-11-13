@@ -10,6 +10,7 @@ export const tnd = {
   short: 'TND',
   version: 'v1.0.0',
   releaseDate: '19 October 2026',
+  tagline: 'Checks the claims in a news article against evidence it retrieves',
   summary:
     'A misinformation risk assessment tool. Paste a news article or its URL; TND extracts the checkable claims, searches for related coverage, checks each claim against the evidence it actually retrieved, and returns an explainable risk score together with everything that failed along the way.',
   stack: 'Python, FastAPI, Pydantic, Ollama, Trafilatura, HTTPX; vanilla HTML, CSS and JavaScript',

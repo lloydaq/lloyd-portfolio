@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Ticks } from '../components/Code';
 import { Footer } from '../components/Footer';
 import { Header } from '../components/Header';
@@ -6,6 +6,8 @@ import { KineticGrid } from '../components/KineticGrid';
 import { ArrowDown, ArrowUpRight, Check, Copy, GitHub, LinkedIn, Mail } from '../components/Icons';
 import { FullSizeLink, ThemedShot } from '../components/ThemedShot';
 import { useActiveSection } from '../components/useActiveSection';
+import { useCopy } from '../components/useCopy';
+import { projectSummaryText, type Summary } from '../content/summary';
 import * as cs from '../content/campussignal';
 import * as ds from '../content/datasentry';
 import * as fc from '../content/flowcast';
@@ -34,7 +36,7 @@ const projectIndex = [
   {
     id: 'tnd',
     name: `${tnd.name} (${tnd.short})`,
-    tagline: 'Checks the claims in a news article against evidence it retrieves',
+    tagline: tnd.tagline,
     stack: 'FastAPI · Ollama · Trafilatura',
     status: `${tnd.version} · runs locally`,
   },
@@ -62,24 +64,35 @@ const projectIndex = [
 ] as const;
 
 function CopyEmail() {
-  const [state, setState] = useState<'idle' | 'copied' | 'failed'>('idle');
-  const copy = async () => {
-    try {
-      await navigator.clipboard.writeText(profile.email);
-      setState('copied');
-    } catch {
-      setState('failed');
-    }
-    window.setTimeout(() => setState('idle'), 2400);
-  };
+  const [state, copy] = useCopy();
   return (
     <>
-      <button type="button" className="icon-button" onClick={copy} aria-label="Copy email address">
+      <button type="button" className="icon-button" onClick={() => copy(profile.email)} aria-label="Copy email address">
         {state === 'copied' ? <Check /> : <Copy />}
       </button>
       <span className="contact__status" role="status">
         {state === 'copied' && 'Email address copied.'}
         {state === 'failed' && 'Copy failed. Select the address instead.'}
+      </span>
+    </>
+  );
+}
+
+function CopySummary(props: Summary) {
+  const [state, copy] = useCopy();
+  return (
+    <>
+      <button
+        type="button"
+        className="button"
+        onClick={() => copy(projectSummaryText(props, window.location.origin))}
+        aria-label={`Copy summary: ${props.title}`}
+      >
+        {state === 'copied' ? <Check /> : <Copy />} Copy summary
+      </button>
+      <span className="project__copy-status" role="status">
+        {state === 'copied' && `Summary of ${props.title} copied.`}
+        {state === 'failed' && 'Copy failed. Open the case study to select the text instead.'}
       </span>
     </>
   );
@@ -162,6 +175,7 @@ function Project({ id, title, summary, shot, figure, features, decisions, note, 
             Open the live demo <ArrowUpRight />
           </a>
         )}
+        <CopySummary title={title} summary={summary} features={features} caseStudy={caseStudy} repo={repo} demo={demo} />
       </div>
     </article>
   );

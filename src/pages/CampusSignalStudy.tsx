@@ -1,8 +1,9 @@
 import { Footer } from '../components/Footer';
+import { NextProject } from '../components/NextProject';
 import { Header } from '../components/Header';
 import { KineticGrid } from '../components/KineticGrid';
 import { ArrowLeft, ArrowUpRight, GitHub } from '../components/Icons';
-import { FullSizeLink, ThemedShot } from '../components/ThemedShot';
+import { FullSizeLink, SIZES_GALLERY_LEAD, SIZES_GALLERY_TILE, ThemedShot } from '../components/ThemedShot';
 import { useActiveSection } from '../components/useActiveSection';
 import {
   campusSignal,
@@ -218,7 +219,7 @@ export function CampusSignalStudy() {
                 {screenshots.map((shot, i) => (
                   <figure key={shot.light} className={`figure${i === 0 ? ' case__gallery-lead' : ''}`}>
                     <div className="figure__frame">
-                      <ThemedShot shot={shot} />
+                      <ThemedShot shot={shot} sizes={i === 0 ? SIZES_GALLERY_LEAD : SIZES_GALLERY_TILE} />
                     </div>
                     <figcaption>
                       <b>Figure {i + 1}.</b> {shot.caption}
@@ -351,6 +352,7 @@ export function CampusSignalStudy() {
             </section>
           </div>
         </div>
+        <NextProject current="campussignal" />
       </main>
       <Footer />
     </>

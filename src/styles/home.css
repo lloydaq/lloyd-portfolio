@@ -468,3 +468,14 @@
     grid-row: 1;
   }
 }
+
+/* "Copy summary" result, on its own line under the project's actions. */
+.project__copy-status {
+  flex-basis: 100%;
+  color: var(--ink-2);
+  font-size: 0.8125rem;
+}
+
+.project__copy-status:empty {
+  display: none;
+}
