@@ -400,3 +400,93 @@
     border-left: 0;
   }
 }
+
+/* ---------- Next project (src/components/NextProject.tsx) ---------- */
+
+.next-project {
+  padding-block: var(--space-8) var(--space-9);
+}
+
+.next-project__card {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: var(--space-5);
+  padding: clamp(1.25rem, 0.75rem + 2vw, 2.5rem);
+  border: var(--hair-strong);
+  border-radius: var(--radius-lg);
+  background: var(--sheet);
+  text-decoration: none;
+  transition:
+    border-color var(--duration-fast) var(--ease-smooth-out),
+    transform var(--duration-fast) var(--ease-smooth-out);
+}
+
+/* Same glow as the hero's index cards: only the pseudo-element's opacity animates. */
+.next-project__card::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  box-shadow: var(--glow);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--duration-fast) var(--ease-smooth-out);
+}
+
+.next-project__label {
+  grid-column: 1;
+  color: var(--accent-ink);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  font-stretch: var(--narrow);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.next-project__name {
+  grid-column: 1;
+  margin-top: var(--space-2);
+  font-size: var(--step-3);
+  font-weight: 680;
+  font-stretch: var(--wide);
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+  overflow-wrap: break-word;
+}
+
+.next-project__tagline {
+  grid-column: 1;
+  margin-top: var(--space-2);
+  color: var(--ink-2);
+  font-size: var(--step-1);
+  line-height: 1.4;
+}
+
+.next-project__arrow {
+  grid-column: 2;
+  grid-row: 1 / span 3;
+  width: clamp(1.75rem, 1.25rem + 1.5vw, 2.5rem);
+  height: auto;
+  color: var(--ink-2);
+  transition:
+    transform var(--duration-fast) var(--ease-smooth-out),
+    color var(--duration-fast) ease;
+}
+
+@media (hover: hover) {
+  .next-project__card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  .next-project__card:hover::after {
+    opacity: 1;
+  }
+
+  .next-project__card:hover .next-project__arrow {
+    color: var(--accent);
+    transform: translateX(6px);
+  }
+}

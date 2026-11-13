@@ -1,8 +1,19 @@
 import { describe, expect, it } from 'vitest';
-import { screenshots as campusSignalShots } from './campussignal';
-import { screenshots as dataSentryShots } from './datasentry';
-import { results, screenshots as flowCastShots } from './flowcast';
-import { campusSignalRepo, dataSentryRepo, flowCastRepo, profile, skills, tndRepo } from './site';
+import { campusSignal, screenshots as campusSignalShots } from './campussignal';
+import { dataSentry, screenshots as dataSentryShots } from './datasentry';
+import { flowCast, features as flowCastFeatures, results, screenshots as flowCastShots } from './flowcast';
+import {
+  campusSignalRepo,
+  dataSentryRepo,
+  flowCastPath,
+  flowCastRepo,
+  nextProject,
+  profile,
+  projectOrder,
+  skills,
+  tndRepo,
+} from './site';
+import { projectSummaryText } from './summary';
 import { edges, screenshots as tndShots, stages, tnd } from './tnd';
 
 // Every source file, read raw, so the exclusion and honesty checks cover
@@ -102,5 +113,42 @@ describe('content integrity', () => {
       const best = Math.min(...results.map(([, ...r]) => Number(r[h])));
       expect(mae('DCRNN')[h]).toBe(best);
     }
+  });
+});
+
+describe('project order and summaries', () => {
+  it('lists each project once, with the tagline its content file uses', () => {
+    expect(projectOrder.map((p) => p.id)).toEqual(['tnd', 'datasentry', 'flowcast', 'campussignal']);
+    expect(projectOrder.map((p) => p.tagline)).toEqual([
+      tnd.tagline,
+      dataSentry.tagline,
+      flowCast.tagline,
+      campusSignal.tagline,
+    ]);
+  });
+
+  it('links each case study to the next project, wrapping at the end', () => {
+    expect(projectOrder.map((p) => nextProject(p.id).id)).toEqual(['datasentry', 'flowcast', 'campussignal', 'tnd']);
+  });
+
+  it('builds a plain-text summary with absolute links and no invented fields', () => {
+    const text = projectSummaryText(
+      {
+        title: flowCast.name,
+        summary: flowCast.summary,
+        features: flowCastFeatures,
+        caseStudy: flowCastPath,
+        repo: flowCastRepo,
+        demo: flowCast.demo,
+      },
+      'https://example.test',
+    );
+    expect(text.split('\n')[0]).toBe('FlowCast');
+    expect(text).toContain(`Stack: ${flowCast.stack}`);
+    expect(text).toContain('Status: Release v1.0.0');
+    expect(text).toContain('Case study: https://example.test/work/flowcast/');
+    expect(text).toContain(`Code: ${flowCastRepo}`);
+    expect(text).toContain(`Live demo: ${flowCast.demo}`);
+    expect(text).toContain(profile.email);
   });
 });

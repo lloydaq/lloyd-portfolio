@@ -17,6 +17,26 @@ export const dataSentryPath = '/work/datasentry/';
 export const flowCastPath = '/work/flowcast/';
 export const campusSignalPath = '/work/campussignal/';
 
+export type ProjectId = 'tnd' | 'datasentry' | 'flowcast' | 'campussignal';
+
+/**
+ * The four projects in reading order. Kept here (not imported from each project's
+ * content file) so a case study can link to the next one without bundling its content.
+ * Taglines must match the content files; content.test.ts checks that.
+ */
+export const projectOrder: readonly { id: ProjectId; name: string; tagline: string; path: string }[] = [
+  { id: 'tnd', name: 'Trustworthy News Detector', tagline: 'Checks the claims in a news article against evidence it retrieves', path: caseStudyPath },
+  { id: 'datasentry', name: 'DataSentry', tagline: 'Dataset diagnostics for machine learning', path: dataSentryPath },
+  { id: 'flowcast', name: 'FlowCast', tagline: 'Traffic speed forecasting for Los Angeles highways', path: flowCastPath },
+  { id: 'campussignal', name: 'CampusSignal', tagline: 'One platform for many colleges', path: campusSignalPath },
+];
+
+/** The project after `id`, wrapping from the last back to the first. */
+export function nextProject(id: ProjectId) {
+  const i = projectOrder.findIndex((p) => p.id === id);
+  return projectOrder[(i + 1) % projectOrder.length]!;
+}
+
 /**
  * A real screenshot of a project, captured in both of its own themes from the
  * same data and viewport (scripts/project-shots.mjs). The portfolio shows the

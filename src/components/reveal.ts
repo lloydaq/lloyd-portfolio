@@ -32,6 +32,7 @@ const SELECTOR = [
   '.case__head > *',
   '.case__section > *',
   '.case__end',
+  '.next-project',
 ].join(',');
 
 /** Delay between blocks that come into view together, and the most any block waits. */

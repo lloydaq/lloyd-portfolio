@@ -58,8 +58,14 @@ SITE_URL=https://your-domain.example npm run build
 | `npm run lint` | ESLint (TypeScript + React hooks rules) |
 | `npm test` | Vitest: content integrity and component behaviour |
 | `npm run test:e2e` | Playwright against the production build in Chromium, Firefox, WebKit and mobile Chromium: navigation, mobile menu, theme, diagram keyboard use, axe accessibility (WCAG 2.2 AA) in both themes, overflow at 5 viewports, broken images, console errors |
+| `npm run check:budget` | Performance budget on `dist/` (also runs at the end of `npm run build`): gzipped JS ≤ 110 KB, CSS ≤ 16 KB and HTML ≤ 4 KB per page; every screenshot has AVIF/WebP copies, none over 220 KB, phone sizes under 90 KB |
+| `npm run images` | Rebuilds the AVIF and WebP copies of every screenshot (640–2880px) and `src/content/imageVariants.json`. Run after adding or replacing a PNG; it takes several minutes |
 | `npm run check:links` | Requests every external link in `dist/` (run after a build) |
 | `npm run check` | typecheck, lint, unit tests, build and e2e in sequence |
+
+Screenshots are served as AVIF (WebP where AVIF is unsupported) at the width
+each layout needs; the PNG in `public/` stays the source, the fallback and the
+full-size link.
 
 LinkedIn rejects automated requests (HTTP 999), so `check:links` reports that
 link as "check by hand" instead of passing or failing it.

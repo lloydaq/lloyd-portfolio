@@ -1,10 +1,11 @@
 import { Breakable, Ticks } from '../components/Code';
 import { Footer } from '../components/Footer';
+import { NextProject } from '../components/NextProject';
 import { Header } from '../components/Header';
 import { KineticGrid } from '../components/KineticGrid';
 import { ArrowLeft, ArrowUpRight, GitHub } from '../components/Icons';
 import { PipelineDiagram } from '../components/PipelineDiagram';
-import { FullSizeLink, ThemedShot } from '../components/ThemedShot';
+import { FullSizeLink, SIZES_GALLERY_LEAD, SIZES_GALLERY_TILE, ThemedShot } from '../components/ThemedShot';
 import { useActiveSection } from '../components/useActiveSection';
 import { tndRepo } from '../content/site';
 import {
@@ -363,7 +364,7 @@ export function CaseStudy() {
                   shot ? (
                     <figure key={shot.light} className={`figure${i === 0 ? ' case__gallery-lead' : ''}`}>
                       <div className="figure__frame">
-                        <ThemedShot shot={shot} />
+                        <ThemedShot shot={shot} sizes={i === 0 ? SIZES_GALLERY_LEAD : SIZES_GALLERY_TILE} />
                       </div>
                       <figcaption>
                         <b>Figure {i + 2}.</b> {shot.caption}
@@ -540,6 +541,7 @@ export function CaseStudy() {
             </section>
           </div>
         </div>
+        <NextProject current="tnd" />
       </main>
       <Footer />
     </>

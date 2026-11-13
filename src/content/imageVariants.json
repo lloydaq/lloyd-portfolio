@@ -1,0 +1,162 @@
+{
+  "/campussignal/campussignal-home-dark.png": [
+    640,
+    960,
+    1440,
+    1920,
+    2880
+  ],
+  "/campussignal/campussignal-home-light.png": [
+    640,
+    960,
+    1440,
+    1920,
+    2880
+  ],
+  "/campussignal/campussignal-issue-dark.png": [
+    640,
+    960,
+    1440,
+    1920,
+    2880
+  ],
+  "/campussignal/campussignal-issue-light.png": [
+    640,
+    960,
+    1440,
+    1920,
+    2880
+  ],
+  "/campussignal/campussignal-notices-dark.png": [
+    640,
+    960,
+    1440,
+    1920,
+    2880
+  ],
+  "/campussignal/campussignal-notices-light.png": [
+    640,
+    960,
+    1440,
+    1920,
+    2880
+  ],
+  "/datasentry/datasentry-findings-dark.png": [
+    640,
+    960,
+    1440,
+    1920,
+    2880
+  ],
+  "/datasentry/datasentry-findings-light.png": [
+    640,
+    960,
+    1440,
+    1920,
+    2880
+  ],
+  "/datasentry/datasentry-ml-checks-dark.png": [
+    640,
+    960,
+    1440,
+    1920,
+    2880
+  ],
+  "/datasentry/datasentry-ml-checks-light.png": [
+    640,
+    960,
+    1440,
+    1920,
+    2880
+  ],
+  "/datasentry/datasentry-overview-dark.png": [
+    640,
+    960,
+    1440,
+    1920,
+    2880
+  ],
+  "/datasentry/datasentry-overview-light.png": [
+    640,
+    960,
+    1440,
+    1920,
+    2880
+  ],
+  "/flowcast/flowcast-forecast-dark.png": [
+    640,
+    960,
+    1440
+  ],
+  "/flowcast/flowcast-forecast-light.png": [
+    640,
+    960,
+    1440
+  ],
+  "/flowcast/flowcast-models-dark.png": [
+    640,
+    960,
+    1440,
+    1920,
+    2880
+  ],
+  "/flowcast/flowcast-models-light.png": [
+    640,
+    960,
+    1440,
+    1920,
+    2880
+  ],
+  "/flowcast/flowcast-network-dark.png": [
+    640,
+    960,
+    1440
+  ],
+  "/flowcast/flowcast-network-light.png": [
+    640,
+    960,
+    1440
+  ],
+  "/tnd/tnd-evidence-dark.png": [
+    640,
+    960,
+    1440,
+    1920,
+    2880
+  ],
+  "/tnd/tnd-evidence-light.png": [
+    640,
+    960,
+    1440,
+    1920,
+    2880
+  ],
+  "/tnd/tnd-home-dark.png": [
+    640,
+    960,
+    1440,
+    1920,
+    2880
+  ],
+  "/tnd/tnd-home-light.png": [
+    640,
+    960,
+    1440,
+    1920,
+    2880
+  ],
+  "/tnd/tnd-results-dark.png": [
+    640,
+    960,
+    1440,
+    1920,
+    2880
+  ],
+  "/tnd/tnd-results-light.png": [
+    640,
+    960,
+    1440,
+    1920,
+    2880
+  ]
+}

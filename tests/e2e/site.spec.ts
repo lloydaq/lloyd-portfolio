@@ -542,3 +542,61 @@ test.describe('scroll reveal', () => {
     await expect(page.locator('[data-reveal]')).toHaveCount(0);
   });
 });
+
+test.describe('project summaries, next project and image weight', () => {
+  test('copy summary puts a plain-text summary with absolute links on the clipboard', async ({ page, browserName }) => {
+    test.skip(browserName !== 'chromium', 'Clipboard permissions are Chromium-only in Playwright.');
+    await page.context().grantPermissions(['clipboard-read', 'clipboard-write']);
+    await page.goto('/#flowcast');
+    const button = page.getByRole('button', { name: 'Copy summary: FlowCast' });
+    await button.click();
+    await expect(page.getByRole('status').filter({ hasText: 'Summary of FlowCast copied.' })).toBeAttached();
+    const text = await page.evaluate(() => navigator.clipboard.readText());
+    const origin = new URL(page.url()).origin;
+    expect(text.split('\n')[0]).toBe('FlowCast');
+    expect(text).toContain(`Case study: ${origin}/work/flowcast/`);
+    expect(text).toContain('Code: https://github.com/lloydaq/flowcast');
+    expect(text).toContain('Live demo: https://lloydaq.github.io/flowcast/');
+  });
+
+  test('each case study ends with a link to the next project, wrapping to the first', async ({ page }) => {
+    const chain = [
+      ['/work/tnd/', 'DataSentry', /\/work\/datasentry\/$/],
+      ['/work/datasentry/', 'FlowCast', /\/work\/flowcast\/$/],
+      ['/work/flowcast/', 'CampusSignal', /\/work\/campussignal\/$/],
+      ['/work/campussignal/', 'Trustworthy News Detector', /\/work\/tnd\/$/],
+    ] as const;
+    for (const [from, name, to] of chain) {
+      await page.goto(from);
+      const next = page.getByRole('navigation', { name: 'Next project' }).getByRole('link');
+      await expect(next).toContainText(name);
+      await next.click();
+      await expect(page).toHaveURL(to);
+    }
+  });
+
+  test('a phone downloads small AVIF screenshots, not the PNGs', async ({ browser, browserName }) => {
+    test.skip(browserName !== 'chromium', 'Measured once, in Chromium.');
+    const context = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2 });
+    const page = await context.newPage();
+    const images: { url: string; bytes: number }[] = [];
+    page.on('response', async (r) => {
+      if (r.request().resourceType() !== 'image' || r.url().startsWith('data:') || r.url().startsWith('blob:')) return;
+      images.push({ url: new URL(r.url()).pathname, bytes: (await r.body().catch(() => Buffer.alloc(0))).length });
+    });
+    await page.goto('/', { waitUntil: 'networkidle' });
+    const height = await page.evaluate(() => document.documentElement.scrollHeight);
+    for (let y = 0; y < height; y += 600) {
+      await page.mouse.wheel(0, 600);
+      await page.waitForTimeout(50);
+    }
+    await page.waitForLoadState('networkidle');
+    const shots = images.filter((i) => /\/(tnd|datasentry|flowcast|campussignal)\//.test(i.url));
+    expect(shots.length).toBeGreaterThanOrEqual(4);
+    expect(shots.filter((i) => i.url.endsWith('.png')), 'no PNG screenshots').toEqual([]);
+    expect(shots.every((i) => i.url.endsWith('.avif'))).toBe(true);
+    const total = shots.reduce((sum, i) => sum + i.bytes, 0);
+    expect(total, `screenshot bytes: ${JSON.stringify(shots)}`).toBeLessThan(700 * 1024);
+    await context.close();
+  });
+});
