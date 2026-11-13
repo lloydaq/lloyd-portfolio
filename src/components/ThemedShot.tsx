@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { Screenshot } from '../content/site';
 import { ArrowUpRight } from './Icons';
 import { useTheme } from './theme';
@@ -17,7 +17,13 @@ interface ThemedShotProps {
 export function ThemedShot({ shot, className, loading = 'lazy' }: ThemedShotProps) {
   const theme = useTheme();
   const [loaded, setLoaded] = useState(false);
+  const ref = useRef<HTMLImageElement>(null);
   const other = theme === 'dark' ? shot.light : shot.dark;
+
+  // Served from cache, the image can finish before React listens for load.
+  useEffect(() => {
+    if (ref.current?.complete && ref.current.naturalWidth > 0) setLoaded(true);
+  }, []);
 
   useEffect(() => {
     if (!loaded) return;
@@ -28,6 +34,7 @@ export function ThemedShot({ shot, className, loading = 'lazy' }: ThemedShotProp
 
   return (
     <img
+      ref={ref}
       className={className}
       src={shot[theme]}
       width={shot.width}
@@ -35,7 +42,9 @@ export function ThemedShot({ shot, className, loading = 'lazy' }: ThemedShotProp
       alt={shot.alt}
       loading={loading}
       decoding="async"
+      data-loaded={loaded}
       onLoad={() => setLoaded(true)}
+      onError={() => setLoaded(true)}
     />
   );
 }

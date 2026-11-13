@@ -716,10 +716,6 @@ code,
     box-shadow var(--duration-fast) var(--ease-smooth-out);
 }
 
-.figure__frame img {
-  transition: transform var(--duration-very-slow) var(--ease-smooth-out);
-}
-
 @media (hover: hover) {
   .figure__frame:hover {
     border-color: var(--accent);
@@ -839,6 +835,49 @@ code,
   display: inline-flex;
   align-items: center;
   min-height: 2.75rem;
+}
+
+/* ---------- Scroll reveal (src/components/reveal.ts) ---------- */
+
+/* Waiting blocks sit a little low and transparent; .reveal-on is only set when motion
+   is allowed, so without script or with reduced motion nothing is ever hidden. */
+.reveal-on [data-reveal] {
+  opacity: 0;
+  transform: translate3d(0, 1.75rem, 0);
+}
+
+.reveal-on [data-reveal='in'],
+.reveal-on [data-reveal='fade'] {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.7s cubic-bezier(0.25, 0.1, 0.25, 1) var(--reveal-delay, 0ms),
+    transform 0.9s var(--ease-smooth-out) var(--reveal-delay, 0ms);
+}
+
+/* Revealed from above (scrolling back up past skipped content): fade only. */
+.reveal-on [data-reveal='fade'] {
+  transition: opacity 0.45s ease var(--reveal-delay, 0ms);
+}
+
+@media print {
+  .reveal-on [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* Screenshots fade in once decoded instead of popping in line by line. */
+@media (prefers-reduced-motion: no-preference) {
+  .figure__frame img {
+    transition:
+      opacity 0.6s ease,
+      transform var(--duration-very-slow) var(--ease-smooth-out);
+  }
+
+  .figure__frame img[data-loaded='false'] {
+    opacity: 0;
+  }
 }
 
 /* ---------- Theme switch (src/components/themeSwitch.ts) ---------- */
