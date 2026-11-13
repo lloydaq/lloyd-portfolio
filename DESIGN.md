@@ -101,7 +101,7 @@ The site reads like the datasheet for a part: a general description, a block dia
 
 Surfaces are a dark charcoal sheet with warm white ink; the light theme is the same sheet printed on paper. Structure is carried by 1px hairline rules, ruled tables with tabular numerals, and block-diagram linework, never by cards or shadows. There is vast quiet ground around each section's single figure. One sodium amber marks live signal and focus, nothing else.
 
-Rejected by brief: neon, purple/blue AI gradients, glassmorphism, decorative blobs, stock photos, fake terminals, rounded card grids, emoji, skill percentages.
+Rejected by brief: neon, purple/blue AI gradients, glass content panels, decorative blobs, stock photos, fake terminals, rounded card grids, emoji, skill percentages.
 
 **Key Characteristics:**
 - Hairline-ruled tables and key/value rows instead of cards.
@@ -161,7 +161,7 @@ Flat by default. Depth comes from tonal layering (ground, sheet, raised sheet) a
 
 ## Shapes
 
-Square corners: 2px radius everywhere, essentially a softened hairline corner. Borders are 1px; emphasis is a 2px rule (the disclaimer callout) or an inset 1px second stroke (selected stage). No pills, no circles, no clipped shapes.
+Rounded corners (owner update, 2026-11-13): `--radius` 12px for controls, cards and stages; `--radius-lg` 18px for figures and the hero index panel. Borders are 1px; emphasis is a 2px rule (the disclaimer callout) or an inset 1px second stroke (selected stage). Hover on buttons, index cards and screenshots adds the amber `--glow`. Buttons and the sticky header are glass: a translucent gradient over `backdrop-filter: blur()`, with a 1px inner highlight.
 
 ## Components
 
@@ -201,4 +201,4 @@ Each row leads with a 2.75rem rule: solid for done, dashed for open, plus the wo
 - **Don't** use cards, card grids, or big-number stat rows.
 - **Don't** put a label or eyebrow above a heading.
 - **Don't** set prose in monospace.
-- **Don't** add neon, gradients, glass, blobs, stock imagery, fake terminals, emoji or skill scores.
+- **Don't** add neon, decorative gradients, glass on content panels, blobs, stock imagery, fake terminals, emoji or skill scores.

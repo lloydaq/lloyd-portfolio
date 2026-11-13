@@ -3,7 +3,7 @@
 Personal portfolio of Lloyd D'Souza, AI/ML engineering student. It has five
 static pages:
 
-- `/` — home: introduction, four projects, engineering principles, toolchain,
+- `/` — home: introduction with a project index, four projects, engineering principles, toolchain,
   about, contact.
 - `/work/tnd/` — case study of **TND (Trustworthy News Detector)**.
 - `/work/datasentry/` — case study of **DataSentry**, a dataset diagnostics
@@ -40,8 +40,9 @@ Netlify, Cloudflare Pages, Vercel). Every page is a real HTML file, so
 
 ### Canonical URL and social image
 
-Canonical links, `og:url` and `og:image` need absolute URLs, and the site has
-no public address yet, so they are left out by default. Once it has one:
+Canonical links, `og:url` and `og:image` need absolute URLs. They are built
+from the deployed address, https://lloyd-portfolio-sand.vercel.app. For a
+custom domain, override it at build time (`SITE_URL=""` leaves the tags out):
 
 ```bash
 SITE_URL=https://your-domain.example npm run build

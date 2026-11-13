@@ -18,6 +18,14 @@
   --selection: rgb(224 168 79 / 0.32);
   --shadow: 0 1px 0 rgb(0 0 0 / 0.4), 0 18px 40px -24px rgb(0 0 0 / 0.7);
 
+  /* Hover glow (amber) and glass surfaces for buttons. */
+  --glow: 0 0 0 1px rgb(224 168 79 / 0.55), 0 0 22px -2px rgb(224 168 79 / 0.42), 0 14px 40px -14px rgb(224 168 79 / 0.4);
+  --glass-bg: linear-gradient(180deg, rgb(255 255 255 / 0.07), rgb(255 255 255 / 0.02));
+  --glass-bg-hover: linear-gradient(180deg, rgb(255 255 255 / 0.12), rgb(255 255 255 / 0.04));
+  --glass-border: rgb(255 255 255 / 0.13);
+  --glass-highlight: inset 0 1px 0 rgb(255 255 255 / 0.1), 0 6px 18px -10px rgb(0 0 0 / 0.6);
+  --header-bg: rgb(22 22 26 / 0.72);
+
   /* Type */
   --font-sans: 'Archivo Variable', 'Archivo', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, monospace;
@@ -52,7 +60,8 @@
   /* Borders */
   --hair: 1px solid var(--rule);
   --hair-strong: 1px solid var(--rule-strong);
-  --radius: 2px;
+  --radius: 12px;
+  --radius-lg: 18px;
 
   /* Motion (transitions.dev token scale) */
   --duration-stagger: 40ms;
@@ -82,6 +91,12 @@
   --on-accent: #fffaf0;
   --selection: rgb(184 119 22 / 0.22);
   --shadow: 0 1px 0 rgb(40 30 10 / 0.06), 0 18px 40px -26px rgb(40 30 10 / 0.35);
+  --glow: 0 0 0 1px rgb(143 91 14 / 0.45), 0 0 20px -2px rgb(196 128 30 / 0.35), 0 14px 36px -14px rgb(143 91 14 / 0.35);
+  --glass-bg: linear-gradient(180deg, rgb(255 255 255 / 0.75), rgb(255 255 255 / 0.4));
+  --glass-bg-hover: linear-gradient(180deg, rgb(255 255 255 / 0.95), rgb(255 255 255 / 0.6));
+  --glass-border: rgb(27 27 31 / 0.14);
+  --glass-highlight: inset 0 1px 0 rgb(255 255 255 / 0.9), 0 6px 18px -12px rgb(40 30 10 / 0.35);
+  --header-bg: rgb(242 238 230 / 0.75);
   color-scheme: light;
 }
 
@@ -228,8 +243,16 @@ code,
   position: sticky;
   top: 0;
   z-index: 50;
-  background: var(--ground);
+  background: var(--header-bg);
   border-bottom: var(--hair);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  backdrop-filter: blur(14px) saturate(1.4);
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .site-header {
+    background: var(--ground);
+  }
 }
 
 .site-header__bar {
@@ -281,19 +304,30 @@ code,
   width: 2.75rem;
   height: 2.75rem;
   padding: 0;
-  border: var(--hair);
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius);
-  background: transparent;
+  background: var(--glass-bg);
+  box-shadow: var(--glass-highlight);
+  -webkit-backdrop-filter: blur(10px) saturate(1.5);
+  backdrop-filter: blur(10px) saturate(1.5);
   color: var(--ink);
   cursor: pointer;
   transition:
-    border-color var(--duration-quick) var(--ease-smooth-out),
-    background-color var(--duration-quick) var(--ease-smooth-out);
+    border-color var(--duration-fast) var(--ease-smooth-out),
+    box-shadow var(--duration-fast) var(--ease-smooth-out),
+    transform var(--duration-fast) var(--ease-smooth-out);
 }
 
-.icon-button:hover {
-  border-color: var(--rule-strong);
-  background: var(--sheet);
+@media (hover: hover) {
+  .icon-button:hover {
+    border-color: var(--accent);
+    background: var(--glass-bg-hover);
+    box-shadow: var(--glass-highlight), var(--glow);
+  }
+}
+
+.icon-button:active {
+  transform: scale(0.94);
 }
 
 .icon-button svg {
@@ -405,9 +439,12 @@ code,
   gap: var(--space-2);
   min-height: 2.875rem;
   padding: 0 1.25rem;
-  border: var(--hair-strong);
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius);
-  background: transparent;
+  background: var(--glass-bg);
+  box-shadow: var(--glass-highlight);
+  -webkit-backdrop-filter: blur(10px) saturate(1.5);
+  backdrop-filter: blur(10px) saturate(1.5);
   color: var(--ink);
   font: inherit;
   font-size: var(--step--1);
@@ -415,41 +452,59 @@ code,
   text-decoration: none;
   cursor: pointer;
   transition:
-    background-color var(--duration-quick) var(--ease-smooth-out),
-    border-color var(--duration-quick) var(--ease-smooth-out),
-    color var(--duration-quick) var(--ease-smooth-out);
+    border-color var(--duration-fast) var(--ease-smooth-out),
+    box-shadow var(--duration-fast) var(--ease-smooth-out),
+    transform var(--duration-fast) var(--ease-smooth-out);
 }
 
-.button:hover {
-  border-color: var(--ink-2);
-  background: var(--sheet);
+@media (hover: hover) {
+  .button:hover {
+    border-color: var(--accent);
+    background: var(--glass-bg-hover);
+    box-shadow: var(--glass-highlight), var(--glow);
+    transform: translateY(-1px);
+  }
 }
 
-/* Primary actions are set in ink; amber is reserved for the signal path and focus. */
+.button:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Primary actions are set in ink, with a glass sheen across the top. */
 .button--primary {
   border-color: var(--ink);
-  background: var(--ink);
+  background: linear-gradient(180deg, rgb(255 255 255 / 0.22), rgb(255 255 255 / 0) 60%), var(--ink);
   color: var(--ground);
 }
 
-.button--primary:hover {
-  border-color: var(--ink-2);
-  background: var(--ink-2);
-  color: var(--ground);
+@media (hover: hover) {
+  .button--primary:hover {
+    border-color: var(--accent);
+    background: linear-gradient(180deg, rgb(255 255 255 / 0.3), rgb(255 255 255 / 0) 60%), var(--ink);
+    color: var(--ground);
+  }
 }
 
 .button--text {
   padding-inline: 0;
   border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
   text-decoration: underline;
   text-decoration-color: var(--rule-strong);
   text-underline-offset: 0.3em;
 }
 
-.button--text:hover {
-  border-color: transparent;
-  background: transparent;
-  text-decoration-color: var(--accent);
+@media (hover: hover) {
+  .button--text:hover {
+    border-color: transparent;
+    background: transparent;
+    box-shadow: none;
+    transform: none;
+    text-decoration-color: var(--accent);
+  }
 }
 
 /* Phones: buttons in an action row share its width and wrap to full width,
@@ -652,10 +707,28 @@ code,
 
 .figure__frame {
   border: var(--hair-strong);
-  border-radius: var(--radius);
+  border-radius: var(--radius-lg);
   background: var(--sheet);
   box-shadow: var(--shadow);
   overflow: hidden;
+  transition:
+    border-color var(--duration-fast) var(--ease-smooth-out),
+    box-shadow var(--duration-fast) var(--ease-smooth-out);
+}
+
+.figure__frame img {
+  transition: transform var(--duration-very-slow) var(--ease-smooth-out);
+}
+
+@media (hover: hover) {
+  .figure__frame:hover {
+    border-color: var(--accent);
+    box-shadow: var(--shadow), var(--glow);
+  }
+
+  .figure__frame:hover img {
+    transform: scale(1.015);
+  }
 }
 
 .figure figcaption {

@@ -1,4 +1,4 @@
-import { inkSplat, splatKeyframes, type Point } from './inkSplat';
+import { inkSplat, rasterSplat, splatKeyframes, type Point, type Splat } from './inkSplat';
 import { applyTheme, currentTheme, type Theme } from './theme';
 
 export type { Point };
@@ -15,9 +15,9 @@ export type { Point };
  * reduced motion the switch is instant.
  */
 
-const DURATION_MS = 1100;
+const DURATION_MS = 900;
 /** Longest the switch waits for screenshots in view to decode in their new theme. */
-const IMAGE_WAIT_MS = 250;
+const IMAGE_WAIT_MS = 120;
 const CSS_FADE_S = 0.45;
 
 export const otherTheme = (theme: Theme): Theme => (theme === 'dark' ? 'light' : 'dark');
@@ -59,6 +59,47 @@ async function imagesInView(): Promise<void> {
 }
 
 let seed = Math.floor(Math.random() * 2 ** 31);
+
+type Prepared = Splat & { release: () => void };
+
+/**
+ * The next pair of splats, rasterised ahead of time while the page is idle, so a press
+ * does no drawing at all. A press that arrives before they are ready uses SVG splats.
+ */
+let prepared: [Prepared, Prepared] | null = null;
+let preparing = false;
+
+function prepare(): void {
+  if (preparing || prepared || typeof document === 'undefined') return;
+  preparing = true;
+  Promise.all([rasterSplat(seed++), rasterSplat(seed++)])
+    .then((pair) => {
+      prepared = pair;
+    })
+    .catch(() => undefined)
+    .finally(() => {
+      preparing = false;
+    });
+}
+
+function whenIdle(task: () => void): void {
+  if (typeof window === 'undefined') return;
+  if ('requestIdleCallback' in window) window.requestIdleCallback(task, { timeout: 2000 });
+  else setTimeout(task, 600);
+}
+
+function takeSplats(): [Prepared, Prepared] {
+  const pair = prepared ?? ([inkSplat(seed++), inkSplat(seed++)].map((s) => ({ ...s, release: () => undefined })) as [Prepared, Prepared]);
+  prepared = null;
+  return pair;
+}
+
+/** Warms the splats as soon as the page is idle; call again any time, it is cheap. */
+export function prepareInk(): void {
+  if (!prepared) whenIdle(prepare);
+}
+
+if (typeof window !== 'undefined' && !reducedMotion()) prepareInk();
 
 interface Ink {
   transition: ViewTransition;
@@ -104,7 +145,7 @@ export function switchTheme(toggle: HTMLElement, point?: Point): void {
 
   const r = toggle.getBoundingClientRect();
   const origin = point ?? { x: r.left + r.width / 2, y: r.top + r.height / 2 };
-  const splats = [inkSplat(seed++), inkSplat(seed++)] as const;
+  const splats = takeSplats();
   const root = document.documentElement;
   const from = currentTheme();
   const to = otherTheme(from);
@@ -160,5 +201,7 @@ export function switchTheme(toggle: HTMLElement, point?: Point): void {
       document.removeEventListener('click', onPress, true);
       if (active === ink) active = null;
       root.classList.remove('ink-transition');
+      splats.forEach((s) => s.release());
+      prepareInk();
     });
 }

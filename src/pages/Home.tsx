@@ -4,7 +4,6 @@ import { Footer } from '../components/Footer';
 import { Header } from '../components/Header';
 import { KineticGrid } from '../components/KineticGrid';
 import { ArrowDown, ArrowUpRight, Check, Copy, GitHub, LinkedIn, Mail } from '../components/Icons';
-import { PipelineDiagram } from '../components/PipelineDiagram';
 import { FullSizeLink, ThemedShot } from '../components/ThemedShot';
 import { useActiveSection } from '../components/useActiveSection';
 import * as cs from '../content/campussignal';
@@ -29,6 +28,38 @@ import * as tndContent from '../content/tnd';
 const { principles, tnd } = tndContent;
 
 const sectionIds = homeSections.map((s) => s.id);
+
+// The hero's at-a-glance list: what each project is, what it is built with, and how it can be seen.
+const projectIndex = [
+  {
+    id: 'tnd',
+    name: `${tnd.name} (${tnd.short})`,
+    tagline: 'Checks the claims in a news article against evidence it retrieves',
+    stack: 'FastAPI · Ollama · Trafilatura',
+    status: `${tnd.version} · runs locally`,
+  },
+  {
+    id: 'datasentry',
+    name: ds.dataSentry.name,
+    tagline: ds.dataSentry.tagline,
+    stack: 'FastAPI · pandas · scikit-learn',
+    status: `${ds.dataSentry.version} · runs locally`,
+  },
+  {
+    id: 'flowcast',
+    name: fc.flowCast.name,
+    tagline: fc.flowCast.tagline,
+    stack: 'LightGBM · PyTorch · React',
+    status: 'v1.0.0 · public demo',
+  },
+  {
+    id: 'campussignal',
+    name: cs.campusSignal.name,
+    tagline: cs.campusSignal.tagline,
+    stack: 'FastAPI · PostgreSQL · React',
+    status: 'Demo data · not deployed',
+  },
+] as const;
 
 function CopyEmail() {
   const [state, setState] = useState<'idle' | 'copied' | 'failed'>('idle');
@@ -154,6 +185,7 @@ export function Home() {
         {/* ---------- Hero ---------- */}
         <section className="hero container" id="top" aria-labelledby="hero-name">
           <div className="hero__intro">
+            <p className="hero__eyebrow">{profile.role}</p>
             <h1 id="hero-name" className="hero__name">
               {profile.name}
             </h1>
@@ -177,16 +209,31 @@ export function Home() {
               </a>
             </div>
           </div>
-          <div className="hero__figure">
-            <PipelineDiagram
-              headingLevel={2}
-              caption={
-                <span>
-                  <b>Figure 1.</b> How TND analyses an article. Select a stage to read its spec.
-                </span>
-              }
-            />
-          </div>
+          <nav className="hero__index" aria-labelledby="index-title">
+            <h2 id="index-title" className="hero__index-title">
+              Project index
+            </h2>
+            <ol className="index-list">
+              {projectIndex.map((p, i) => (
+                <li key={p.id}>
+                  <a className="index-card" href={`#${p.id}`}>
+                    <span className="index-card__num" aria-hidden="true">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <span className="index-card__body">
+                      <span className="index-card__name">{p.name}</span>
+                      <span className="index-card__tagline">{p.tagline}</span>
+                      <span className="index-card__meta">
+                        <span>{p.stack}</span>
+                        <span className="index-card__status">{p.status}</span>
+                      </span>
+                    </span>
+                    <ArrowDown />
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </nav>
         </section>
 
         {/* ---------- Projects ---------- */}
@@ -207,7 +254,7 @@ export function Home() {
               title={tnd.name}
               summary={tnd.summary}
               shot={tndContent.screenshots[0]!}
-              figure={2}
+              figure={1}
               features={tndContent.features}
               decisions={tndContent.decisions}
               note={tnd.disclaimer}
@@ -219,7 +266,7 @@ export function Home() {
               title={ds.dataSentry.name}
               summary={ds.dataSentry.summary}
               shot={ds.screenshots[0]!}
-              figure={3}
+              figure={2}
               features={ds.features}
               decisions={ds.decisions}
               note={ds.dataSentry.disclaimer}
@@ -231,7 +278,7 @@ export function Home() {
               title={fc.flowCast.name}
               summary={fc.flowCast.summary}
               shot={fc.screenshots[0]!}
-              figure={4}
+              figure={3}
               features={fc.features}
               decisions={fc.decisions}
               note={fc.flowCast.disclaimer}
@@ -244,7 +291,7 @@ export function Home() {
               title={cs.campusSignal.name}
               summary={cs.campusSignal.summary}
               shot={cs.screenshots[0]!}
-              figure={5}
+              figure={4}
               features={cs.features}
               decisions={cs.decisions}
               note={cs.campusSignal.disclaimer}

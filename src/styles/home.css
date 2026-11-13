@@ -48,11 +48,152 @@
   border-bottom: var(--hair);
 }
 
-.hero__figure {
+.hero__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+  padding: 0.3rem 0.8rem;
+  border: 1px solid var(--glass-border);
+  border-radius: 999px;
+  background: var(--glass-bg);
+  box-shadow: var(--glass-highlight);
+  color: var(--ink-2);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  font-stretch: var(--narrow);
+  letter-spacing: 0.02em;
+}
+
+.hero__eyebrow::before {
+  content: '';
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+/* ---------- Hero project index ---------- */
+
+.hero__index {
   padding: clamp(1rem, 0.5rem + 1.5vw, 1.75rem);
   border: var(--hair);
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--sheet) 70%, transparent);
+}
+
+.hero__index-title {
+  margin-bottom: var(--space-4);
+  color: var(--ink-2);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  font-stretch: var(--narrow);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.index-list {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.index-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  border: var(--hair);
   border-radius: var(--radius);
-  background: color-mix(in srgb, var(--sheet) 55%, var(--ground));
+  background: var(--sheet);
+  text-decoration: none;
+  transition:
+    border-color var(--duration-fast) var(--ease-smooth-out),
+    transform var(--duration-fast) var(--ease-smooth-out);
+}
+
+/* Glow lives on a pseudo-element: only its opacity animates, so hover never repaints the shadow. */
+.index-card::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  box-shadow: var(--glow);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--duration-fast) var(--ease-smooth-out);
+}
+
+.index-card__num {
+  color: var(--accent-ink);
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+}
+
+.index-card__body {
+  display: grid;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.index-card__name {
+  font-weight: 640;
+  font-stretch: var(--wide);
+  letter-spacing: -0.01em;
+}
+
+.index-card__tagline {
+  color: var(--ink-2);
+  font-size: var(--step--1);
+  line-height: 1.4;
+}
+
+.index-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+  margin-top: var(--space-1);
+  color: var(--ink-2);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+
+.index-card__status {
+  color: var(--ink);
+}
+
+.index-card > svg {
+  width: 1rem;
+  height: 1rem;
+  color: var(--ink-2);
+  transition: transform var(--duration-fast) var(--ease-smooth-out), color var(--duration-fast) ease;
+}
+
+@media (hover: hover) {
+  .index-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  .index-card:hover::after {
+    opacity: 1;
+  }
+
+  .index-card:hover > svg {
+    color: var(--accent);
+    transform: translateY(2px);
+  }
+}
+
+@media (max-width: 39.99rem) {
+  .index-card {
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+  }
 }
 
 @media (max-width: 63.99rem) {
@@ -113,20 +254,6 @@
   aspect-ratio: 1440 / 780;
   object-fit: cover;
   object-position: top;
-}
-
-.project__shot .figure__frame {
-  transition: border-color var(--duration-quick) var(--ease-smooth-out);
-}
-
-.project:hover .project__shot .figure__frame {
-  border-color: var(--ink-2);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .project__shot .figure__frame {
-    transition: none;
-  }
 }
 
 .project__grid {

@@ -92,7 +92,8 @@ function smoothPath(points: Point[]): string {
   return `${d}Z`;
 }
 
-export function inkSplat(seed: number): Splat {
+/** The drop's outline and satellite droplets, in viewBox units. */
+function splatShapes(seed: number) {
   const radii = splatRadii(seed);
   const outline = radii.map((r, i) => {
     const theta = (i / POINTS) * Math.PI * 2;
@@ -101,20 +102,60 @@ export function inkSplat(seed: number): Splat {
 
   // Satellite droplets thrown just beyond the edge.
   const rand = random(seed ^ 0x9e3779b9);
-  const drops: string[] = [];
+  const drops: { x: number; y: number; r: number }[] = [];
   for (let i = 0, count = 8 + Math.floor(rand() * 8); i < count; i++) {
     const index = Math.floor(rand() * POINTS);
     const theta = (index / POINTS) * Math.PI * 2;
     const size = 0.3 + rand() * 0.6;
     const dist = Math.min(100 - size, radii[index]! + 1.2 + rand() * 3.5);
-    drops.push(`<circle cx="${round(dist * Math.cos(theta))}" cy="${round(dist * Math.sin(theta))}" r="${round(size)}"/>`);
+    drops.push({ x: round(dist * Math.cos(theta)), y: round(dist * Math.sin(theta)), r: round(size) });
   }
+  return { path: smoothPath(outline), drops, minRadius: Math.min(...radii) - SMOOTHING_SLACK };
+}
 
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="-100 -100 200 200"><path d="${smoothPath(outline)}"/>${drops.join('')}</svg>`;
+export function inkSplat(seed: number): Splat {
+  const { path, drops, minRadius } = splatShapes(seed);
+  const circles = drops.map((d) => `<circle cx="${d.x}" cy="${d.y}" r="${d.r}"/>`).join('');
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="-100 -100 200 200"><path d="${path}"/>${circles}</svg>`;
   return {
     url: `url("data:image/svg+xml,${encodeURIComponent(svg)}")`,
-    minRadius: Math.min(...radii) - SMOOTHING_SLACK,
+    minRadius,
   };
+}
+
+/** Bitmap size of a rasterised splat (px). Upscaled during the spread, which softens the edge like wet ink. */
+const RASTER_SIZE = 1024;
+
+/**
+ * The same splat drawn once into a bitmap and decoded, ready for `mask-image`.
+ *
+ * An SVG mask is re-rasterised at every new mask size, so animating its size redraws
+ * hundreds of curve segments every frame. A decoded bitmap only has to be scaled, which
+ * keeps the spread at the display's full frame rate even on phones. Resolves to the SVG
+ * version where canvas or Path2D is unavailable.
+ */
+export async function rasterSplat(seed: number): Promise<Splat & { release: () => void }> {
+  const svg = { ...inkSplat(seed), release: () => undefined };
+  if (typeof document === 'undefined' || typeof Path2D === 'undefined' || typeof URL.createObjectURL !== 'function') return svg;
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = RASTER_SIZE;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return svg;
+  const { path, drops, minRadius } = splatShapes(seed);
+  ctx.setTransform(RASTER_SIZE / 200, 0, 0, RASTER_SIZE / 200, RASTER_SIZE / 2, RASTER_SIZE / 2);
+  ctx.fill(new Path2D(path));
+  for (const d of drops) {
+    ctx.beginPath();
+    ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/png'));
+  if (!blob) return svg;
+  const href = URL.createObjectURL(blob);
+  const img = new Image();
+  img.src = href;
+  await img.decode().catch(() => undefined);
+  return { url: `url("${href}")`, minRadius, release: () => URL.revokeObjectURL(href) };
 }
 
 /** Distance from `p` to the farthest corner of a `width` × `height` viewport. */
