@@ -38,6 +38,7 @@ Most student portfolios list many projects and claim skills. This one makes one 
 - TND is not deployed; no live demo exists. Local development is its deployment assumption.
 - Featured projects (owner, 2026-11-10): TND, DataSentry, **FlowCast** (https://github.com/lloydaq/flowcast, v1.0.0, public demo on GitHub Pages) and **CampusSignal** (https://github.com/lloydaq/CampusSignal-pro; not deployed, demo data only). Link CampusSignal only through `CampusSignal-pro`, never the older `lloydaq/CampusSignal` repository. The site still must not list repositories dynamically.
 - No other projects are featured.
+- Project facts refreshed 2026-11-18 from the repositories: DataSentry at commit 05e437d (phases 0–11 of its PHASES.md complete, still application version 0.1.0; 422 pytest runs, 26 frontend unit tests and a 28-check browser smoke test all passed when run for the site; screenshots now its redesigned UI from `docs/screenshots/`). CampusSignal status from its README at 0fad707 (phases 0–6 and 8 done; 7 and 9 merged, awaiting sign-off; not deployed). TND unchanged since v1.0.0; FlowCast unchanged since its v1.0.0 demo.
 
 ## Brand Commitments
 

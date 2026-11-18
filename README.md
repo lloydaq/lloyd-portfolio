@@ -4,7 +4,7 @@ Personal portfolio of Lloyd D'Souza, AI/ML engineering student. It has six
 static pages:
 
 - `/` — home: introduction with a project index, four projects, engineering principles, toolchain,
-  about, contact.
+  about, résumé, contact.
 - `/work/tnd/` — case study of **TND (Trustworthy News Detector)**.
 - `/work/datasentry/` — case study of **DataSentry**, a dataset diagnostics
   tool.
@@ -116,7 +116,13 @@ public/campussignal/campussignal-{home,issue,notices}-{light,dark}.png
 
 FlowCast's network and sensor views are FlowCast's own captures (1440 x 900 at
 1x, from its `docs/assets/screens/`), because they show OpenStreetMap tiles;
-its models view is captured here like the rest.
+its models view is captured here like the rest. DataSentry's three views are
+copied from its repository's `docs/screenshots/` (1440 x 900 at 1x, commit
+05e437d), so they show its current design.
+
+Each PNG also has AVIF and WebP copies at several widths (`npm run images`,
+or `npm run images -- datasentry` for one folder), which the browser picks by
+screen size; the PNG stays the fallback and the full-size link.
 
 The site shows the file that matches its own theme (`ThemedShot`, driven by
 `useTheme()` in `src/components/theme.ts`, which follows the `data-theme`
@@ -139,16 +145,24 @@ build (the `gh-pages` branch) and CampusSignal from a local run with its
 ## Project structure
 
 ```text
-index.html, work/*/index.html     page entries with metadata
+index.html, work/*/index.html,
+resume/index.html                 page entries with metadata
 src/
   main-*.tsx                      page bootstraps
-  pages/                          Home, CaseStudy (TND), DataSentryStudy
-  components/                     Header, Footer, PipelineDiagram, ThemedShot, icons, theme, themeSwitch, inkSplat
-  content/                        site.ts, tnd.ts, datasentry.ts (+ content tests)
-  styles/                         global (tokens), pipeline, home, case
-public/                           favicon, og image, robots.txt, project screenshots
+  pages/                          Home, CaseStudy (TND), DataSentryStudy, FlowCastStudy,
+                                  CampusSignalStudy, ResumePage
+  components/                     Header (phone menu), Footer, PipelineDiagram, ThemedShot,
+                                  KineticGrid + inkTrail, theme + themeSwitch + inkSplat,
+                                  reveal, Shortcuts + keyShortcuts, NextProject, ResumeParts,
+                                  useCopy, icons
+  content/                        site.ts, tnd.ts, datasentry.ts, flowcast.ts, campussignal.ts,
+                                  resume.ts, summary.ts, imageVariants.json (+ content tests)
+  styles/                         global (tokens), pipeline, home, case, resume
+public/                           favicon, og image, robots.txt, résumé PDF, project screenshots
+                                  (PNG + AVIF/WebP copies)
 tests/e2e/                        Playwright suite
-scripts/                          link check, page review shots, project screenshots, og image
+scripts/                          link check, performance budget, image copies, résumé PDF,
+                                  page review shots, project screenshots, og image
 ```
 
 ## Theme switch
@@ -164,10 +178,29 @@ irregular drop with tendrils and droplets), that grows from the press point.
 Two splats grow at slightly different rates, so the outline keeps changing as it
 spreads, and the final size is computed so the ink always covers every corner
 of the viewport. Pressing again mid-spread pulls the ink back and keeps the
-previous theme.
+previous theme. The splats are drawn into bitmaps while the page is idle, so
+during the 0.9s spread the browser only scales an image instead of redrawing
+the SVG every frame.
 
 Browsers without View Transitions get a colour cross-fade; with
 `prefers-reduced-motion: reduce` the switch is instant.
+
+## Interactions
+
+- **Scroll reveal** (`reveal.ts`): blocks fade and rise into place the first
+  time they enter the view, staggered; nothing is hidden without script, with
+  reduced motion, or in print.
+- **Phone menu** (`Header.tsx`): a glass card that springs out of the menu
+  button, with numbered link pills, contact bubbles and a dimmed, blurred page
+  behind it. The header's frosted bar is a pseudo-element so the menu inside it
+  can blur the page.
+- **Ink trail** (`inkTrail.ts`): hold the mouse down on empty page and drag to
+  draw ink on the background grid; it dries into the paper in about 2.5s.
+- **Keyboard shortcuts** (`keyShortcuts.ts`): `?` for the list, `t` for the
+  theme, `g` then a letter to jump to a section, `g n` for the next project, and
+  one hidden one.
+- **Copy summary** on each project, and a **next project** card at the end of
+  each case study.
 
 Design tokens (colour, type scale, spacing, motion) are CSS custom properties
 at the top of `src/styles/global.css`; the light theme overrides the colours

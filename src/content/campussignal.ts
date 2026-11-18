@@ -2,7 +2,8 @@ import type { Screenshot } from './site';
 
 // Everything on this page was checked against the CampusSignal-pro repository at
 // commit 618458d (github.com/lloydaq/CampusSignal-pro): its code, tests, PRD.md,
-// architecture.md and Phases.md. Where the README's feature table lags the code
+// architecture.md and Phases.md. The status and roadmap were updated from the
+// README's roadmap at commit 0fad707 (14 November 2026). Where the README's feature table lags the code
 // (it still lists the community and Academic Hub as planned), the code and
 // Phases.md win. File paths are relative to that repository.
 
@@ -23,7 +24,7 @@ export const features = [
   ['Tenancy', 'Shared schema; the college comes from the signed-in member’s membership, never from the request'],
   ['Security', 'Server-side sessions, CSRF and Origin checks, Argon2id passwords, one policy module for every permission'],
   ['Tests', 'pytest with a tenant-isolation suite, Vitest, Playwright with axe accessibility checks'],
-  ['Status', 'Phases 0–6 done; 7 and 8 built and merged, awaiting review; not deployed'],
+  ['Status', 'Phases 0–6 and 8 done; 7 and 9 merged, awaiting sign-off; not deployed'],
 ] as const;
 
 export interface Decision {
@@ -102,7 +103,7 @@ export const limitations = [
 
 export type ItemStatus = 'done' | 'open';
 
-/** Phases.md, as of commit 618458d. */
+/** The README's roadmap, as of commit 0fad707. */
 export const roadmap: { text: string; status: ItemStatus }[] = [
   { text: 'Phases 0–1: requirements, architecture, design system, backend, frontend shell and CI', status: 'done' },
   { text: 'Phase 2: accounts, email verification, sessions, password reset, platform admins', status: 'done' },
@@ -110,10 +111,10 @@ export const roadmap: { text: string; status: ItemStatus }[] = [
   { text: 'Phase 4: notices, department pages, in-app notifications', status: 'done' },
   { text: 'Phase 5: campus issues, the coordinator queue, assignment, duplicates', status: 'done' },
   { text: 'Phase 6: community feeds, reports and moderation', status: 'done' },
-  { text: 'Phase 7: Academic Hub (built; its second policy review is outstanding)', status: 'open' },
-  { text: 'Phase 8: home screens and profile (built; awaiting review)', status: 'open' },
-  { text: 'Phase 9: hardening for security, accessibility, responsiveness and performance', status: 'open' },
-  { text: 'Phase 10: deployment and the MVP release', status: 'open' },
+  { text: 'Phase 8: role-aware home screens and profile editing', status: 'done' },
+  { text: 'Phase 7: Academic Hub (merged; awaiting the second policy review)', status: 'open' },
+  { text: 'Phase 9: hardening: security audit, coverage gate, responsive pass, performance budgets (merged; awaiting sign-off and a manual screen-reader pass)', status: 'open' },
+  { text: 'Phase 10: launch with a pilot college (needs hosting, a data agreement and staging)', status: 'open' },
 ];
 
 // Captured with scripts/project-shots.mjs from CampusSignal running locally against a

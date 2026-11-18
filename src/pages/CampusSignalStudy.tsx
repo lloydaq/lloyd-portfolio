@@ -69,7 +69,7 @@ export function CampusSignalStudy() {
             </div>
             <div className="kv__row">
               <dt>Progress</dt>
-              <dd>Phases 0–6 done; 7 and 8 built and merged, awaiting review; 9 and 10 (hardening, deployment) to come</dd>
+              <dd>Phases 0–6 and 8 done; 7 (Academic Hub) and 9 (hardening) merged, awaiting sign-off; 10 (pilot launch) to come</dd>
             </div>
             <div className="kv__row">
               <dt>Status</dt>

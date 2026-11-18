@@ -4,7 +4,8 @@
 //
 // The PNGs stay the source of truth and the fallback (and the full-size links).
 // Run after adding or replacing a screenshot:  npm run images
-import { readdir, stat, unlink, writeFile } from 'node:fs/promises';
+// Only some folders:  npm run images -- datasentry flowcast
+import { readFile, readdir, stat, unlink, writeFile } from 'node:fs/promises';
 import { join, relative } from 'node:path';
 import sharp from 'sharp';
 
@@ -14,8 +15,13 @@ const WIDTHS = [640, 960, 1440, 1920, 2880];
 const AVIF = { quality: 55, effort: 6 };
 const WEBP = { quality: 80, effort: 5 };
 
-const dirs = (await readdir(PUBLIC, { withFileTypes: true })).filter((d) => d.isDirectory()).map((d) => d.name);
-const manifest = {};
+const only = process.argv.slice(2);
+const dirs = (await readdir(PUBLIC, { withFileTypes: true }))
+  .filter((d) => d.isDirectory() && (only.length === 0 || only.includes(d.name)))
+  .map((d) => d.name);
+// A partial run keeps the other folders' entries.
+const manifest = only.length ? JSON.parse(await readFile(MANIFEST, 'utf8')) : {};
+for (const key of Object.keys(manifest)) if (dirs.some((d) => key.startsWith(`/${d}/`))) delete manifest[key];
 let before = 0;
 let after = 0;
 
@@ -40,5 +46,6 @@ for (const dir of dirs.sort()) {
   }
 }
 
-await writeFile(MANIFEST, `${JSON.stringify(manifest, null, 2)}\n`);
+const sorted = Object.fromEntries(Object.entries(manifest).sort(([a], [b]) => a.localeCompare(b)));
+await writeFile(MANIFEST, `${JSON.stringify(sorted, null, 2)}\n`);
 console.log(`\nFull-size PNG ${Math.round(before / 1024)} KB -> full-size AVIF ${Math.round(after / 1024)} KB`);

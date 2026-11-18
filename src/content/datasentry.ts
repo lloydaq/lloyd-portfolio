@@ -1,8 +1,8 @@
 import type { Screenshot } from './site';
 
 // Everything on this page was checked against the DataSentry repository at
-// commit ae58615 (github.com/lloydaq/DataSentry, application version 0.1.0):
-// its code, tests and README. File paths are relative to that repository. Do
+// commit 05e437d (github.com/lloydaq/DataSentry, application version 0.1.0,
+// phases 0–11 of PHASES.md complete): its code, tests, README and PHASES.md. File paths are relative to that repository. Do
 // not add a figure that is not in the code, its tests, or its README.
 
 export const dataSentry = {
@@ -18,12 +18,13 @@ export const dataSentry = {
 
 export const features = [
   ['Stack', dataSentry.stack],
-  ['Input', 'One UTF-8, comma-separated CSV with a header row; up to 10 MB, 200,000 rows and 500 columns by default'],
-  ['Checks', 'Profiling, column quality, consistency, target analysis and a single-feature leakage screen'],
-  ['ML checks', 'Opt-in cross-validated label review and a train/test overlap check, both with scikit-learn'],
+  ['Input', 'A CSV with a header row: comma, semicolon, tab or pipe; UTF-8 or Latin-1; your own missing-value tokens; up to 10 MB, 200,000 rows and 500 columns by default'],
+  ['Checks', 'Profiling, exact and near-duplicate rows, column quality, consistency, target analysis and a single-feature leakage screen'],
+  ['ML checks', 'Opt-in label review (with optional Cleanlab), train/test overlap, Split Doctor split advice and reproducible model-impact experiments'],
+  ['Workflow', 'Version comparison, data contracts, a datasheet draft, a finding review log and a command-line quality gate for CI'],
   ['Output', 'Findings by category with evidence, a strict JSON report and a script-free HTML report'],
   ['Privacy', 'One local process: no database, accounts, analytics or external calls; uploads never touch disk'],
-  ['Status', 'Application version 0.1.0; runs locally, not deployed'],
+  ['Status', 'Application version 0.1.0; all twelve planned phases complete, CI green on main; runs locally, not deployed'],
 ] as const;
 
 export interface Decision {
@@ -87,50 +88,65 @@ export const securityPoints = [
   'HTML reports are self-contained, escape every dynamic string and cannot run scripts.',
 ] as const;
 
-/** pytest functions per file, counted in the repository. Parametrised cases make the 161 runs. */
+/** Test files and what each covers, from their docstrings. */
 export const testFiles = [
   ['test_api.py', 'endpoints, error codes, limits, security headers, uploads never spooled to disk'],
-  ['test_profiler.py', 'type inference, missing values, duplicates, statistics, redundancy'],
   ['test_loader.py', 'CSV validation: BOM, quoting, headers, malformed rows, limits, safe error messages'],
-  ['test_ml_checks.py', 'label review and train/test overlap'],
+  ['test_parsing.py', 'configurable delimiter, encoding and extra missing-value tokens'],
+  ['test_profiler.py', 'type inference, missing values, duplicates, statistics, redundancy'],
+  ['test_near_duplicates.py', 'normalized grouping, ignored identifiers, bounds and the finding'],
   ['test_target.py', 'task inference, class balance, label conflicts'],
   ['test_findings.py', 'finding rules, severities, ordering, partial results, determinism'],
+  ['test_ml_checks.py', 'label review and train/test overlap'],
+  ['test_cleanlab.py', 'optional Cleanlab: works when installed, degrades honestly when not'],
+  ['test_splits.py', 'Split Doctor: split advice, entity and time checks across two files'],
+  ['test_experiments.py', 'model-impact experiments: reproducibility, the planted leakage fixture, edge cases'],
+  ['test_diff.py', 'version comparison: schema, rows, distributions, missing values, finding changes'],
+  ['test_contract.py', 'data contracts: export, untrusted-contract validation, checking'],
+  ['test_datasheet.py', 'datasheet draft: every filled field traces to the analysis'],
+  ['test_reviews.py', 'review log: decisions validated as untrusted input, carried in reports, escaped in HTML'],
+  ['test_cli.py', 'quality gate: exit codes, thresholds, outputs matching the API'],
   ['test_report.py', 'JSON and HTML reports, value redaction, escaping, reproducibility'],
 ] as const;
 
 export const limitations = [
-  'CSV only: comma-separated, UTF-8. Other delimiters and encodings are rejected rather than guessed.',
-  'Only exact duplicates and exact train/test matches are detected, not near-duplicates or related records.',
+  'CSV only. Delimiter and encoding are chosen from a fixed list (comma, semicolon, tab or pipe; UTF-8 or Latin-1), never detected automatically.',
+  'Near-duplicates are found only when rows match after normalizing case, spacing, punctuation and numeric precision; typos are not, and train/test overlap is exact.',
   'Datetimes are recognised in ISO 8601 only; booleans as true/false, not yes/no.',
   'Fixed-threshold heuristics can produce false positives and false negatives.',
-  'The leakage screen catches only single features with near-perfect association; it cannot detect temporal leakage or leakage spread across several columns.',
+  'The leakage screen catches only single features with near-perfect association; it cannot detect temporal leakage, leakage through feature engineering, or leakage spread across several columns.',
   'Label review uses one linear model; a weak model makes its disagreements uninformative.',
+  'Model-impact experiments cover classification targets only, use one simple model and measure this dataset; they are not significance tests.',
   'No authentication: the server is meant to be bound to 127.0.0.1, not exposed.',
 ] as const;
 
 export type ItemStatus = 'done' | 'open';
 
+/** PHASES.md at commit 05e437d: phases 0–11 done; 12–17 proposed, none started. */
 export const roadmap: { text: string; status: ItemStatus }[] = [
-  { text: 'Validation, profiling, target analysis and the leakage screen', status: 'done' },
-  { text: 'Opt-in label review and train/test overlap', status: 'done' },
-  { text: 'Approved, audited corrections', status: 'done' },
-  { text: 'JSON and HTML reports', status: 'done' },
-  { text: 'pytest suite covering services, API and security boundaries', status: 'done' },
-  { text: 'Reproducible model-impact experiments', status: 'open' },
-  { text: 'Group-aware and temporal train/test checks', status: 'open' },
-  { text: 'Near-duplicate detection', status: 'open' },
-  { text: 'Configurable missing-value tokens, delimiter and encoding', status: 'open' },
-  { text: 'Frontend unit tests and a browser test in CI', status: 'open' },
+  { text: 'Validation, profiling, target analysis, the leakage screen, label review and train/test overlap', status: 'done' },
+  { text: 'CI, frontend unit tests and a browser smoke test (phases 0–1)', status: 'done' },
+  { text: 'Configurable delimiter, encoding and missing-value tokens (phase 2)', status: 'done' },
+  { text: 'Split Doctor: group-aware and time-based split advice (phase 3)', status: 'done' },
+  { text: 'Version comparison and data contracts (phases 4–5)', status: 'done' },
+  { text: 'Command-line quality gate, datasheet draft and review log (phases 6–8)', status: 'done' },
+  { text: 'Near-duplicate detection (phase 9)', status: 'done' },
+  { text: 'Reproducible model-impact experiments and optional Cleanlab (phases 10–11)', status: 'done' },
+  { text: 'Re-identification risk screen (phase 12)', status: 'open' },
+  { text: 'Detector self-test on planted problems (phase 13)', status: 'open' },
+  { text: 'Evidence notebook export (phase 14)', status: 'open' },
+  { text: 'Source audit, learning curve and Split Lab (phases 15–17)', status: 'open' },
 ];
 
-// Captured with scripts/project-shots.mjs from DataSentry running locally on
-// its synthetic customer churn sample, with churned as the target.
+// From the DataSentry repository's docs/screenshots (commit 05e437d, after its
+// redesign): the app running locally on its synthetic customer churn sample,
+// with churned as the target.
 export const screenshots: Screenshot[] = [
   {
     light: '/datasentry/datasentry-overview-light.png',
     dark: '/datasentry/datasentry-overview-dark.png',
-    width: 2880,
-    height: 1800,
+    width: 1440,
+    height: 900,
     alt: 'DataSentry dashboard for customer_churn.csv: a summary reading 8 potential problems, 1 of high severity, and 7 observations; checks by category with Completeness and Leakage marked Issue; and dataset figures of 535 rows, 13 columns and 15 duplicate rows.',
     caption:
       'The synthetic churn sample, analysed with churned as the target. Each category is reported on its own; there is no overall score.',
@@ -138,19 +154,19 @@ export const screenshots: Screenshot[] = [
   {
     light: '/datasentry/datasentry-findings-light.png',
     dark: '/datasentry/datasentry-findings-dark.png',
-    width: 2880,
-    height: 1800,
-    alt: 'DataSentry findings list with the high-severity finding that cancellation_code almost perfectly predicts the target expanded, showing what was found, affected columns, why it matters, the recommended next step, its limitations and the evidence statistic 0.93893.',
+    width: 1440,
+    height: 900,
+    alt: 'DataSentry findings list with the high-severity finding that cancellation_code almost perfectly predicts the target expanded, showing what was found, affected columns, why it matters, the recommended next step, its limitations, the evidence statistic 0.93893 and a review decision control.',
     caption:
       'The planted leakage column, found and explained. The finding states its own limitation: a strong association does not prove leakage.',
   },
   {
     light: '/datasentry/datasentry-ml-checks-light.png',
     dark: '/datasentry/datasentry-ml-checks-dark.png',
-    width: 2880,
-    height: 1800,
-    alt: 'DataSentry ML checks: label review reporting out-of-fold accuracy 83.9%, balanced accuracy 74.2% and a 75.2% majority baseline with rows to review, and a train/test overlap check finding 20 of 180 holdout rows copied from training.',
+    width: 1440,
+    height: 900,
+    alt: 'DataSentry ML checks: label review reporting out-of-fold accuracy 83.9%, balanced accuracy 74.2% and a 75.2% majority baseline with Cleanlab results, a train/test overlap check finding 20 of 180 holdout rows copied from training, and the Split Doctor panel.',
     caption:
-      'Opt-in checks. Label review reports its own accuracy beside the baseline; the overlap check finds the 20 holdout rows copied from training.',
+      'Opt-in checks. Label review reports its own accuracy beside the baseline; the overlap check finds the 20 holdout rows copied from training; Split Doctor advises how to split.',
   },
 ];

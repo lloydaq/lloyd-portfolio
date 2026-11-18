@@ -637,7 +637,12 @@ test.describe('ink trail and keyboard shortcuts', () => {
     expect(await page.evaluate(([px]) => document.elementFromPoint(px!, 420)?.closest('p,h1,a,button') ?? null, [x])).toBeNull();
     await page.mouse.move(x, 300);
     await page.mouse.down();
-    for (let y = 300; y <= 560; y += 20) await page.mouse.move(x, y);
+    // A human-paced drag: Playwright's instant jumps read as a very fast stroke, which the
+    // trail draws at its thinnest by design.
+    for (let y = 300; y <= 560; y += 10) {
+      await page.mouse.move(x, y, { steps: 2 });
+      await page.waitForTimeout(16);
+    }
     await page.mouse.up();
     expect(await amberAt(page, x, 420)).toBeGreaterThan(0.3);
     expect(await page.evaluate(() => String(window.getSelection()))).toBe('');
