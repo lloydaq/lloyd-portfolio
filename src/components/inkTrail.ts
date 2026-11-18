@@ -137,14 +137,18 @@ export class InkLayer {
     this.blots = this.blots.filter((b) => now - b.born < b.life);
   }
 
-  draw(ctx: CanvasRenderingContext2D, now: number, accent: RGB, ground: RGB): void {
+  /**
+   * `ground` gives the page colour behind a point (it varies down the screen when the page
+   * is a gradient), so ink always dries into exactly what is under it.
+   */
+  draw(ctx: CanvasRenderingContext2D, now: number, accent: RGB, ground: (y: number) => RGB): void {
     ctx.save();
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
     for (const s of this.strokes) {
       if (s.length === 1) {
         const p = s[0]!;
-        ctx.fillStyle = inkColour(accent, ground, now - p.t, TRAIL_LIFE);
+        ctx.fillStyle = inkColour(accent, ground(p.y), now - p.t, TRAIL_LIFE);
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.w / 2, 0, Math.PI * 2);
         ctx.fill();
@@ -156,7 +160,7 @@ export class InkLayer {
         const age = now - b.t;
         // Ink thins slightly as it soaks in.
         ctx.lineWidth = b.w * (1 - 0.35 * clamp(age / TRAIL_LIFE, 0, 1));
-        ctx.strokeStyle = inkColour(accent, ground, age, TRAIL_LIFE);
+        ctx.strokeStyle = inkColour(accent, ground(b.y), age, TRAIL_LIFE);
         ctx.beginPath();
         ctx.moveTo(a.x, a.y);
         ctx.lineTo(b.x, b.y);
@@ -167,7 +171,7 @@ export class InkLayer {
       const age = now - b.born;
       if (age < 0) continue;
       const r = b.r * (0.35 + 0.65 * easeOut(Math.min(1, age / SPREAD_MS)));
-      ctx.fillStyle = inkColour(accent, ground, age, b.life);
+      ctx.fillStyle = inkColour(accent, ground(b.y), age, b.life);
       ctx.beginPath();
       ctx.arc(b.x, b.y, r, 0, Math.PI * 2);
       ctx.fill();

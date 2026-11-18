@@ -10,11 +10,12 @@ colors:
   hairline: "#262b37"
   hairline-strong: "#3b4252"
   ember: "#ff5a1f"
-  paper-ground: "#f4f1ea"
-  paper-sheet: "#fbfaf6"
-  paper-ink: "#14161c"
-  paper-ink-muted: "#55524d"
-  paper-ember: "#bf3a0a"
+  sky-top: "#cfe6ff"
+  sky-bottom: "#f6faff"
+  cloud-sheet: "#fbfdff"
+  navy-ink: "#0f1b2d"
+  navy-ink-muted: "#475569"
+  amber-red: "#c2410c"
 typography:
   display:
     fontFamily: "'Archivo Variable', Archivo, system-ui, sans-serif"
@@ -99,7 +100,7 @@ components:
 
 The site reads like the datasheet for a part: a general description, a block diagram, characteristic tables, test conditions, operating limits. The engineer is presented the way a careful manufacturer presents a component, by what it does, how it is wired, how it was tested and where it stops working. Credibility comes from specificity and stated limits, not adjectives.
 
-Surfaces are a blue-black sheet with warm white ink; the light theme is the same sheet printed on paper. Structure is carried by 1px hairline rules, ruled tables with tabular numerals, and block-diagram linework, never by cards or shadows. There is vast quiet ground around each section's single figure. One ember orange marks live signal, focus and the primary action, nothing else.
+Night is a blue-black sheet with warm white ink and ember; day is a sky that fades from blue to white down the screen, with cloud-white surfaces, navy ink and amber-red. Structure is carried by 1px hairline rules, ruled tables with tabular numerals, and block-diagram linework, never by cards or shadows. There is vast quiet ground around each section's single figure. One ember orange marks live signal, focus and the primary action, nothing else.
 
 Rejected by brief: neon, purple/blue AI gradients, glass content panels, decorative blobs, stock photos, fake terminals, rounded card grids, emoji, skill percentages.
 
@@ -112,10 +113,10 @@ Rejected by brief: neon, purple/blue AI gradients, glass content panels, decorat
 
 ## Colors
 
-"Ink & Ember" (owner update, 2026-11-18): roughly 80% blue-black ground, 15% slate surfaces and 5% ember. On paper, the same roles with a deeper ember that keeps 4.5:1. `--accent-rgb` carries the ember as an RGB triplet so glows and tints derive from one token.
+"Ink & Ember" (owner update, 2026-11-18): roughly 80% blue-black ground, 15% slate surfaces and 5% ember. Light theme ("daylight", owner update 2026-11-18): about 80% sky, a fixed gradient from #cfe6ff at the top of the screen to #f6faff at the bottom (painted on the background canvas so it holds still while scrolling, also on iOS); 15% cloud-white surfaces (#fbfdff, #edf3fa); 5% amber-red (#c2410c, used as text only through #a3360a, 5.3:1 or better everywhere on the sky); navy ink #0f1b2d. `--accent-rgb` carries the ember as an RGB triplet so glows and tints derive from one token.
 
 ### Primary
-- **Ember** (#ff5a1f dark / #bf3a0a light; text tint #ff7a45 / #a8350a): the live signal. The diagram's load pass, the selected stage's border and marker, focus rings, the reading-progress bar, the active table-of-contents marker, hover glow, the ink trail, the current menu item, and the fill of the primary button (dark text on ember in dark, white on ember on paper). Never a large area.
+- **Ember / amber-red** (#ff5a1f dark / #c2410c light; text tint #ff7a45 / #a3360a): the live signal. The diagram's load pass, the selected stage's border and marker, focus rings, the reading-progress bar, the active table-of-contents marker, hover glow, the ink trail, the current menu item, and the fill of the primary button (dark text on ember in dark, white on ember on paper). Never a large area.
 
 ### Neutral
 - **Ink Ground** (#0b0d12): page background, dark theme.
@@ -123,7 +124,7 @@ Rejected by brief: neon, purple/blue AI gradients, glass content panels, decorat
 - **Warm Ink** (#f1ece4): body text and headings.
 - **Muted Ink** (#a7a3a0): secondary text, table heads, captions, unselected markers. 7.8:1 on the ground.
 - **Hairline** (#262b37) / **Strong Hairline** (#3b4252): rules, table borders, diagram edges, block outlines.
-- **Paper** (#f4f1ea), **Paper Sheet** (#fbfaf6), **Paper Ink** (#14161c), **Paper Muted** (#55524d): the light theme, same roles.
+- **Sky** (#cfe6ff → #f6faff), **Cloud Sheet** (#fbfdff / #edf3fa), **Navy Ink** (#0f1b2d), **Navy Muted** (#475569), **Hairlines** (#cddae8 / #9db0c6): the light theme, same roles.
 
 ### Named Rules
 **The 5% Ember Rule.** Ember marks where the signal is, where focus is, and the one primary action in a group. It never fills a section, a card or a panel.
@@ -182,7 +183,7 @@ Hairline top border per row, strong hairline above and below the head, condensed
 Nine stage blocks (sheet fill, strong hairline, square marker before the label) joined by 1.5px edges with arrowheads, a dotted frame around the per-claim loop, and dashed edges for input-dependent paths. Selecting a block (click, or arrow keys with a single tab stop) fills its marker, thickens its border in ember, highlights its edges and prints its spec and source files below. On load, an ember signal travels the request path once and fades. Narrow containers render the same stages as a railed list with specs opening inline.
 
 ### Background grid
-A fixed canvas behind every page (`KineticGrid`): ink hairlines at 13% on a 55px cell with a faint 28px dot texture. Near the mouse the intersections bend away and light up in the accent; a click sends one ring outward. Colours are read from `--ink` and `--accent`, so it follows the theme. It ignores touch and keyboard clicks, redraws only while moving, and is drawn once and held still under reduced motion. Holding the mouse down on empty page and dragging draws ink under the grid lines: slow strokes pool wider, a held pen leaves a blot, and the ink dries from ember into the ground colour over about 2.5s (its colour changes, not its opacity, so joints never bead). Typing `ink` splashes a few blots.
+A fixed canvas behind every page (`KineticGrid`): ink hairlines at 13% on a 55px cell with a faint 28px dot texture. Near the mouse the intersections bend away and light up in the accent; a click sends one ring outward. Colours are read from `--ink` and `--accent`, so it follows the theme. It ignores touch and keyboard clicks, redraws only while moving, and is drawn once and held still under reduced motion. Holding the mouse down on empty page and dragging draws ink under the grid lines: slow strokes pool wider, a held pen leaves a blot, and the ink dries from ember into the page colour behind each point (the sky's shade at that height in light) over about 2.5s (its colour changes, not its opacity, so joints never bead). Typing `ink` splashes a few blots.
 
 ### Status list
 Each row leads with a 2.75rem rule: solid for done, dashed for open, plus the word "Done" or "Open".

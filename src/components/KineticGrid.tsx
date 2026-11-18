@@ -132,7 +132,13 @@ export function KineticGrid() {
     let raf = 0;
     let ink: RGB = [237, 230, 218];
     let accent: RGB = [224, 168, 79];
-    let ground: RGB = [22, 22, 26];
+    let groundTop: RGB = [11, 13, 18];
+    let groundBottom: RGB = [11, 13, 18];
+    /** Page colour at a height on screen: the sky gradient in light, flat ink in dark. */
+    const groundAt = (y: number): RGB => {
+      const t = Math.min(1, Math.max(0, y / Math.max(1, h)));
+      return [0, 1, 2].map((i) => Math.round(lerp(groundTop[i]!, groundBottom[i]!, t))) as RGB;
+    };
     const inkLayer = new InkLayer();
     const root = document.documentElement;
     /** Set when a drag drew ink, so the click that ends it does not also ripple. */
@@ -142,7 +148,8 @@ export function KineticGrid() {
       const style = getComputedStyle(document.documentElement);
       ink = hexToRgb(style.getPropertyValue('--ink'));
       accent = hexToRgb(style.getPropertyValue('--accent'));
-      ground = hexToRgb(style.getPropertyValue('--ground'));
+      groundTop = hexToRgb(style.getPropertyValue('--ground-top'));
+      groundBottom = hexToRgb(style.getPropertyValue('--ground-bottom'));
     };
 
     const resize = () => {
@@ -159,7 +166,7 @@ export function KineticGrid() {
 
       // Ink first, so the grid prints over it.
       inkLayer.update(now);
-      inkLayer.draw(ctx, now, accent, ground);
+      inkLayer.draw(ctx, now, accent, groundAt);
 
       ctx.fillStyle = rgba(ink, 0.05);
       ctx.beginPath();

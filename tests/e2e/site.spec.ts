@@ -165,7 +165,7 @@ test.describe('home interactions', () => {
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
     await page.goto('/work/tnd/');
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
-    await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#f4f1ea');
+    await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#cfe6ff');
   });
 
   test('the theme switch bleeds ink across the whole page', async ({ page }) => {

@@ -8,6 +8,9 @@
      for signal, focus, glow, the primary action and the ink. Light is the same sheet printed
      on warm paper with a deeper ember. */
   --ground: #0b0d12;
+  /* The page behind everything: flat ink at night, a sky gradient by day. */
+  --ground-top: #0b0d12;
+  --ground-bottom: #0b0d12;
   --sheet: #141821;
   --sheet-2: #1c2130;
   --ink: #f1ece4;
@@ -85,30 +88,34 @@
 }
 
 :root[data-theme='light'] {
-  --ground: #f4f1ea;
-  --sheet: #fbfaf6;
-  --sheet-2: #e9e4da;
-  --ink: #14161c;
-  --ink-2: #55524d;
-  --rule: #dad4c8;
-  --rule-strong: #ada699;
-  /* Deeper ember on paper so it keeps 4.5:1 as text and behind white button text. */
-  --accent: #bf3a0a;
-  --accent-rgb: 191 58 10;
-  --accent-ink: #a8350a;
+  /* Daylight: about 80% sky (blue fading to white down the screen), 15% cloud-white
+     surfaces, 5% amber-red. Ink is a deep navy. Amber-red is used as text only through
+     --accent-ink (5.3:1 or better on every part of the sky). */
+  --ground: #e4f1ff;
+  --ground-top: #cfe6ff;
+  --ground-bottom: #f6faff;
+  --sheet: #fbfdff;
+  --sheet-2: #edf3fa;
+  --ink: #0f1b2d;
+  --ink-2: #475569;
+  --rule: #cddae8;
+  --rule-strong: #9db0c6;
+  --accent: #c2410c;
+  --accent-rgb: 194 65 12;
+  --accent-ink: #a3360a;
   --on-accent: #ffffff;
   --selection: rgb(var(--accent-rgb) / 0.18);
-  --shadow: 0 1px 0 rgb(30 20 10 / 0.06), 0 18px 40px -26px rgb(30 20 10 / 0.35);
+  --shadow: 0 1px 0 rgb(15 40 80 / 0.06), 0 18px 40px -26px rgb(15 40 80 / 0.35);
   --glow: 0 0 0 1px rgb(var(--accent-rgb) / 0.45), 0 0 20px -2px rgb(var(--accent-rgb) / 0.3),
     0 14px 36px -14px rgb(var(--accent-rgb) / 0.35);
-  --glass-bg: linear-gradient(180deg, rgb(255 255 255 / 0.75), rgb(255 255 255 / 0.4));
-  --glass-bg-hover: linear-gradient(180deg, rgb(255 255 255 / 0.95), rgb(255 255 255 / 0.6));
-  --glass-border: rgb(20 22 28 / 0.14);
-  --glass-highlight: inset 0 1px 0 rgb(255 255 255 / 0.9), 0 6px 18px -12px rgb(30 20 10 / 0.35);
-  --header-bg: rgb(244 241 234 / 0.75);
-  --menu-bg: radial-gradient(120% 55% at 100% 0%, rgb(var(--accent-rgb) / 0.12), transparent 60%),
-    linear-gradient(160deg, rgb(255 255 255 / 0.74), rgb(244 238 228 / 0.56));
-  --scrim: rgb(40 20 10 / 0.2);
+  --glass-bg: linear-gradient(180deg, rgb(255 255 255 / 0.8), rgb(255 255 255 / 0.45));
+  --glass-bg-hover: linear-gradient(180deg, rgb(255 255 255 / 0.96), rgb(255 255 255 / 0.65));
+  --glass-border: rgb(15 40 80 / 0.12);
+  --glass-highlight: inset 0 1px 0 rgb(255 255 255 / 0.95), 0 6px 18px -12px rgb(15 40 80 / 0.3);
+  --header-bg: rgb(240 247 255 / 0.72);
+  --menu-bg: radial-gradient(120% 55% at 100% 0%, rgb(var(--accent-rgb) / 0.1), transparent 60%),
+    linear-gradient(160deg, rgb(255 255 255 / 0.78), rgb(232 243 255 / 0.6));
+  --scrim: rgb(15 27 45 / 0.16);
   color-scheme: light;
 }
 
@@ -247,6 +254,9 @@ code,
   width: 100%;
   height: 100%;
   pointer-events: none;
+  /* The page gradient lives on this fixed layer, so it holds still while the page
+     scrolls (background-attachment: fixed is ignored on iOS). */
+  background: linear-gradient(180deg, var(--ground-top), var(--ground-bottom));
 }
 
 /* ---------- Header ---------- */
