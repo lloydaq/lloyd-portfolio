@@ -1,6 +1,6 @@
-import { useEffect, useLayoutEffect, useRef, useState, type MouseEvent } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type MouseEvent } from 'react';
 import { homeSections, profile } from '../content/site';
-import { Close, Menu, Moon, Sun } from './Icons';
+import { ArrowRight, GitHub, LinkedIn, Mail, Moon, Sun } from './Icons';
 import { applyTheme, readStoredTheme, systemTheme, useTheme } from './theme';
 import { initReveal } from './reveal';
 import { Shortcuts } from './Shortcuts';
@@ -49,7 +49,10 @@ export function Header({ base, activeId }: HeaderProps) {
     };
     document.addEventListener('keydown', onKey);
     document.addEventListener('pointerdown', onPointer);
+    // The page underneath holds still while the menu is open.
+    document.documentElement.classList.add('menu-open');
     return () => {
+      document.documentElement.classList.remove('menu-open');
       document.removeEventListener('keydown', onKey);
       document.removeEventListener('pointerdown', onPointer);
     };
@@ -64,6 +67,8 @@ export function Header({ base, activeId }: HeaderProps) {
       <a className="skip-link" href="#main">
         Skip to content
       </a>
+      {/* Dims and blurs the page behind the open phone menu; a tap on it closes the menu. */}
+      <div className="site-nav__scrim" data-open={open} aria-hidden="true" />
       <div className="container site-header__bar">
         <a className="site-header__name" href={base === '' ? '#top' : '/'}>
           {profile.name}
@@ -76,18 +81,44 @@ export function Header({ base, activeId }: HeaderProps) {
           ref={navRef}
         >
           <ul className="site-nav__list">
-            {homeSections.map((section) => (
-              <li key={section.id}>
+            {homeSections.map((section, i) => (
+              <li key={section.id} style={{ '--i': i } as CSSProperties}>
                 <a
                   className="site-nav__link"
                   href={`${base}#${section.id}`}
                   aria-current={activeId === section.id ? 'true' : undefined}
                   onClick={() => setOpen(false)}
                 >
+                  <span className="site-nav__num" aria-hidden="true">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
                   {section.label}
+                  <ArrowRight className="site-nav__arrow" />
                 </a>
               </li>
             ))}
+          </ul>
+          {/* Phone menu only: the quickest ways to get in touch, one tap away. */}
+          <ul
+            className="site-nav__contact"
+            aria-label="Contact"
+            style={{ '--i': homeSections.length } as CSSProperties}
+          >
+            <li>
+              <a className="site-nav__bubble" href={`mailto:${profile.email}`} aria-label="Email">
+                <Mail />
+              </a>
+            </li>
+            <li>
+              <a className="site-nav__bubble" href={profile.github} rel="me noopener" aria-label="GitHub">
+                <GitHub />
+              </a>
+            </li>
+            <li>
+              <a className="site-nav__bubble" href={profile.linkedin} rel="me noopener" aria-label="LinkedIn">
+                <LinkedIn />
+              </a>
+            </li>
           </ul>
         </nav>
         <button
@@ -108,7 +139,11 @@ export function Header({ base, activeId }: HeaderProps) {
           aria-label={open ? 'Close menu' : 'Open menu'}
           onClick={() => setOpen((value) => !value)}
         >
-          {open ? <Close /> : <Menu />}
+          <span className="burger" aria-hidden="true">
+            <span />
+            <span />
+            <span />
+          </span>
         </button>
       </div>
       <Shortcuts />
