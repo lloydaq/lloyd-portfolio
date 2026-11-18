@@ -190,8 +190,8 @@ Browsers without View Transitions get a colour cross-fade; with
 - **Scroll reveal** (`reveal.ts`): blocks fade and rise into place the first
   time they enter the view, staggered; nothing is hidden without script, with
   reduced motion, or in print.
-- **Phone menu** (`Header.tsx`): a glass card that springs out of the menu
-  button, with numbered link pills, contact bubbles and a dimmed, blurred page
+- **Phone menu** (`Header.tsx`): the 3-line button grows into a glass card
+  (a `clip-path` morph from the button's exact square) and shrinks back into it, with numbered link pills, contact bubbles and a dimmed, blurred page
   behind it. The header's frosted bar is a pseudo-element so the menu inside it
   can blur the page.
 - **Ink trail** (`inkTrail.ts`): hold the mouse down on empty page and drag to

@@ -80,6 +80,9 @@ export function Header({ base, activeId }: HeaderProps) {
           data-open={open}
           ref={navRef}
         >
+          <span className="site-nav__label" aria-hidden="true">
+            Menu
+          </span>
           <ul className="site-nav__list">
             {homeSections.map((section, i) => (
               <li key={section.id} style={{ '--i': i } as CSSProperties}>

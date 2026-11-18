@@ -27,7 +27,6 @@
   --header-bg: rgb(22 22 26 / 0.72);
   --menu-bg: radial-gradient(120% 55% at 100% 0%, rgb(224 168 79 / 0.14), transparent 60%),
     linear-gradient(160deg, rgb(52 50 56 / 0.5), rgb(24 24 28 / 0.42));
-  --menu-shadow: 0 30px 70px -18px rgb(0 0 0 / 0.75), 0 0 0 1px rgb(255 255 255 / 0.04);
   --scrim: rgb(8 8 10 / 0.5);
 
   /* Type */
@@ -103,7 +102,6 @@
   --header-bg: rgb(242 238 230 / 0.75);
   --menu-bg: radial-gradient(120% 55% at 100% 0%, rgb(196 128 30 / 0.12), transparent 60%),
     linear-gradient(160deg, rgb(255 255 255 / 0.72), rgb(246 241 232 / 0.55));
-  --menu-shadow: 0 30px 70px -22px rgb(60 40 10 / 0.45), 0 0 0 1px rgb(255 255 255 / 0.5);
   --scrim: rgb(60 45 20 / 0.18);
   color-scheme: light;
 }
@@ -394,6 +392,7 @@ code,
 .site-nav__num,
 .site-nav__arrow,
 .site-nav__contact,
+.site-nav__label,
 .site-nav__scrim {
   display: none;
 }
@@ -451,11 +450,6 @@ code,
   transform: rotate(-45deg);
 }
 
-.menu-button[aria-expanded='true'] {
-  border-color: var(--accent);
-  box-shadow: var(--glass-highlight), var(--glow);
-}
-
 @media (max-width: 47.99rem) {
   .menu-button {
     display: inline-grid;
@@ -495,40 +489,77 @@ code,
     transition: opacity 0.35s ease;
   }
 
-  /* The bubble. Closed, it is shrunk into the menu button's corner and invisible;
-     open, it springs out with a little overshoot. Only transform and opacity animate. */
+  /* The menu IS the button, grown. The card sits exactly over the menu button (same top
+     and right edge) and is clipped down to the button's own square and corner radius, so
+     closed it is the button; opening unclips it to the full card with a slight spring, and
+     closing clips it back into the button. The button (above it) keeps its lines, which
+     fold into an X. Content waits for the shape: it fades in after the card starts growing
+     and fades out before it shrinks. */
   .site-nav {
+    --menu-btn: 2.75rem;
     position: absolute;
-    top: calc(100% + 0.6rem);
+    top: calc((var(--header-h) - var(--menu-btn)) / 2);
     right: var(--gutter);
+    z-index: 2;
     width: min(calc(100% - 2 * var(--gutter)), 22rem);
     margin: 0;
-    padding: 0.6rem;
+    padding: calc(var(--menu-btn) + 0.75rem) 0.6rem 0.6rem;
     border: 1px solid var(--glass-border);
     border-radius: 1.75rem;
     background: var(--menu-bg);
     -webkit-backdrop-filter: blur(28px) saturate(1.8);
     backdrop-filter: blur(28px) saturate(1.8);
-    box-shadow: var(--glass-highlight), var(--menu-shadow);
-    transform-origin: calc(100% - 1.375rem) calc(-0.6rem - var(--header-h) / 2);
-    opacity: 0;
+    box-shadow: var(--glass-highlight);
+    clip-path: inset(0 0 calc(100% - var(--menu-btn)) calc(100% - var(--menu-btn)) round var(--radius));
     visibility: hidden;
     pointer-events: none;
-    transform: scale(0.35);
     transition:
-      transform 0.32s cubic-bezier(0.5, 0, 0.75, 0),
-      opacity 0.22s ease 0.08s,
-      visibility 0s linear 0.32s;
+      clip-path 0.45s cubic-bezier(0.65, 0, 0.35, 1) 0.1s,
+      visibility 0s linear 0.55s;
   }
 
   .site-nav[data-open='true'] {
-    opacity: 1;
+    clip-path: inset(0 0 0 0 round 1.75rem);
     visibility: visible;
     pointer-events: auto;
-    transform: none;
-    transition:
-      transform 0.6s cubic-bezier(0.34, 1.36, 0.5, 1),
-      opacity 0.18s ease;
+    transition: clip-path 0.7s cubic-bezier(0.55, 0, 0.2, 1.12);
+  }
+
+  /* "Menu", top left of the card, level with the X. */
+  .site-nav__label {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 1.1rem;
+    height: var(--menu-btn);
+    color: var(--ink-2);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    line-height: var(--menu-btn);
+    text-transform: uppercase;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+  }
+
+  .site-nav[data-open='true'] .site-nav__label {
+    opacity: 1;
+    transition: opacity 0.35s ease 0.12s;
+  }
+
+  /* While open, the button is the card's corner: its own glass steps aside so the X sits on
+     the card; it comes back as the card shrinks into it. */
+  .menu-button {
+    position: relative;
+    z-index: 3;
+  }
+
+  .menu-button[aria-expanded='true'] {
+    border-color: transparent;
+    background: transparent;
+    box-shadow: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
   }
 
   /* A soft sheen across the top of the glass. */
