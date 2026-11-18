@@ -12,6 +12,38 @@ describe('inkColour', () => {
   });
 });
 
+describe('InkLayer.draw', () => {
+  it('dries each point into the page colour behind it', () => {
+    const ink = new InkLayer();
+    ink.start(10, 10, 0);
+    ink.move(10, 700, 16);
+    ink.end();
+    const styles: string[] = [];
+    const ctx = {
+      save() {},
+      restore() {},
+      beginPath() {},
+      moveTo() {},
+      lineTo() {},
+      arc() {},
+      fill() {},
+      stroke() {},
+      set strokeStyle(v: string) {
+        styles.push(v);
+      },
+      set fillStyle(v: string) {
+        styles.push(v);
+      },
+      lineWidth: 0,
+      lineCap: 'round',
+      lineJoin: 'round',
+    } as unknown as CanvasRenderingContext2D;
+    // Fully dry: the point low on the screen takes the lower (whiter) colour.
+    ink.draw(ctx, 16 + TRAIL_LIFE, accent, (y) => (y > 400 ? [246, 250, 255] : [207, 230, 255]));
+    expect(styles.at(-1)).toBe('rgb(246,250,255)');
+  });
+});
+
 describe('widthFor', () => {
   it('runs thin when fast and pools when slow, within bounds', () => {
     let fast = 5;

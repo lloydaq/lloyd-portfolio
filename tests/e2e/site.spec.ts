@@ -165,7 +165,7 @@ test.describe('home interactions', () => {
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
     await page.goto('/work/tnd/');
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
-    await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#f2eee6');
+    await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#cfe6ff');
   });
 
   test('the theme switch bleeds ink across the whole page', async ({ page }) => {
@@ -444,6 +444,22 @@ test.describe('mobile navigation', () => {
     await page.getByRole('button', { name: 'Close menu' }).click();
     await expect(nav).toBeHidden();
     expect(await nav.evaluate((e) => getComputedStyle(e).clipPath)).toBe(closedClip);
+  });
+
+  test('the menu switches theme and shows the local time', async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'dark', reducedMotion: 'reduce' });
+    await page.goto('/', { waitUntil: 'networkidle' });
+    await page.getByRole('button', { name: 'Open menu' }).click();
+    const nav = page.getByRole('navigation', { name: 'Main' });
+    await expect(page.locator('.site-nav__clock')).toHaveText(/^· Karkala \d{2}:\d{2} IST$/);
+    const themes = nav.getByRole('group', { name: 'Theme' });
+    await expect(themes.getByRole('button', { name: 'Dark' })).toHaveAttribute('aria-pressed', 'true');
+    await themes.getByRole('button', { name: 'Light' }).click();
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+    await expect(themes.getByRole('button', { name: 'Light' })).toHaveAttribute('aria-pressed', 'true');
+    // Pressing the theme already in use changes nothing.
+    await themes.getByRole('button', { name: 'Light' }).click();
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
   });
 
   test('Escape closes the menu and returns focus', async ({ page }) => {
