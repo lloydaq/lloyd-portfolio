@@ -420,6 +420,32 @@ test.describe('mobile navigation', () => {
     await expect(page.getByRole('heading', { name: 'How I work' })).toBeInViewport();
   });
 
+  test('the menu grows out of the menu button and shrinks back into it', async ({ page }) => {
+    await page.goto('/', { waitUntil: 'networkidle' });
+    const button = page.getByRole('button', { name: 'Open menu' });
+    const nav = page.locator('#site-nav');
+    const b = (await button.boundingBox())!;
+    const n = (await nav.boundingBox())!;
+    // The card is anchored on the button: same top edge, same right edge.
+    expect(Math.abs(n.y - b.y)).toBeLessThan(1.5);
+    expect(Math.abs(n.x + n.width - (b.x + b.width))).toBeLessThan(1.5);
+    // Closed, its visible shape is clipped to exactly the button's square.
+    const closedClip = await nav.evaluate((e) => getComputedStyle(e).clipPath);
+    expect(closedClip).toMatch(/^inset\(/);
+    const side = Math.round(b.width);
+    const radius = await button.evaluate((e) => getComputedStyle(e).borderTopRightRadius);
+    expect(Math.round(b.height)).toBe(side);
+    expect(closedClip).toBe(`inset(0px 0px calc(100% - ${side}px) calc(100% - ${side}px) round ${radius})`);
+    // Open: unclipped to the full card.
+    await button.click();
+    await nav.evaluate((e) => Promise.all(e.getAnimations().map((a) => a.finished)));
+    expect(await nav.evaluate((e) => getComputedStyle(e).clipPath)).toMatch(/^inset\(0px( 0px)* round/);
+    // Closed again: back to the button's square.
+    await page.getByRole('button', { name: 'Close menu' }).click();
+    await expect(nav).toBeHidden();
+    expect(await nav.evaluate((e) => getComputedStyle(e).clipPath)).toBe(closedClip);
+  });
+
   test('Escape closes the menu and returns focus', async ({ page }) => {
     await page.goto('/');
     await page.getByRole('button', { name: 'Open menu' }).click();
