@@ -406,6 +406,14 @@ test.describe('mobile navigation', () => {
     await expect(nav).toBeHidden();
     await page.getByRole('button', { name: 'Open menu' }).click();
     await expect(nav).toBeVisible();
+    // Once it has finished springing open, every link is a full-size tap target.
+    await nav.evaluate((e) => Promise.all(e.getAnimations({ subtree: true }).map((a) => a.finished)));
+    for (const link of await nav.getByRole('link').all()) {
+      await expect(link).toBeVisible();
+      const box = (await link.boundingBox())!;
+      expect(box.height).toBeGreaterThanOrEqual(44);
+    }
+    await expect(nav.getByRole('link', { name: 'GitHub' })).toHaveAttribute('href', 'https://github.com/lloydaq');
     await nav.getByRole('link', { name: 'Engineering' }).click();
     await expect(nav).toBeHidden();
     await expect(page).toHaveURL(/#engineering$/);
@@ -488,7 +496,8 @@ test.describe('responsive layout', () => {
         // WCAG 2.5.8: interactive targets at least 24x24 CSS px (inline text links exempt).
         const small = await page.$$eval('button, .button, .site-nav__link, .icon-button', (els) =>
           els
-            .filter((e) => (e as HTMLElement).offsetParent !== null)
+            // Only what can be seen and tapped: the closed phone menu is laid out but hidden.
+            .filter((e) => e.checkVisibility({ visibilityProperty: true, opacityProperty: true }))
             .map((e) => e.getBoundingClientRect())
             .filter((r) => r.width < 24 || r.height < 24).length,
         );
@@ -628,7 +637,12 @@ test.describe('ink trail and keyboard shortcuts', () => {
     expect(await page.evaluate(([px]) => document.elementFromPoint(px!, 420)?.closest('p,h1,a,button') ?? null, [x])).toBeNull();
     await page.mouse.move(x, 300);
     await page.mouse.down();
-    for (let y = 300; y <= 560; y += 20) await page.mouse.move(x, y);
+    // A human-paced drag: Playwright's instant jumps read as a very fast stroke, which the
+    // trail draws at its thinnest by design.
+    for (let y = 300; y <= 560; y += 10) {
+      await page.mouse.move(x, y, { steps: 2 });
+      await page.waitForTimeout(16);
+    }
     await page.mouse.up();
     expect(await amberAt(page, x, 420)).toBeGreaterThan(0.3);
     expect(await page.evaluate(() => String(window.getSelection()))).toBe('');

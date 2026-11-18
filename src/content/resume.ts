@@ -113,7 +113,7 @@ export const resumeProjects: ResumeProject[] = [
     status: 'v0.1.0 · github.com/lloydaq/DataSentry',
     points: [
       'Profiles a CSV and screens it for target leakage, label conflicts and quality problems, reporting each finding with its evidence and limits.',
-      'Cross-validated label review and train/test overlap checks; JSON and HTML reports; runs locally with no database or external calls.',
+      'Near-duplicate and train/test overlap checks, split advice, model-impact experiments and a CI quality gate; runs fully locally.',
     ],
   },
   {

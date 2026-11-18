@@ -44,44 +44,32 @@
   "/datasentry/datasentry-findings-dark.png": [
     640,
     960,
-    1440,
-    1920,
-    2880
+    1440
   ],
   "/datasentry/datasentry-findings-light.png": [
     640,
     960,
-    1440,
-    1920,
-    2880
+    1440
   ],
   "/datasentry/datasentry-ml-checks-dark.png": [
     640,
     960,
-    1440,
-    1920,
-    2880
+    1440
   ],
   "/datasentry/datasentry-ml-checks-light.png": [
     640,
     960,
-    1440,
-    1920,
-    2880
+    1440
   ],
   "/datasentry/datasentry-overview-dark.png": [
     640,
     960,
-    1440,
-    1920,
-    2880
+    1440
   ],
   "/datasentry/datasentry-overview-light.png": [
     640,
     960,
-    1440,
-    1920,
-    2880
+    1440
   ],
   "/flowcast/flowcast-forecast-dark.png": [
     640,

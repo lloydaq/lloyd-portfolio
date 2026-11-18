@@ -81,7 +81,7 @@ export function DataSentryStudy() {
             </div>
             <div className="kv__row">
               <dt>Status</dt>
-              <dd>Runs locally. Not deployed, so there is no live demo.</dd>
+              <dd>All twelve planned phases complete, CI green on main. Runs locally; not deployed, so there is no live demo.</dd>
             </div>
           </dl>
           <div className="actions case__actions">
@@ -307,22 +307,35 @@ export function DataSentryStudy() {
                   <tr>
                     <th scope="row">Backend (pytest)</th>
                     <td className="num" data-label="Runs">
-                      161
+                      422
                     </td>
                     <td data-label="Result">All passed</td>
                     <td data-label="Conditions" className="muted">
-                      Run for this page on 20 October 2026 with Python 3.14.4 on Windows 11. Unit, API
-                      integration, security-boundary and determinism tests; no network.
+                      Run for this page on 18 November 2026 at commit 05e437d, with Python 3.13 on Linux: 413
+                      with the base requirements, plus the 9 optional Cleanlab tests with
+                      requirements-optional.txt, as CI runs them. Unit, API integration, security-boundary and
+                      determinism tests; no network.
                     </td>
                   </tr>
                   <tr>
-                    <th scope="row">Frontend</th>
+                    <th scope="row">Frontend unit (node --test)</th>
                     <td className="num" data-label="Runs">
-                      None
+                      26
                     </td>
-                    <td data-label="Result">Not automated</td>
+                    <td data-label="Result">All passed</td>
                     <td data-label="Conditions" className="muted">
-                      Frontend unit tests and a browser test in CI are on the roadmap.
+                      Same run, Node.js 22, against a small fake DOM.
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Browser smoke test</th>
+                    <td className="num" data-label="Runs">
+                      28 checks
+                    </td>
+                    <td data-label="Result">All passed</td>
+                    <td data-label="Conditions" className="muted">
+                      Same run, headless Chromium: starts the real app and walks the whole workflow, failing on
+                      any console error, CSP violation or horizontal scroll at 375px.
                     </td>
                   </tr>
                 </tbody>
