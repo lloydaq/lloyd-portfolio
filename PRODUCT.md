@@ -47,6 +47,7 @@ Most student portfolios list many projects and claim skills. This one makes one 
 - Voice: plain, specific, grounded. No hype, no "passionate", no expert claims.
 - Visual brief (owner-pinned): deep charcoal or near-black surfaces, warm white type, one restrained accent; no neon, no purple/blue AI gradients, no blobs, no stock photos, no fake terminals, no emoji, no skill percentages.
 - Owner update (2026-11-13): rounded corners on boxes and figures, an amber hover glow on buttons, cards and screenshots, and glass (translucent, blurred) buttons and header. Glass stays on controls only, never on content panels.
+- Owner update (2026-11-18): palette "Ink & Ember": about 80% blue-black ground, 15% slate surfaces, 5% ember (#ff5a1f; #bf3a0a on paper). Ember now also fills the primary button. Phone menu: glass card morphing out of the menu button, with an ember edge trace, spotlight, ink-fill links, local time and an in-menu theme switch.
 
 ## Evidence on Hand
 
