@@ -32,7 +32,6 @@ interface GridNode {
 const CELL_SIZE = 55;
 const INFLUENCE_RADIUS = 260;
 const MAX_WARP = 24;
-const DOT_SPACING = 28;
 const LERP_SPEED = 0.08;
 const NODE_BASE_RADIUS = 1.8;
 const NODE_ACTIVE_RADIUS = 3.2;
@@ -143,6 +142,16 @@ export function KineticGrid() {
     const root = document.documentElement;
     /** Set when a drag drew ink, so the click that ends it does not also ripple. */
     let drew = false;
+    // Resting strength of the grid (the lit part near the pointer is unaffected), per theme
+    // from CSS, and how calm it gets once the reader has scrolled past the hero.
+    let lineAlpha = 0.07;
+    let nodeAlpha = 0.12;
+    let calmFloor = 0.4;
+    let calm = 1;
+    const calmFor = () => {
+      const t = Math.min(1, Math.max(0, window.scrollY / Math.max(1, h * 1.1)));
+      return 1 - (1 - calmFloor) * smoothstep(t);
+    };
 
     const readColours = () => {
       const style = getComputedStyle(document.documentElement);
@@ -150,6 +159,14 @@ export function KineticGrid() {
       accent = hexToRgb(style.getPropertyValue('--accent'));
       groundTop = hexToRgb(style.getPropertyValue('--ground-top'));
       groundBottom = hexToRgb(style.getPropertyValue('--ground-bottom'));
+      const num = (name: string, fallback: number) => {
+        const v = parseFloat(style.getPropertyValue(name));
+        return Number.isFinite(v) ? v : fallback;
+      };
+      lineAlpha = num('--grid-line', 0.07);
+      nodeAlpha = num('--grid-node', 0.12);
+      calmFloor = num('--grid-calm', 0.4);
+      calm = calmFor();
     };
 
     const resize = () => {
@@ -168,15 +185,8 @@ export function KineticGrid() {
       inkLayer.update(now);
       inkLayer.draw(ctx, now, accent, groundAt);
 
-      ctx.fillStyle = rgba(ink, 0.05);
-      ctx.beginPath();
-      for (let x = DOT_SPACING / 2; x < w; x += DOT_SPACING) {
-        for (let y = DOT_SPACING / 2; y < h; y += DOT_SPACING) {
-          ctx.moveTo(x + 0.7, y);
-          ctx.arc(x, y, 0.7, 0, TAU);
-        }
-      }
-      ctx.fill();
+      const line = lineAlpha * calm;
+      const node = nodeAlpha * calm;
 
       for (const r of ripples) {
         const age = (now - r.born) / 1000;
@@ -220,19 +230,19 @@ export function KineticGrid() {
         });
       });
       ctx.lineCap = 'butt';
-      ctx.strokeStyle = rgba(ink, 0.13);
+      ctx.strokeStyle = rgba(ink, line);
       ctx.lineWidth = 0.8;
       ctx.stroke();
       for (const [a, b, t] of lit) {
         ctx.beginPath();
         ctx.moveTo(a.x, a.y);
         ctx.lineTo(b.x, b.y);
-        ctx.strokeStyle = mix(ink, 0.13, accent, 0.9, t);
+        ctx.strokeStyle = mix(ink, line, accent, 0.9, t);
         ctx.lineWidth = lerp(0.8, 1.5, t);
         ctx.stroke();
       }
 
-      ctx.fillStyle = rgba(ink, 0.2);
+      ctx.fillStyle = rgba(ink, node);
       ctx.beginPath();
       const litNodes: [Point, number][] = [];
       for (const { pt: p, proximity } of grid.flat()) {
@@ -259,7 +269,7 @@ export function KineticGrid() {
         }
         ctx.beginPath();
         ctx.arc(p.x, p.y, r, 0, TAU);
-        ctx.fillStyle = mix(ink, 0.2, accent, 1, t);
+        ctx.fillStyle = mix(ink, node, accent, 1, t);
         ctx.fill();
       }
 
@@ -351,6 +361,13 @@ export function KineticGrid() {
       wake();
     };
 
+    const onScroll = () => {
+      const next = calmFor();
+      if (Math.abs(next - calm) < 0.005) return;
+      calm = next;
+      wake();
+    };
+
     const onResize = () => {
       resize();
       wake();
@@ -379,6 +396,7 @@ export function KineticGrid() {
     const themeObserver = new MutationObserver(onThemeChange);
     themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
     window.addEventListener('resize', onResize);
+    window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('pointermove', onPointerMove, { passive: true });
     document.documentElement.addEventListener('pointerleave', onPointerLeave);
     window.addEventListener('click', onClick);
@@ -392,6 +410,7 @@ export function KineticGrid() {
     return () => {
       themeObserver.disconnect();
       window.removeEventListener('resize', onResize);
+      window.removeEventListener('scroll', onScroll);
       window.removeEventListener('pointermove', onPointerMove);
       document.documentElement.removeEventListener('pointerleave', onPointerLeave);
       window.removeEventListener('click', onClick);
