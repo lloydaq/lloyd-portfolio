@@ -238,52 +238,63 @@
     grid-template-columns: 1fr;
   }
 
+  /* One column: the project cards come right after the hero, so the index would repeat them. */
+  .hero__index {
+    display: none;
+  }
+
   .hero__desc {
     max-width: 60ch;
   }
 }
 
-/* ---------- Projects ---------- */
+/* ---------- Projects: compact cards ---------- */
 
-/* Each project is a datasheet entry separated by a strong rule, not a card. */
-.project {
-  padding-top: var(--space-7);
-  border-top: 2px solid var(--ink);
+.pcard-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+}
+
+@media (max-width: 63.99rem) {
+  .pcard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pcard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
   scroll-margin-top: 5rem;
 }
 
-.project + .project {
-  margin-top: var(--space-9);
+/* The open-source library spans the grid: screenshot left, text right. */
+.pcard--wide {
+  grid-column: 1 / -1;
 }
 
-.project__head {
-  display: grid;
-  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-  gap: var(--space-4) clamp(2rem, 1rem + 3vw, 4.5rem);
-  margin-bottom: var(--space-7);
+@media (min-width: 64rem) {
+  .pcard--wide {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    align-items: center;
+    gap: clamp(1.5rem, 1rem + 2vw, 3rem);
+    padding-top: var(--space-6);
+    border-top: var(--hair);
+  }
 }
 
-.project__title {
-  font-size: var(--step-2);
-  font-stretch: var(--wide);
-  letter-spacing: -0.02em;
-  line-height: 1.1;
+.pcard__kicker {
+  margin-bottom: var(--space-2);
+  color: var(--accent-ink);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
-.project__summary {
-  max-width: 62ch;
-  margin: 0;
-  color: var(--ink-2);
-}
-
-.project__shot {
-  margin-bottom: var(--space-8);
-}
-
-/* Both projects' screenshots share one crop: the top of a 16:10 capture, down
-   to the end of the first meaningful block (TND's incomplete-analysis notice,
-   DataSentry's dataset overview). Each theme's file has the same framing, so a
-   theme switch never moves the layout. */
+/* Every card shows the same crop of its screenshot, so a theme switch never moves the layout. */
 .project__shot img {
   display: block;
   width: 100%;
@@ -293,121 +304,155 @@
   object-position: top;
 }
 
-.project__grid {
-  display: grid;
-  grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
-  gap: var(--space-7) clamp(2rem, 1rem + 3vw, 4.5rem);
+.pcard__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
-.sub-title {
-  margin-bottom: var(--space-4);
+.pcard__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.pcard__title {
+  font-size: var(--step-2);
+  font-stretch: var(--wide);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.pcard__copy {
+  flex: none;
+}
+
+.pcard__pitch {
+  max-width: 52ch;
+  margin-top: var(--space-3);
+  color: var(--ink-2);
+  font-size: var(--step-0);
+  line-height: 1.5;
+}
+
+.pcard__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: var(--space-4) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pcard__tags li {
+  padding: 0.2rem 0.65rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  color: var(--ink-2);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+
+/* Buttons sit in equal columns (two on a phone), pushed to the card's foot. */
+.pcard__actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  gap: var(--space-3);
+  margin-top: auto;
+  padding-top: var(--space-5);
+}
+
+.pcard__actions .button {
+  justify-content: center;
+  padding-inline: 0.9rem;
+}
+
+/* "Copy summary" result, under the card's actions. */
+.project__copy-status {
+  margin-top: var(--space-2);
+  color: var(--ink-2);
+  font-size: 0.8125rem;
+}
+
+.project__copy-status:empty {
+  display: none;
+}
+
+/* ---------- Engineering: three principles and a compact toolchain ---------- */
+
+.how {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-5) clamp(1.5rem, 1rem + 2vw, 3rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.how__item {
+  padding-top: var(--space-4);
+  border-top: 2px solid var(--ink);
+}
+
+.how__num {
+  color: var(--accent-ink);
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+}
+
+.how__name {
+  margin-top: var(--space-2);
   font-size: var(--step-1);
   font-stretch: var(--wide);
   letter-spacing: -0.01em;
 }
 
-.decision-list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  border-bottom: var(--hair);
-  font-size: var(--step--1);
-}
-
-.decision-list li {
-  padding-block: var(--space-3);
-  border-top: var(--hair);
+.how__line {
+  margin-top: var(--space-2);
   color: var(--ink-2);
-}
-
-.decision-list strong {
-  color: var(--ink);
-  font-weight: 620;
-}
-
-.project__note {
-  max-width: 70ch;
-  margin-top: var(--space-7);
-  padding: var(--space-4) 0 0;
-  border-top: 2px solid var(--ink);
   font-size: var(--step--1);
-}
-
-.project__actions {
-  margin-top: var(--space-6);
+  line-height: 1.5;
 }
 
 @media (max-width: 55.99rem) {
-  .project__head,
-  .project__grid {
+  .how {
     grid-template-columns: 1fr;
   }
-}
-
-/* ---------- Engineering ---------- */
-
-.principles tbody th {
-  width: 22%;
-  white-space: normal;
-}
-
-.principles td:last-child {
-  width: 30%;
 }
 
 .toolchain {
   margin-top: var(--space-8);
 }
 
-.toolchain__note {
-  margin-top: calc(-1 * var(--space-2));
-  margin-bottom: var(--space-5);
+.toolchain__rows {
+  margin: 0;
+  border-bottom: var(--hair);
   font-size: var(--step--1);
 }
 
-.toolchain__groups {
+.toolchain__row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
-  gap: var(--space-5) var(--space-6);
-  margin: 0;
+  grid-template-columns: 11rem minmax(0, 1fr);
+  gap: var(--space-4);
+  padding-block: var(--space-3);
+  border-top: var(--hair);
 }
 
-.toolchain__group {
-  padding-top: var(--space-3);
-  border-top: var(--hair-strong);
-}
-
-.toolchain__group dt {
-  margin-bottom: var(--space-2);
+.toolchain__row dt {
   font-weight: 620;
 }
 
-.toolchain__group dd {
+.toolchain__row dd {
   margin: 0;
-  padding-block: 0.2rem;
   color: var(--ink-2);
-  font-size: var(--step--1);
-  line-height: 1.45;
+  line-height: 1.55;
 }
 
-/* Phones get one column, so each group runs its items together instead of
-   one short item per line. */
-@media (max-width: 47.99rem) {
-  .toolchain__group {
-    display: flex;
-    flex-wrap: wrap;
-    column-gap: var(--space-2);
-  }
-
-  .toolchain__group dt {
-    flex-basis: 100%;
-  }
-
-  .toolchain__group dd:not(:last-of-type)::after {
-    content: '·';
-    content: '·' / '';
-    margin-left: var(--space-2);
-    color: var(--rule-strong);
+@media (max-width: 39.99rem) {
+  .toolchain__row {
+    grid-template-columns: 1fr;
+    gap: var(--space-1);
   }
 }
 
@@ -430,27 +475,14 @@
   }
 }
 
-/* ---------- Résumé ---------- */
+/* ---------- Résumé: one line and the buttons ---------- */
+
+.resume-line {
+  margin-bottom: 0;
+}
 
 .resume__actions {
   margin-top: var(--space-5);
-}
-
-.resume-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-7) clamp(2rem, 1rem + 3vw, 4.5rem);
-}
-
-.resume-block {
-  padding-top: var(--space-4);
-  border-top: 2px solid var(--ink);
-}
-
-@media (max-width: 55.99rem) {
-  .resume-grid {
-    grid-template-columns: 1fr;
-  }
 }
 
 /* ---------- Contact ---------- */
@@ -538,4 +570,42 @@
 
 .project__copy-status:empty {
   display: none;
+}
+
+/* ---------- Scroll-linked motion (compositor-only, where supported) ---------- */
+
+/* As you scroll past it, the hero eases back; each project screenshot settles from a slight
+   zoom as it comes into view. Driven by the scroll position itself, not by script, so it
+   stays smooth; absent with reduced motion or without scroll-driven animation support. */
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .hero__intro,
+    .hero__index {
+      animation: hero-away linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 80vh;
+    }
+
+    .pcard .project__shot picture {
+      animation: shot-settle linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 40%;
+    }
+  }
+}
+
+@keyframes hero-away {
+  to {
+    opacity: 0.35;
+    transform: translateY(-5vh) scale(0.985);
+  }
+}
+
+@keyframes shot-settle {
+  from {
+    transform: scale(1.12);
+  }
+  to {
+    transform: none;
+  }
 }

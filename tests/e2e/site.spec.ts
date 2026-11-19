@@ -94,15 +94,15 @@ test.describe('home interactions', () => {
     await expect(page).toHaveTitle(/Lloyd D'Souza/);
     await expect(page.getByRole('heading', { level: 1 })).toHaveText("Lloyd D'Souza");
     await expect(page.getByRole('link', { name: 'View GitHub' })).toHaveAttribute('href', 'https://github.com/lloydaq');
-    await expect(page.getByRole('link', { name: /View the repository: Trustworthy News Detector/ })).toHaveAttribute(
+    await expect(page.getByRole('link', { name: /View code: Trustworthy News Detector/ })).toHaveAttribute(
       'href',
       'https://github.com/lloydaq/TND-The-News-Detector',
     );
-    await expect(page.getByRole('link', { name: /View the repository: DataSentry/ })).toHaveAttribute(
+    await expect(page.getByRole('link', { name: /View code: DataSentry/ })).toHaveAttribute(
       'href',
       'https://github.com/lloydaq/DataSentry',
     );
-    await expect(page.getByRole('link', { name: /View the repository: FlowCast/ })).toHaveAttribute(
+    await expect(page.getByRole('link', { name: /View code: FlowCast/ })).toHaveAttribute(
       'href',
       'https://github.com/lloydaq/flowcast',
     );
@@ -110,7 +110,7 @@ test.describe('home interactions', () => {
       'href',
       'https://lloydaq.github.io/flowcast/',
     );
-    await expect(page.getByRole('link', { name: /View the repository: CampusSignal/ })).toHaveAttribute(
+    await expect(page.getByRole('link', { name: /View code: CampusSignal/ })).toHaveAttribute(
       'href',
       'https://github.com/lloydaq/CampusSignal-pro',
     );
@@ -242,6 +242,7 @@ test.describe('project screenshots', () => {
     `/datasentry/datasentry-overview-${theme}.png`,
     `/flowcast/flowcast-network-${theme}.png`,
     `/campussignal/campussignal-home-${theme}.png`,
+    `/inkshift/inkshift-demo-${theme}.png`,
   ];
   const DARK = homeShots('dark');
   const LIGHT = homeShots('light');
@@ -319,6 +320,7 @@ test.describe('project screenshots', () => {
       ['datasentry', ['datasentry-overview', 'datasentry-findings', 'datasentry-ml-checks']],
       ['flowcast', ['flowcast-network', 'flowcast-forecast', 'flowcast-models']],
       ['campussignal', ['campussignal-home', 'campussignal-issue', 'campussignal-notices']],
+      ['inkshift', ['inkshift-demo']],
     ].flatMap(([dir, names]) => (names as string[]).map((n) => `/${dir}/${n}`));
     // Mean luminance (0-255) of each file, measured in the browser.
     const luminance = (src: string) =>
@@ -365,10 +367,11 @@ test.describe('phone layout', () => {
   test.use({ viewport: { width: 320, height: 800 } });
 
   test('screenshots offer the full-size file for the current theme', async ({ page }) => {
+    // The home page shows compact cards; case study galleries carry the full-size links.
     await page.emulateMedia({ colorScheme: 'light' });
-    await page.goto('/');
-    const links = page.locator('#projects').getByRole('link', { name: 'Open full-size screenshot' });
-    await expect(links).toHaveCount(4);
+    await page.goto('/work/tnd/');
+    const links = page.locator('.case__gallery').getByRole('link', { name: 'Open full-size screenshot' });
+    await expect(links).toHaveCount(3);
     await expect(links.first()).toBeVisible();
     await expect(links.first()).toHaveAttribute('href', '/tnd/tnd-results-light.png');
     await page.getByRole('button', { name: 'Switch to dark theme' }).click();
@@ -385,7 +388,7 @@ test.describe('phone layout', () => {
 
   test('action buttons share each row instead of stacking at uneven widths', async ({ page }) => {
     await page.goto('/');
-    const actions = page.locator('#tnd .project__actions .button');
+    const actions = page.locator('#tnd .pcard__actions .button');
     const [a, b] = await Promise.all([actions.nth(0).boundingBox(), actions.nth(1).boundingBox()]);
     expect(Math.round(a!.width)).toBe(Math.round(b!.width));
   });
@@ -393,8 +396,27 @@ test.describe('phone layout', () => {
 
 test('full-size screenshot links stay hidden on wider screens', async ({ page }) => {
   await page.setViewportSize({ width: 1024, height: 800 });
-  await page.goto('/');
+  await page.goto('/work/tnd/');
+  await expect(page.locator('.figure__full')).toHaveCount(3);
   await expect(page.locator('.figure__full').first()).toBeHidden();
+});
+
+test('the home page stays short: compact project cards, depth in the case studies', async ({ page }) => {
+  for (const [width, height, maxScreens] of [
+    [1440, 900, 7],
+    [390, 844, 11],
+  ] as const) {
+    await page.setViewportSize({ width, height });
+    await page.goto('/', { waitUntil: 'networkidle' });
+    const screens = await page.evaluate(() => document.documentElement.scrollHeight / innerHeight);
+    expect(screens, `${width}px`).toBeLessThanOrEqual(maxScreens);
+  }
+  const words = await page.evaluate(() => document.querySelector('main')!.innerText.split(/\s+/).length);
+  expect(words).toBeLessThan(900);
+  // Every project still links to its full case study, and the TND principles moved there intact.
+  await expect(page.getByRole('link', { name: /Read the case study:/ })).toHaveCount(4);
+  await page.goto('/work/tnd/#principles');
+  await expect(page.locator('table.principles tbody tr')).toHaveCount(5);
 });
 
 test.describe('mobile navigation', () => {
@@ -784,5 +806,76 @@ test.describe('résumé', () => {
     await expect(page.locator('.site-header')).toBeHidden();
     await expect(page.locator('.resume-page__bar')).toBeHidden();
     await expect(page.locator('.cv-sheet')).toBeVisible();
+  });
+});
+
+test.describe('page transitions', () => {
+  test('moving between home and a case study is a view transition, with one title morphing', async ({ page, browserName }) => {
+    test.skip(browserName !== 'chromium', 'Cross-page view transitions are checked in Chromium.');
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
+    await page.addInitScript(() => {
+      const w = window as unknown as { __reveal: string };
+      w.__reveal = 'none';
+      addEventListener('pagereveal', (e) => {
+        w.__reveal = (e as Event & { viewTransition: unknown }).viewTransition ? 'transition' : 'plain';
+      });
+    });
+    await page.goto('/#projects', { waitUntil: 'networkidle' });
+    // Registered after the app's own listener, so it sees the name the app has just set.
+    await page.evaluate(() =>
+      addEventListener('pageswap', () => {
+        const named = Array.from(document.querySelectorAll<HTMLElement>('[data-morph]')).filter(
+          (el) => el.style.viewTransitionName,
+        ).length;
+        sessionStorage.setItem('named-on-swap', String(named));
+      }),
+    );
+    await page.getByRole('link', { name: 'Read the case study: DataSentry' }).click();
+    await expect(page).toHaveURL(/\/work\/datasentry\/$/);
+    await expect.poll(() => page.evaluate(() => (window as unknown as { __reveal: string }).__reveal)).toBe('transition');
+    // Exactly one card (the one opened) carried the shared title name as the page left.
+    expect(await page.evaluate(() => sessionStorage.getItem('named-on-swap'))).toBe('1');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveCSS('view-transition-name', 'title-datasentry');
+    // And back: a transition again; once it ends, no card keeps a name.
+    await page.getByRole('link', { name: 'Back to the portfolio' }).click();
+    await expect(page).toHaveURL(/\/#datasentry$/);
+    await expect.poll(() => page.evaluate(() => (window as unknown as { __reveal: string }).__reveal)).toBe('transition');
+    await expect
+      .poll(() => page.evaluate(() => Array.from(document.querySelectorAll<HTMLElement>('[data-morph]')).filter((el) => el.style.viewTransitionName).length))
+      .toBe(0);
+  });
+
+  test('with reduced motion pages load without a transition', async ({ page, browserName }) => {
+    test.skip(browserName !== 'chromium', 'Cross-page view transitions are checked in Chromium.');
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.addInitScript(() => {
+      addEventListener('pagereveal', (e) => {
+        (window as unknown as { __reveal: string }).__reveal = (e as Event & { viewTransition: unknown }).viewTransition
+          ? 'transition'
+          : 'plain';
+      });
+    });
+    await page.goto('/#projects', { waitUntil: 'networkidle' });
+    await page.getByRole('link', { name: 'Read the case study: DataSentry' }).click();
+    await expect(page).toHaveURL(/\/work\/datasentry\/$/);
+    await expect.poll(() => page.evaluate(() => (window as unknown as { __reveal?: string }).__reveal)).toBe('plain');
+  });
+});
+
+test.describe('Inkshift', () => {
+  test('the open-source card links the repo and npm, and "Try it" switches the theme', async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'dark', reducedMotion: 'reduce' });
+    await page.goto('/#inkshift', { waitUntil: 'networkidle' });
+    const card = page.locator('#inkshift');
+    await expect(card.getByRole('heading', { name: 'Inkshift', level: 3 })).toBeVisible();
+    await expect(card).toContainText('npm v0.1.0');
+    await expect(card.getByRole('link', { name: 'View code: Inkshift' })).toHaveAttribute('href', 'https://github.com/lloydaq/inkshift');
+    await expect(card.getByRole('link', { name: 'Open on npm: Inkshift' })).toHaveAttribute(
+      'href',
+      'https://www.npmjs.com/package/inkshift',
+    );
+    await card.getByRole('button', { name: /^Try it/ }).click();
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+    await expect(card.locator('img')).toHaveAttribute('src', '/inkshift/inkshift-demo-light.png');
   });
 });

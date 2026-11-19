@@ -54,7 +54,8 @@ export function FlowCastStudy() {
           <a className="back-link" href="/#flowcast">
             <ArrowLeft /> Back to the portfolio
           </a>
-          <h1 className="case__title">
+          {/* Same transition name as this project's card on the home page: the title morphs between them. */}
+          <h1 className="case__title" style={{ viewTransitionName: 'title-flowcast' }}>
             {flowCast.name}: {flowCast.tagline}
           </h1>
           <p className="case__summary">{flowCast.summary}</p>

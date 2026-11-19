@@ -32,6 +32,8 @@
         if (t === 'light') document.querySelector('meta[name="theme-color"]').setAttribute('content', '#cfe6ff');
       })();
     </script>
+    <!-- Render-blocking, so the first paint (and a cross-page view transition) shows the finished page. -->
+    <script type="module" blocking="render" src="/src/main-datasentry.tsx"></script>
   </head>
   <body>
     <div id="root"></div>
@@ -41,6 +43,5 @@
         https://github.com/lloydaq/DataSentry.
       </p>
     </noscript>
-    <script type="module" src="/src/main-datasentry.tsx"></script>
   </body>
 </html>

@@ -14,6 +14,7 @@ import {
   tndRepo,
 } from './site';
 import { projectSummaryText } from './summary';
+import { inkshift, inkshiftNpm, inkshiftRepo, screenshot as inkshiftShot } from './inkshift';
 import { edges, screenshots as tndShots, stages, tnd } from './tnd';
 
 // Every source file, read raw, so the exclusion and honesty checks cover
@@ -93,7 +94,7 @@ describe('content integrity', () => {
   });
 
   it('gives every project screenshot a distinct, existing file for each theme', () => {
-    for (const shot of [...tndShots, ...dataSentryShots, ...flowCastShots, ...campusSignalShots]) {
+    for (const shot of [...tndShots, ...dataSentryShots, ...flowCastShots, ...campusSignalShots, inkshiftShot]) {
       expect(shot.light, shot.alt).not.toBe(shot.dark);
       for (const src of [shot.light, shot.dark]) {
         expect(publicImages, src).toContain(`/public${src}`);
@@ -150,5 +151,14 @@ describe('project order and summaries', () => {
     expect(text).toContain(`Code: ${flowCastRepo}`);
     expect(text).toContain(`Live demo: ${flowCast.demo}`);
     expect(text).toContain(profile.email);
+  });
+});
+
+describe('Inkshift', () => {
+  it('links the repository and npm package, and claims only the version published on npm', () => {
+    expect(inkshiftRepo).toBe('https://github.com/lloydaq/inkshift');
+    expect(inkshiftNpm).toBe('https://www.npmjs.com/package/inkshift');
+    expect(inkshift.npmVersion).toBe('0.1.0');
+    expect(inkshift.status).toContain('not yet on npm');
   });
 });

@@ -3,8 +3,10 @@
 Personal portfolio of Lloyd D'Souza, AI/ML engineering student. It has six
 static pages:
 
-- `/` — home: introduction with a project index, four projects, engineering principles, toolchain,
-  about, résumé, contact.
+- `/` — home, kept short (about 5.5 screens on desktop, 7.5 on a phone): introduction with
+  an open-to-work line and a project index, four compact project cards and a wide card for
+  the Inkshift library (its "Try it" plays the site's own theme switch), three principles and the
+  toolchain, about, a one-line résumé, contact. Depth lives in the case studies.
 - `/work/tnd/` — case study of **TND (Trustworthy News Detector)**.
 - `/work/datasentry/` — case study of **DataSentry**, a dataset diagnostics
   tool.
@@ -187,6 +189,14 @@ Browsers without View Transitions get a colour cross-fade; with
 
 ## Interactions
 
+- **Page transitions**: moving between pages is a cross-document view transition (the old
+  page lifts away, the new one rises in and comes into focus; the header and grid hold still).
+  Opening a case study morphs the card's title into the case study headline, and back
+  (`titleMorph.ts`). Each page renders synchronously behind a render-blocking entry script
+  (`mount.tsx`, the `renderBlockingEntry` Vite plugin), so the transition never shows an
+  empty page. Off with reduced motion.
+- **Scroll-linked motion**: the hero eases back as you scroll past it, and project screenshots
+  settle from a slight zoom as they come into view (CSS scroll-driven animations).
 - **Scroll reveal** (`reveal.ts`): blocks fade and rise into place the first
   time they enter the view, staggered; nothing is hidden without script, with
   reduced motion, or in print.

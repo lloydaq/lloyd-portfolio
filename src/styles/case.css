@@ -490,3 +490,17 @@
     transform: translateX(6px);
   }
 }
+
+/* The principles table (moved here from the home page): first and last columns kept narrow. */
+.principles tbody th {
+  width: 22%;
+  white-space: normal;
+}
+
+.principles td:last-child {
+  width: 30%;
+}
+
+.case__section .principles {
+  margin-top: var(--space-4);
+}

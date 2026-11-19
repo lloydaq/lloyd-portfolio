@@ -1575,6 +1575,78 @@ kbd {
   }
 }
 
+/* ---------- Page transitions (moving between pages) ---------- */
+
+/* Cross-page view transitions: the old page lifts away, the new one rises in and comes into
+   focus. The header and the background grid have their own names, so they hold perfectly
+   still, and a project's card title morphs into its case study's headline (and back). */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+}
+
+.site-header {
+  view-transition-name: site-header;
+}
+
+.kinetic-grid {
+  view-transition-name: page-grid;
+}
+
+::view-transition-group(site-header),
+::view-transition-group(page-grid) {
+  animation: none;
+}
+
+::view-transition-old(page-grid),
+::view-transition-new(page-grid) {
+  /* The grid redraws itself on the new page: show it directly, without a cross-fade. */
+  animation: none;
+}
+
+::view-transition-old(page-grid) {
+  display: none;
+}
+
+::view-transition-old(root) {
+  animation: page-out 0.26s cubic-bezier(0.4, 0, 1, 1) both;
+}
+
+::view-transition-new(root) {
+  animation: page-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.06s both;
+}
+
+/* A title travelling between pages: a soft spring, and its two snapshots cross-fade. */
+::view-transition-group(*) {
+  animation-duration: 0.55s;
+  animation-timing-function: cubic-bezier(0.3, 1.1, 0.4, 1);
+}
+
+@keyframes page-out {
+  to {
+    opacity: 0;
+    transform: translateY(-14px) scale(0.99);
+    filter: blur(3px);
+  }
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+    filter: blur(6px);
+  }
+}
+
+/* The theme switch is a view transition too, but the ink must reveal the whole page at
+   once: while it runs, nothing keeps its own name, so everything is in the root snapshot. */
+html.ink-transition *,
+html.ink-transition .site-header,
+html.ink-transition .kinetic-grid {
+  view-transition-name: none !important;
+}
+
 /* ---------- Theme switch (src/components/themeSwitch.ts) ---------- */
 
 /* Ink bleed: the browser snapshots the page before and after the switch; the old
