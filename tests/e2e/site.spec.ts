@@ -94,15 +94,15 @@ test.describe('home interactions', () => {
     await expect(page).toHaveTitle(/Lloyd D'Souza/);
     await expect(page.getByRole('heading', { level: 1 })).toHaveText("Lloyd D'Souza");
     await expect(page.getByRole('link', { name: 'View GitHub' })).toHaveAttribute('href', 'https://github.com/lloydaq');
-    await expect(page.getByRole('link', { name: /View the repository: Trustworthy News Detector/ })).toHaveAttribute(
+    await expect(page.getByRole('link', { name: /View code: Trustworthy News Detector/ })).toHaveAttribute(
       'href',
       'https://github.com/lloydaq/TND-The-News-Detector',
     );
-    await expect(page.getByRole('link', { name: /View the repository: DataSentry/ })).toHaveAttribute(
+    await expect(page.getByRole('link', { name: /View code: DataSentry/ })).toHaveAttribute(
       'href',
       'https://github.com/lloydaq/DataSentry',
     );
-    await expect(page.getByRole('link', { name: /View the repository: FlowCast/ })).toHaveAttribute(
+    await expect(page.getByRole('link', { name: /View code: FlowCast/ })).toHaveAttribute(
       'href',
       'https://github.com/lloydaq/flowcast',
     );
@@ -110,7 +110,7 @@ test.describe('home interactions', () => {
       'href',
       'https://lloydaq.github.io/flowcast/',
     );
-    await expect(page.getByRole('link', { name: /View the repository: CampusSignal/ })).toHaveAttribute(
+    await expect(page.getByRole('link', { name: /View code: CampusSignal/ })).toHaveAttribute(
       'href',
       'https://github.com/lloydaq/CampusSignal-pro',
     );
@@ -365,10 +365,11 @@ test.describe('phone layout', () => {
   test.use({ viewport: { width: 320, height: 800 } });
 
   test('screenshots offer the full-size file for the current theme', async ({ page }) => {
+    // The home page shows compact cards; case study galleries carry the full-size links.
     await page.emulateMedia({ colorScheme: 'light' });
-    await page.goto('/');
-    const links = page.locator('#projects').getByRole('link', { name: 'Open full-size screenshot' });
-    await expect(links).toHaveCount(4);
+    await page.goto('/work/tnd/');
+    const links = page.locator('.case__gallery').getByRole('link', { name: 'Open full-size screenshot' });
+    await expect(links).toHaveCount(3);
     await expect(links.first()).toBeVisible();
     await expect(links.first()).toHaveAttribute('href', '/tnd/tnd-results-light.png');
     await page.getByRole('button', { name: 'Switch to dark theme' }).click();
@@ -385,7 +386,7 @@ test.describe('phone layout', () => {
 
   test('action buttons share each row instead of stacking at uneven widths', async ({ page }) => {
     await page.goto('/');
-    const actions = page.locator('#tnd .project__actions .button');
+    const actions = page.locator('#tnd .pcard__actions .button');
     const [a, b] = await Promise.all([actions.nth(0).boundingBox(), actions.nth(1).boundingBox()]);
     expect(Math.round(a!.width)).toBe(Math.round(b!.width));
   });
@@ -393,8 +394,27 @@ test.describe('phone layout', () => {
 
 test('full-size screenshot links stay hidden on wider screens', async ({ page }) => {
   await page.setViewportSize({ width: 1024, height: 800 });
-  await page.goto('/');
+  await page.goto('/work/tnd/');
+  await expect(page.locator('.figure__full')).toHaveCount(3);
   await expect(page.locator('.figure__full').first()).toBeHidden();
+});
+
+test('the home page stays short: compact project cards, depth in the case studies', async ({ page }) => {
+  for (const [width, height, maxScreens] of [
+    [1440, 900, 7],
+    [390, 844, 11],
+  ] as const) {
+    await page.setViewportSize({ width, height });
+    await page.goto('/', { waitUntil: 'networkidle' });
+    const screens = await page.evaluate(() => document.documentElement.scrollHeight / innerHeight);
+    expect(screens, `${width}px`).toBeLessThanOrEqual(maxScreens);
+  }
+  const words = await page.evaluate(() => document.querySelector('main')!.innerText.split(/\s+/).length);
+  expect(words).toBeLessThan(900);
+  // Every project still links to its full case study, and the TND principles moved there intact.
+  await expect(page.getByRole('link', { name: /Read the case study:/ })).toHaveCount(4);
+  await page.goto('/work/tnd/#principles');
+  await expect(page.locator('table.principles tbody tr')).toHaveCount(5);
 });
 
 test.describe('mobile navigation', () => {

@@ -1,11 +1,9 @@
 import { useEffect } from 'react';
-import { Ticks } from '../components/Code';
 import { Footer } from '../components/Footer';
 import { Header } from '../components/Header';
 import { KineticGrid } from '../components/KineticGrid';
-import { ArrowDown, ArrowUpRight, Check, Copy, Download, GitHub, LinkedIn, Mail } from '../components/Icons';
-import { CertificationList, EducationList, EntryList } from '../components/ResumeParts';
-import { FullSizeLink, ThemedShot } from '../components/ThemedShot';
+import { ArrowDown, ArrowRight, ArrowUpRight, Check, Copy, Download, GitHub, LinkedIn, Mail } from '../components/Icons';
+import { ThemedShot } from '../components/ThemedShot';
 import { useActiveSection } from '../components/useActiveSection';
 import { useCopy } from '../components/useCopy';
 import { projectSummaryText, type Summary } from '../content/summary';
@@ -26,22 +24,14 @@ import {
   tndRepo,
   type Screenshot,
 } from '../content/site';
-import {
-  RESUME_PAGE,
-  RESUME_PDF,
-  certifications,
-  education,
-  hackathons,
-  leadership,
-  spokenLanguages,
-} from '../content/resume';
+import { RESUME_PAGE, RESUME_PDF } from '../content/resume';
 import * as tndContent from '../content/tnd';
 
-const { principles, tnd } = tndContent;
+const { tnd } = tndContent;
 
 const sectionIds = homeSections.map((s) => s.id);
 
-// The hero's at-a-glance list: what each project is, what it is built with, and how it can be seen.
+// The hero's at-a-glance list (desktop): what each project is, what it is built with, and how it can be seen.
 const projectIndex = [
   {
     id: 'tnd',
@@ -73,6 +63,13 @@ const projectIndex = [
   },
 ] as const;
 
+/** The three principles shown on the home page; the full table, with where to check each in TND, is in its case study. */
+const howIWork = [
+  ['Evidence over assumptions', 'Every result says what it was based on, and missing evidence is never treated as proof.'],
+  ['Honest about incompleteness', 'When part of a system fails, the output says what is missing instead of looking complete.'],
+  ['Tests before claims', 'Nothing goes in a README, or on this page, unless the code or a test backs it.'],
+] as const;
+
 function CopyEmail() {
   const [state, copy] = useCopy();
   return (
@@ -88,104 +85,63 @@ function CopyEmail() {
   );
 }
 
-function CopySummary(props: Summary) {
+interface ProjectProps extends Summary {
+  id: string;
+  /** One sentence: what it does, in plain words. */
+  pitch: string;
+  tags: readonly string[];
+  shot: Screenshot;
+}
+
+// One project as a compact card: a real screenshot that follows the theme, one sentence,
+// three tags and its links. The depth (characteristics, decisions, limits) is in the case study.
+function Project({ id, pitch, tags, shot, ...summary }: ProjectProps) {
+  const { title, caseStudy, repo, demo } = summary;
+  const titleId = `${id}-title`;
   const [state, copy] = useCopy();
   return (
-    <>
-      <button
-        type="button"
-        className="button"
-        onClick={() => copy(projectSummaryText(props, window.location.origin))}
-        aria-label={`Copy summary: ${props.title}`}
-      >
-        {state === 'copied' ? <Check /> : <Copy />} Copy summary
-      </button>
-      <span className="project__copy-status" role="status">
-        {state === 'copied' && `Summary of ${props.title} copied.`}
-        {state === 'failed' && 'Copy failed. Open the case study to select the text instead.'}
-      </span>
-    </>
-  );
-}
-
-interface ProjectProps {
-  id: string;
-  title: string;
-  summary: string;
-  shot: Screenshot;
-  figure: number;
-  features: readonly (readonly [string, string])[];
-  decisions: readonly { title: string; why: string }[];
-  note: string;
-  caseStudy: string;
-  repo: string;
-  /** A public demo, when the project has one. */
-  demo?: string;
-}
-
-// One project as a datasheet entry: description, a real screenshot that
-// follows the site theme, characteristics, design rationale and links.
-function Project({ id, title, summary, shot, figure, features, decisions, note, caseStudy, repo, demo }: ProjectProps) {
-  const titleId = `${id}-title`;
-  return (
-    <article className="project" id={id} aria-labelledby={titleId}>
-      <div className="project__head">
-        <h3 id={titleId} className="project__title">
-          {title}
-        </h3>
-        <p className="project__summary">{summary}</p>
+    <article className="pcard" id={id} aria-labelledby={titleId}>
+      <div className="figure__frame project__shot">
+        <ThemedShot shot={shot} sizes="(min-width: 90rem) 660px, (min-width: 64rem) 46vw, 94vw" />
       </div>
-
-      <figure className="figure project__shot">
-        <div className="figure__frame">
-          <ThemedShot shot={shot} />
+      <div className="pcard__body">
+        <div className="pcard__head">
+          <h3 id={titleId} className="pcard__title">
+            {title}
+          </h3>
+          <button
+            type="button"
+            className="icon-button pcard__copy"
+            onClick={() => copy(projectSummaryText(summary, window.location.origin))}
+            aria-label={`Copy summary: ${title}`}
+            title="Copy a text summary"
+          >
+            {state === 'copied' ? <Check /> : <Copy />}
+          </button>
         </div>
-        <figcaption>
-          <b>Figure {figure}.</b> {shot.caption}
-          <FullSizeLink shot={shot} />
-        </figcaption>
-      </figure>
-
-      <div className="project__grid">
-        <div>
-          <h4 className="sub-title">Characteristics</h4>
-          <dl className="kv">
-            {features.map(([key, value]) => (
-              <div key={key} className="kv__row">
-                <dt>{key}</dt>
-                <dd>{value}</dd>
-              </div>
-            ))}
-          </dl>
-        </div>
-        <div>
-          <h4 className="sub-title">Why it is built this way</h4>
-          <ul className="decision-list">
-            {decisions.slice(0, 3).map((d) => (
-              <li key={d.title}>
-                <strong>{d.title}.</strong> {d.why}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-
-      <p className="project__note">{note}</p>
-
-      <div className="actions project__actions">
-        {/* Each project has the same two actions, so the label names the project. */}
-        <a className="button button--primary" href={caseStudy} aria-label={`Read the case study: ${title}`}>
-          Read the case study
-        </a>
-        <a className="button" href={repo} rel="noopener" aria-label={`View the repository: ${title}`}>
-          <GitHub /> View the repository <ArrowUpRight />
-        </a>
-        {demo && (
-          <a className="button" href={demo} rel="noopener" aria-label={`Open the live demo: ${title}`}>
-            Open the live demo <ArrowUpRight />
+        <p className="pcard__pitch">{pitch}</p>
+        <ul className="pcard__tags" aria-label="Key facts">
+          {tags.map((tag) => (
+            <li key={tag}>{tag}</li>
+          ))}
+        </ul>
+        <div className="pcard__actions">
+          <a className="button button--primary" href={caseStudy} aria-label={`Read the case study: ${title}`}>
+            Case study <ArrowRight />
           </a>
-        )}
-        <CopySummary title={title} summary={summary} features={features} caseStudy={caseStudy} repo={repo} demo={demo} />
+          <a className="button" href={repo} rel="noopener" aria-label={`View code: ${title}`}>
+            <GitHub /> View code
+          </a>
+          {demo && (
+            <a className="button" href={demo} rel="noopener" aria-label={`Open the live demo: ${title}`}>
+              Live demo <ArrowUpRight />
+            </a>
+          )}
+        </div>
+        <span className="project__copy-status" role="status">
+          {state === 'copied' && `Summary of ${title} copied.`}
+          {state === 'failed' && 'Copy failed. Open the case study to select the text instead.'}
+        </span>
       </div>
     </article>
   );
@@ -215,11 +171,8 @@ export function Home() {
             </h1>
             <p className="hero__statement">I build AI software that shows its&nbsp;work.</p>
             <p className="hero__desc">
-              AI/ML engineering student working on applied machine learning and backend systems. TND checks
-              the claims in a news article against evidence it retrieves, and says plainly when it cannot
-              tell. DataSentry explains the problems in a training dataset. FlowCast forecasts highway
-              traffic and checks every forecast against what happened. CampusSignal serves many colleges on
-              one platform without any of them seeing another’s data.
+              AI/ML engineering student building applied AI and backend systems that say plainly what they
+              found, and what they could not check.
             </p>
             <p className="hero__open">
               <span className="hero__open-dot" aria-hidden="true" />
@@ -275,60 +228,58 @@ export function Home() {
                 Projects
               </h2>
               <p className="section__lede">
-                Four projects, each built end to end: the service, the checks around it, the interface that
-                explains what it found, and the tests. FlowCast has a public demo; the others run locally.
+                Four projects, each built end to end and tested. Open a case study for the architecture,
+                the decisions and the limits.
               </p>
             </div>
 
-            <Project
-              id="tnd"
-              title={tnd.name}
-              summary={tnd.summary}
-              shot={tndContent.screenshots[0]!}
-              figure={1}
-              features={tndContent.features}
-              decisions={tndContent.decisions}
-              note={tnd.disclaimer}
-              caseStudy={caseStudyPath}
-              repo={tndRepo}
-            />
-            <Project
-              id="datasentry"
-              title={ds.dataSentry.name}
-              summary={ds.dataSentry.summary}
-              shot={ds.screenshots[0]!}
-              figure={2}
-              features={ds.features}
-              decisions={ds.decisions}
-              note={ds.dataSentry.disclaimer}
-              caseStudy={dataSentryPath}
-              repo={dataSentryRepo}
-            />
-            <Project
-              id="flowcast"
-              title={fc.flowCast.name}
-              summary={fc.flowCast.summary}
-              shot={fc.screenshots[0]!}
-              figure={3}
-              features={fc.features}
-              decisions={fc.decisions}
-              note={fc.flowCast.disclaimer}
-              caseStudy={flowCastPath}
-              repo={flowCastRepo}
-              demo={fc.flowCast.demo}
-            />
-            <Project
-              id="campussignal"
-              title={cs.campusSignal.name}
-              summary={cs.campusSignal.summary}
-              shot={cs.screenshots[0]!}
-              figure={4}
-              features={cs.features}
-              decisions={cs.decisions}
-              note={cs.campusSignal.disclaimer}
-              caseStudy={campusSignalPath}
-              repo={campusSignalRepo}
-            />
+            <div className="pcard-grid">
+              <Project
+                id="tnd"
+                title={tnd.name}
+                pitch="Checks each claim in a news article against evidence it retrieves, and says plainly when it cannot tell."
+                tags={['FastAPI', 'Local LLM (Ollama)', tnd.version]}
+                shot={tndContent.screenshots[0]!}
+                summary={tnd.summary}
+                features={tndContent.features}
+                caseStudy={caseStudyPath}
+                repo={tndRepo}
+              />
+              <Project
+                id="datasentry"
+                title={ds.dataSentry.name}
+                pitch="Finds leakage, label and quality problems in a training dataset, each with its evidence and its limits."
+                tags={['pandas', 'scikit-learn', `v${ds.dataSentry.version}`]}
+                shot={ds.screenshots[0]!}
+                summary={ds.dataSentry.summary}
+                features={ds.features}
+                caseStudy={dataSentryPath}
+                repo={dataSentryRepo}
+              />
+              <Project
+                id="flowcast"
+                title={fc.flowCast.name}
+                pitch="Forecasts Los Angeles highway traffic up to an hour ahead and checks every forecast against what happened."
+                tags={['LightGBM', 'DCRNN (PyTorch)', 'Live demo']}
+                shot={fc.screenshots[0]!}
+                summary={fc.flowCast.summary}
+                features={fc.features}
+                caseStudy={flowCastPath}
+                repo={flowCastRepo}
+                demo={fc.flowCast.demo}
+              />
+              <Project
+                id="campussignal"
+                title={cs.campusSignal.name}
+                pitch="Many colleges on one platform, with the server making sure none of them can see another’s data."
+                tags={['FastAPI', 'PostgreSQL', 'Multi-tenant']}
+                shot={cs.screenshots[0]!}
+                summary={cs.campusSignal.summary}
+                features={cs.features}
+                caseStudy={campusSignalPath}
+                repo={campusSignalRepo}
+              />
+            </div>
           </div>
         </section>
 
@@ -340,43 +291,29 @@ export function Home() {
                 How I work
               </h2>
               <p className="section__lede">
-                Five rules I hold myself to, each with the place in TND where you can check it.
+                Three rules I hold myself to.{' '}
+                <a href={`${caseStudyPath}#principles`}>See where to check them in TND</a>.
               </p>
             </div>
-
-            <table className="spec-table spec-table--stack principles">
-              <thead>
-                <tr>
-                  <th scope="col">Principle</th>
-                  <th scope="col">What it means in TND</th>
-                  <th scope="col">Where to look</th>
-                </tr>
-              </thead>
-              <tbody>
-                {principles.map((p) => (
-                  <tr key={p.name}>
-                    <th scope="row">{p.name}</th>
-                    <td data-label="What it means in TND">{p.inTnd}</td>
-                    <td data-label="Where to look">
-                      <Ticks text={p.evidence} />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <ol className="how">
+              {howIWork.map(([name, line], i) => (
+                <li key={name} className="how__item">
+                  <span className="how__num" aria-hidden="true">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <h3 className="how__name">{name}</h3>
+                  <p className="how__line">{line}</p>
+                </li>
+              ))}
+            </ol>
 
             <div className="toolchain">
               <h3 className="sub-title">Toolchain</h3>
-              <p className="muted toolchain__note">
-                Listed where there is code to point at, in these four projects or this site.
-              </p>
-              <dl className="toolchain__groups">
+              <dl className="toolchain__rows">
                 {skills.map((group) => (
-                  <div key={group.name} className="toolchain__group">
+                  <div key={group.name} className="toolchain__row">
                     <dt>{group.name}</dt>
-                    {group.items.map((item) => (
-                      <dd key={item}>{item}</dd>
-                    ))}
+                    <dd>{group.items.join(' · ')}</dd>
                   </div>
                 ))}
               </dl>
@@ -397,21 +334,8 @@ export function Home() {
                 the interface that explains what it found.
               </p>
               <p>
-                TND is the clearest example so far. I built it end to end, from the FastAPI service and the
-                evidence pipeline to the frontend and the test suites, and tagged version 1.0.0 in October
-                2026. It runs a language model locally, checks its output against retrieved evidence, and
-                reports what failed instead of hiding it.
-              </p>
-              <p>
-                DataSentry applies the same habit to training data. It profiles a CSV, screens it for
-                leakage and label problems, and reports each finding with its evidence and its limits,
-                instead of a single score that could hide the one problem that matters.
-              </p>
-              <p>
-                FlowCast is the same habit applied to model evaluation: every model scored on identical
-                rows, features tested so they cannot see the future, and a bootstrap that says where the
-                best model is not actually better. CampusSignal is a larger system, many colleges on one
-                platform, where the hard part is making sure none of them can ever see another’s data.
+                Across TND, DataSentry, FlowCast and CampusSignal the habit is the same: measure honestly, say
+                where a result stops, and test it before claiming it.
               </p>
             </div>
           </div>
@@ -419,47 +343,22 @@ export function Home() {
 
         {/* ---------- Résumé ---------- */}
         <section className="section" id="resume" aria-labelledby="resume-title">
-          <div className="container">
-            <div className="section__head">
-              <h2 id="resume-title" className="section__title">
-                Résumé
-              </h2>
-              <div>
-                <p className="section__lede">
-                  Education, hackathons and coursework. The projects above are the main evidence; the one-page
-                  résumé puts everything together.
-                </p>
-                <div className="actions resume__actions">
-                  <a className="button button--primary" href={RESUME_PDF} download="Lloyd-DSouza-Resume.pdf">
-                    <Download /> Download résumé (PDF)
-                  </a>
-                  <a className="button" href={RESUME_PAGE}>
-                    View the printable résumé <ArrowUpRight />
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <div className="resume-grid">
-              <div className="resume-block">
-                <h3 className="sub-title">Education</h3>
-                <EducationList items={education} />
-              </div>
-              <div className="resume-block">
-                <h3 className="sub-title">Hackathons</h3>
-                <EntryList items={hackathons} />
-              </div>
-              <div className="resume-block">
-                <h3 className="sub-title">Leadership</h3>
-                <EntryList items={leadership} />
-              </div>
-              <div className="resume-block">
-                <h3 className="sub-title">Certification</h3>
-                <CertificationList items={certifications} />
-              </div>
-              <div className="resume-block">
-                <h3 className="sub-title">Languages</h3>
-                <p className="cv-item__meta">{spokenLanguages.join(', ')}</p>
+          <div className="container section__head resume-line">
+            <h2 id="resume-title" className="section__title">
+              Résumé
+            </h2>
+            <div>
+              <p className="section__lede">
+                BE in AI &amp; ML at MITE · CGPA 8.43 · two team hackathons · conducted the AIvibeX hackathon ·
+                NPTEL Foundations of Virtual Reality (Elite)
+              </p>
+              <div className="actions resume__actions">
+                <a className="button button--primary" href={RESUME_PDF} download="Lloyd-DSouza-Resume.pdf">
+                  <Download /> Download résumé (PDF)
+                </a>
+                <a className="button" href={RESUME_PAGE}>
+                  View the full résumé <ArrowUpRight />
+                </a>
               </div>
             </div>
           </div>

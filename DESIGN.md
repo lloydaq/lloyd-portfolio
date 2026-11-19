@@ -106,7 +106,8 @@ Rejected by brief: neon, purple/blue AI gradients, glass content panels, decorat
 
 **Key Characteristics:**
 - Hairline-ruled tables and key/value rows instead of cards.
-- One explorable block diagram as the signature figure.
+- One explorable block diagram as the signature figure (in the TND case study).
+- The home page is a short index: compact project cards with one sentence and three tags each; depth is one click away in the case studies.
 - Archivo's width axis does the hierarchy: expanded display, condensed table heads.
 - State is drawn by stroke pattern plus text, never colour alone.
 - Ember is rare (about 5% of the page): signal path, selection, focus, glow, the primary action.

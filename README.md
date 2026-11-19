@@ -3,8 +3,9 @@
 Personal portfolio of Lloyd D'Souza, AI/ML engineering student. It has six
 static pages:
 
-- `/` — home: introduction with a project index, four projects, engineering principles, toolchain,
-  about, résumé, contact.
+- `/` — home, kept short (about 5.5 screens on desktop, 7.5 on a phone): introduction with
+  an open-to-work line and a project index, four compact project cards, three principles and the
+  toolchain, about, a one-line résumé, contact. Depth lives in the case studies.
 - `/work/tnd/` — case study of **TND (Trustworthy News Detector)**.
 - `/work/datasentry/` — case study of **DataSentry**, a dataset diagnostics
   tool.

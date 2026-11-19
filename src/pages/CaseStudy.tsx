@@ -12,6 +12,7 @@ import {
   backendTestFiles,
   claimStatuses,
   decisions,
+  principles,
   limitations,
   roadmap,
   scoreBands,
@@ -393,6 +394,30 @@ export function CaseStudy() {
                       <td data-label="Why">{d.why}</td>
                       <td data-label="What it costs" className="muted">
                         {d.cost}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+
+              <h3 id="principles" className="case__h3">
+                The principles behind it, and where to check them
+              </h3>
+              <table className="spec-table spec-table--stack principles">
+                <thead>
+                  <tr>
+                    <th scope="col">Principle</th>
+                    <th scope="col">What it means in TND</th>
+                    <th scope="col">Where to look</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {principles.map((p) => (
+                    <tr key={p.name}>
+                      <th scope="row">{p.name}</th>
+                      <td data-label="What it means in TND">{p.inTnd}</td>
+                      <td data-label="Where to look">
+                        <Ticks text={p.evidence} />
                       </td>
                     </tr>
                   ))}
