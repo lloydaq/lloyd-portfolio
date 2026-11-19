@@ -126,7 +126,8 @@ export function CaseStudy() {
           <a className="back-link" href="/#projects">
             <ArrowLeft /> Back to the portfolio
           </a>
-          <h1 className="case__title">
+          {/* Same transition name as this project's card on the home page: the title morphs between them. */}
+          <h1 className="case__title" style={{ viewTransitionName: 'title-tnd' }}>
             {tnd.short}: {tnd.name}
           </h1>
           <p className="case__summary">{tnd.summary}</p>

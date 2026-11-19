@@ -32,6 +32,8 @@
         if (t === 'light') document.querySelector('meta[name="theme-color"]').setAttribute('content', '#cfe6ff');
       })();
     </script>
+    <!-- Render-blocking, so the first paint (and a cross-page view transition) shows the finished page. -->
+    <script type="module" blocking="render" src="/src/main-resume.tsx"></script>
   </head>
   <body>
     <div id="root"></div>
@@ -40,6 +42,5 @@
         Résumé of Lloyd D'Souza. This page needs JavaScript; the PDF is at /lloyd-dsouza-resume.pdf.
       </p>
     </noscript>
-    <script type="module" src="/src/main-resume.tsx"></script>
   </body>
 </html>

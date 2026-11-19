@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useLayoutEffect } from 'react';
 import { Footer } from '../components/Footer';
 import { Header } from '../components/Header';
 import { KineticGrid } from '../components/KineticGrid';
@@ -106,7 +106,8 @@ function Project({ id, pitch, tags, shot, ...summary }: ProjectProps) {
       </div>
       <div className="pcard__body">
         <div className="pcard__head">
-          <h3 id={titleId} className="pcard__title">
+          {/* Morphs into the case study's headline when its case study is opened (titleMorph.ts). */}
+          <h3 id={titleId} className="pcard__title" data-morph={`title-${id}`} data-morph-href={caseStudy}>
             {title}
           </h3>
           <button
@@ -152,9 +153,11 @@ export function Home() {
 
   // The page is rendered by script, after the browser's own jump to a #fragment, so a link
   // such as /#flowcast (each case study's back link) would land at the top. Jump once on load.
-  useEffect(() => {
+  // A layout effect, so the jump happens before the first paint: a page transition back from
+  // a case study then lands on (and morphs into) the right card.
+  useLayoutEffect(() => {
     const id = decodeURIComponent(window.location.hash.slice(1));
-    if (id) document.getElementById(id)?.scrollIntoView({ block: 'start' });
+    if (id) document.getElementById(id)?.scrollIntoView({ block: 'start', behavior: 'instant' });
   }, []);
 
   return (

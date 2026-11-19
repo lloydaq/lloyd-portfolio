@@ -33,6 +33,8 @@
         if (t === 'light') document.querySelector('meta[name="theme-color"]').setAttribute('content', '#cfe6ff');
       })();
     </script>
+    <!-- Render-blocking, so the first paint (and a cross-page view transition) shows the finished page. -->
+    <script type="module" blocking="render" src="/src/main-home.tsx"></script>
   </head>
   <body>
     <div id="root"></div>
@@ -42,6 +44,5 @@
         lloyd25dsouza@gmail.com or see https://github.com/lloydaq.
       </p>
     </noscript>
-    <script type="module" src="/src/main-home.tsx"></script>
   </body>
 </html>

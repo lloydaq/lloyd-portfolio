@@ -53,7 +53,8 @@ export function CampusSignalStudy() {
           <a className="back-link" href="/#campussignal">
             <ArrowLeft /> Back to the portfolio
           </a>
-          <h1 className="case__title">
+          {/* Same transition name as this project's card on the home page: the title morphs between them. */}
+          <h1 className="case__title" style={{ viewTransitionName: 'title-campussignal' }}>
             {/* The name is one long word in a wide face: let it break between its parts on phones. */}
             Campus<wbr />Signal: {campusSignal.tagline}
           </h1>

@@ -188,6 +188,14 @@ Browsers without View Transitions get a colour cross-fade; with
 
 ## Interactions
 
+- **Page transitions**: moving between pages is a cross-document view transition (the old
+  page lifts away, the new one rises in and comes into focus; the header and grid hold still).
+  Opening a case study morphs the card's title into the case study headline, and back
+  (`titleMorph.ts`). Each page renders synchronously behind a render-blocking entry script
+  (`mount.tsx`, the `renderBlockingEntry` Vite plugin), so the transition never shows an
+  empty page. Off with reduced motion.
+- **Scroll-linked motion**: the hero eases back as you scroll past it, and project screenshots
+  settle from a slight zoom as they come into view (CSS scroll-driven animations).
 - **Scroll reveal** (`reveal.ts`): blocks fade and rise into place the first
   time they enter the view, staggered; nothing is hidden without script, with
   reduced motion, or in print.

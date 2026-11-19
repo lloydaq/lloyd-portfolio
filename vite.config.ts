@@ -28,10 +28,24 @@ function absoluteSeo(): Plugin {
   };
 }
 
+/**
+ * Vite rewrites each page's entry <script> and drops `blocking="render"`. Put it back on the
+ * built entry, so the first paint, and a cross-page view transition, show the finished page.
+ */
+function renderBlockingEntry(): Plugin {
+  return {
+    name: 'render-blocking-entry',
+    transformIndexHtml: {
+      order: 'post',
+      handler: (html) => html.replace(/<script type="module" (?!blocking)/, '<script type="module" blocking="render" '),
+    },
+  };
+}
+
 // Static pages (multi-page build), so every /work/<project>/ page deep-links on any static
 // host without rewrite rules, and in-page #anchors keep working.
 export default defineConfig({
-  plugins: [react(), absoluteSeo()],
+  plugins: [react(), absoluteSeo(), renderBlockingEntry()],
   build: {
     rollupOptions: {
       input: {

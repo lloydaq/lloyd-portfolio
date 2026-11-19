@@ -806,3 +806,56 @@ test.describe('résumé', () => {
     await expect(page.locator('.cv-sheet')).toBeVisible();
   });
 });
+
+test.describe('page transitions', () => {
+  test('moving between home and a case study is a view transition, with one title morphing', async ({ page, browserName }) => {
+    test.skip(browserName !== 'chromium', 'Cross-page view transitions are checked in Chromium.');
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
+    await page.addInitScript(() => {
+      const w = window as unknown as { __reveal: string };
+      w.__reveal = 'none';
+      addEventListener('pagereveal', (e) => {
+        w.__reveal = (e as Event & { viewTransition: unknown }).viewTransition ? 'transition' : 'plain';
+      });
+    });
+    await page.goto('/#projects', { waitUntil: 'networkidle' });
+    // Registered after the app's own listener, so it sees the name the app has just set.
+    await page.evaluate(() =>
+      addEventListener('pageswap', () => {
+        const named = Array.from(document.querySelectorAll<HTMLElement>('[data-morph]')).filter(
+          (el) => el.style.viewTransitionName,
+        ).length;
+        sessionStorage.setItem('named-on-swap', String(named));
+      }),
+    );
+    await page.getByRole('link', { name: 'Read the case study: DataSentry' }).click();
+    await expect(page).toHaveURL(/\/work\/datasentry\/$/);
+    await expect.poll(() => page.evaluate(() => (window as unknown as { __reveal: string }).__reveal)).toBe('transition');
+    // Exactly one card (the one opened) carried the shared title name as the page left.
+    expect(await page.evaluate(() => sessionStorage.getItem('named-on-swap'))).toBe('1');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveCSS('view-transition-name', 'title-datasentry');
+    // And back: a transition again; once it ends, no card keeps a name.
+    await page.getByRole('link', { name: 'Back to the portfolio' }).click();
+    await expect(page).toHaveURL(/\/#datasentry$/);
+    await expect.poll(() => page.evaluate(() => (window as unknown as { __reveal: string }).__reveal)).toBe('transition');
+    await expect
+      .poll(() => page.evaluate(() => Array.from(document.querySelectorAll<HTMLElement>('[data-morph]')).filter((el) => el.style.viewTransitionName).length))
+      .toBe(0);
+  });
+
+  test('with reduced motion pages load without a transition', async ({ page, browserName }) => {
+    test.skip(browserName !== 'chromium', 'Cross-page view transitions are checked in Chromium.');
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.addInitScript(() => {
+      addEventListener('pagereveal', (e) => {
+        (window as unknown as { __reveal: string }).__reveal = (e as Event & { viewTransition: unknown }).viewTransition
+          ? 'transition'
+          : 'plain';
+      });
+    });
+    await page.goto('/#projects', { waitUntil: 'networkidle' });
+    await page.getByRole('link', { name: 'Read the case study: DataSentry' }).click();
+    await expect(page).toHaveURL(/\/work\/datasentry\/$/);
+    await expect.poll(() => page.evaluate(() => (window as unknown as { __reveal?: string }).__reveal)).toBe('plain');
+  });
+});

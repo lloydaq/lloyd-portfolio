@@ -546,3 +546,41 @@
 .project__copy-status:empty {
   display: none;
 }
+
+/* ---------- Scroll-linked motion (compositor-only, where supported) ---------- */
+
+/* As you scroll past it, the hero eases back; each project screenshot settles from a slight
+   zoom as it comes into view. Driven by the scroll position itself, not by script, so it
+   stays smooth; absent with reduced motion or without scroll-driven animation support. */
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .hero__intro,
+    .hero__index {
+      animation: hero-away linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 80vh;
+    }
+
+    .pcard .project__shot picture {
+      animation: shot-settle linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 40%;
+    }
+  }
+}
+
+@keyframes hero-away {
+  to {
+    opacity: 0.35;
+    transform: translateY(-5vh) scale(0.985);
+  }
+}
+
+@keyframes shot-settle {
+  from {
+    transform: scale(1.12);
+  }
+  to {
+    transform: none;
+  }
+}

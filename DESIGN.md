@@ -196,6 +196,7 @@ Each row leads with a 2.75rem rule: solid for done, dashed for open, plus the wo
 - **Do** keep ember to about 5%: the signal path, selection, focus, glow and the one primary action.
 - **Do** draw state with stroke pattern and label it in text.
 - **Do** use ruled tables for anything that has parameters and values.
+- **Do** move between pages with the cross-document view transition (page out 0.26s: fade, lift 14px, blur 3px; page in 0.55s `cubic-bezier(0.22, 1, 0.36, 1)`: fade, rise 22px, unblur 6px), keep the header and grid named so they hold still, and give a shared element (a project title) the same name on both pages only when that pair is involved.
 - **Do** gate entrance motion behind `prefers-reduced-motion: no-preference`; with reduced motion, animations are removed, not shortened.
 
 ### Don't:
