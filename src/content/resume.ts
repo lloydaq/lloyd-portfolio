@@ -81,7 +81,7 @@ export const certifications: Certification[] = [
     name: 'Foundations of Virtual Reality',
     issuer: 'NPTEL, IIT Madras',
     when: 'Jul–Oct 2026, 12-week course',
-    detail: 'Elite certificate · consolidated score 67% · 4 credits recommended',
+    detail: 'Elite certificate',
   },
 ];
 
@@ -122,7 +122,7 @@ export const resumeProjects: ResumeProject[] = [
     stack: 'Python, pandas, LightGBM, PyTorch (DCRNN), FastAPI; React, TypeScript, Leaflet',
     status: 'v1.0.0 · live demo at lloydaq.github.io/flowcast',
     points: [
-      'Forecasts traffic speed 15–60 min ahead for 207 LA highway sensors (METR-LA): four baselines, LightGBM and a DCRNN, on identical rows.',
+      'Forecasts LA traffic speed 15–60 min ahead (METR-LA, 207 sensors): four baselines, LightGBM and DCRNN on identical rows.',
       'Leakage-tested features, a day-block bootstrap to compare models, and a React dashboard that replays June 2012.',
     ],
   },

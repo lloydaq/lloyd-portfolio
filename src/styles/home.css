@@ -73,6 +73,43 @@
   background: var(--accent);
 }
 
+/* What he is looking for: one line, a live ember dot, right above the actions. */
+.hero__open {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+  font-size: var(--step--1);
+  line-height: 1.5;
+}
+
+.hero__open strong {
+  color: var(--ink);
+  font-weight: 620;
+}
+
+.hero__open-where {
+  display: block;
+  color: var(--ink-2);
+}
+
+.hero__open-dot {
+  position: relative;
+  top: -0.05em;
+  flex: none;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 0 rgb(var(--accent-rgb) / 0.6);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero__open-dot {
+    animation: ember-pulse 1.8s ease-out infinite;
+  }
+}
+
 /* ---------- Hero project index ---------- */
 
 .hero__index {

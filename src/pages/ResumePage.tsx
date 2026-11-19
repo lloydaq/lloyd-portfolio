@@ -49,6 +49,9 @@ export function ResumePage() {
               {profile.name}
             </h1>
             <p className="cv-sheet__headline">{resume.headline}</p>
+            <p className="cv-sheet__open">
+              {profile.lookingFor} · {profile.workWhere}
+            </p>
             <p className="cv-sheet__contact">
               <span>{resume.location}</span>
               <a href={`mailto:${profile.email}`}>{profile.email}</a>

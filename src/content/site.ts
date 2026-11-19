@@ -5,6 +5,9 @@ export const profile = {
   email: 'lloyd25dsouza@gmail.com',
   github: 'https://github.com/lloydaq',
   linkedin: 'https://www.linkedin.com/in/lloyddso',
+  /** What he is looking for (owner, 2026-11-19). No start date by choice. */
+  lookingFor: 'Open to software engineering internships',
+  workWhere: 'Remote, or on-site in Bengaluru or Mangaluru',
 } as const;
 
 export const tndRepo = 'https://github.com/lloydaq/TND-The-News-Detector';
