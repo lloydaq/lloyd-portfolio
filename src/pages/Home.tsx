@@ -4,12 +4,14 @@ import { Header } from '../components/Header';
 import { KineticGrid } from '../components/KineticGrid';
 import { ArrowDown, ArrowRight, ArrowUpRight, Check, Copy, Download, GitHub, LinkedIn, Mail } from '../components/Icons';
 import { ThemedShot } from '../components/ThemedShot';
+import { switchTheme } from '../components/themeSwitch';
 import { useActiveSection } from '../components/useActiveSection';
 import { useCopy } from '../components/useCopy';
 import { projectSummaryText, type Summary } from '../content/summary';
 import * as cs from '../content/campussignal';
 import * as ds from '../content/datasentry';
 import * as fc from '../content/flowcast';
+import * as ink from '../content/inkshift';
 import {
   campusSignalPath,
   campusSignalRepo,
@@ -60,6 +62,13 @@ const projectIndex = [
     tagline: cs.campusSignal.tagline,
     stack: 'FastAPI · PostgreSQL · React',
     status: 'Demo data · not deployed',
+  },
+  {
+    id: 'inkshift',
+    name: ink.inkshift.name,
+    tagline: ink.inkshift.tagline,
+    stack: 'TypeScript · React · npm',
+    status: `v${ink.inkshift.npmVersion} on npm · open source`,
   },
 ] as const;
 
@@ -148,6 +157,49 @@ function Project({ id, pitch, tags, shot, ...summary }: ProjectProps) {
   );
 }
 
+// The open-source library behind this site's theme switch: a wide card, with "Try it"
+// playing the real thing from the button.
+function InkshiftCard() {
+  const { inkshift, inkshiftRepo, inkshiftNpm, screenshot } = ink;
+  return (
+    <article className="pcard pcard--wide" id="inkshift" aria-labelledby="inkshift-title">
+      <div className="figure__frame project__shot">
+        <ThemedShot shot={screenshot} sizes="(min-width: 90rem) 760px, (min-width: 64rem) 55vw, 94vw" />
+      </div>
+      <div className="pcard__body">
+        <p className="pcard__kicker">Open source · npm</p>
+        <h3 id="inkshift-title" className="pcard__title">
+          {inkshift.name}
+        </h3>
+        <p className="pcard__pitch">{inkshift.pitch}</p>
+        <ul className="pcard__tags" aria-label="Key facts">
+          <li>npm v{inkshift.npmVersion}</li>
+          <li>≈6 kB gzipped</li>
+          <li>React + vanilla JS</li>
+        </ul>
+        <div className="pcard__actions">
+          <button
+            type="button"
+            className="button button--primary"
+            onClick={(event) =>
+              switchTheme(event.currentTarget, event.detail === 0 ? undefined : { x: event.clientX, y: event.clientY })
+            }
+            aria-label="Try it: switch the theme with Inkshift's ink"
+          >
+            Try it
+          </button>
+          <a className="button" href={inkshiftRepo} rel="noopener" aria-label={`View code: ${inkshift.name}`}>
+            <GitHub /> View code
+          </a>
+          <a className="button" href={inkshiftNpm} rel="noopener" aria-label={`Open on npm: ${inkshift.name}`}>
+            Open on npm <ArrowUpRight />
+          </a>
+        </div>
+      </div>
+    </article>
+  );
+}
+
 export function Home() {
   const active = useActiveSection(sectionIds);
 
@@ -231,8 +283,8 @@ export function Home() {
                 Projects
               </h2>
               <p className="section__lede">
-                Four projects, each built end to end and tested. Open a case study for the architecture,
-                the decisions and the limits.
+                Four projects, each built end to end and tested, and one open-source library. Open a case
+                study for the architecture, the decisions and the limits.
               </p>
             </div>
 
@@ -282,6 +334,7 @@ export function Home() {
                 caseStudy={campusSignalPath}
                 repo={campusSignalRepo}
               />
+              <InkshiftCard />
             </div>
           </div>
         </section>

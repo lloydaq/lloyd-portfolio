@@ -10,7 +10,7 @@ export const resume = {
   headline: 'AI & ML engineering student',
   location: 'Karkala, Karnataka, India',
   summary:
-    'AI & ML engineering student who builds complete applications: the backend service, the checks around a model, the interface that explains its output, and the tests. Four projects built end to end, two team hackathons, and one hackathon conducted for my college.',
+    'AI & ML engineering student who builds complete applications: the service, the checks around a model, the interface and the tests. Four projects, one open-source library, two team hackathons.',
 } as const;
 
 export interface Education {
@@ -44,9 +44,8 @@ export const hackathons: Entry[] = [
     context: 'Build for Billions Hackathon, NITK',
     role: 'Backend: verification, security and disputes',
     points: [
-      'Built backend workflows for order verification, delivery validation and dispute handling.',
+      'Built backend workflows and APIs, with teammates, for order verification, delivery validation and disputes.',
       'Worked on OTP verification and server-side validation logic.',
-      'Developed APIs for the water-delivery workflow with teammates.',
     ],
   },
   {
@@ -54,8 +53,7 @@ export const hackathons: Entry[] = [
     context: 'Tech Fusion 2.0',
     role: 'AI-powered learning assistant',
     points: [
-      'Contributed to a tool that turns YouTube videos into summaries, key takeaways and flashcards.',
-      'Worked on interactive timelines and progress tracking for long-form learning.',
+      'Turns YouTube videos into summaries, key takeaways and flashcards; I worked on timelines and progress tracking.',
     ],
   },
 ];
@@ -86,7 +84,7 @@ export const certifications: Certification[] = [
 ];
 
 export interface ResumeProject {
-  id: 'tnd' | 'datasentry' | 'flowcast' | 'campussignal';
+  id: 'tnd' | 'datasentry' | 'flowcast' | 'campussignal' | 'inkshift';
   name: string;
   stack: string;
   status: string;
@@ -134,6 +132,15 @@ export const resumeProjects: ResumeProject[] = [
     points: [
       'A multi-college campus platform: notices, department pages, a moderated community, academic records and issue reporting.',
       'College isolation enforced by the server on every request; server-side sessions, CSRF checks, Argon2id, tenant-isolation tests.',
+    ],
+  },
+  {
+    id: 'inkshift',
+    name: 'Inkshift (open source)',
+    stack: 'TypeScript, View Transitions, Web Animations; React entry point',
+    status: 'npm v0.1.0, MIT · github.com/lloydaq/inkshift',
+    points: [
+      'This site’s ink-bleed theme switch as a library: reversible, about 6 kB gzipped, no runtime dependencies.',
     ],
   },
 ];

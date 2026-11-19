@@ -269,6 +269,31 @@
   scroll-margin-top: 5rem;
 }
 
+/* The open-source library spans the grid: screenshot left, text right. */
+.pcard--wide {
+  grid-column: 1 / -1;
+}
+
+@media (min-width: 64rem) {
+  .pcard--wide {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    align-items: center;
+    gap: clamp(1.5rem, 1rem + 2vw, 3rem);
+    padding-top: var(--space-6);
+    border-top: var(--hair);
+  }
+}
+
+.pcard__kicker {
+  margin-bottom: var(--space-2);
+  color: var(--accent-ink);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 /* Every card shows the same crop of its screenshot, so a theme switch never moves the layout. */
 .project__shot img {
   display: block;

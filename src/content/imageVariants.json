@@ -105,6 +105,20 @@
     960,
     1440
   ],
+  "/inkshift/inkshift-demo-dark.png": [
+    640,
+    960,
+    1440,
+    1920,
+    2560
+  ],
+  "/inkshift/inkshift-demo-light.png": [
+    640,
+    960,
+    1440,
+    1920,
+    2560
+  ],
   "/tnd/tnd-evidence-dark.png": [
     640,
     960,

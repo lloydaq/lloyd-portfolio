@@ -242,6 +242,7 @@ test.describe('project screenshots', () => {
     `/datasentry/datasentry-overview-${theme}.png`,
     `/flowcast/flowcast-network-${theme}.png`,
     `/campussignal/campussignal-home-${theme}.png`,
+    `/inkshift/inkshift-demo-${theme}.png`,
   ];
   const DARK = homeShots('dark');
   const LIGHT = homeShots('light');
@@ -319,6 +320,7 @@ test.describe('project screenshots', () => {
       ['datasentry', ['datasentry-overview', 'datasentry-findings', 'datasentry-ml-checks']],
       ['flowcast', ['flowcast-network', 'flowcast-forecast', 'flowcast-models']],
       ['campussignal', ['campussignal-home', 'campussignal-issue', 'campussignal-notices']],
+      ['inkshift', ['inkshift-demo']],
     ].flatMap(([dir, names]) => (names as string[]).map((n) => `/${dir}/${n}`));
     // Mean luminance (0-255) of each file, measured in the browser.
     const luminance = (src: string) =>
@@ -857,5 +859,23 @@ test.describe('page transitions', () => {
     await page.getByRole('link', { name: 'Read the case study: DataSentry' }).click();
     await expect(page).toHaveURL(/\/work\/datasentry\/$/);
     await expect.poll(() => page.evaluate(() => (window as unknown as { __reveal?: string }).__reveal)).toBe('plain');
+  });
+});
+
+test.describe('Inkshift', () => {
+  test('the open-source card links the repo and npm, and "Try it" switches the theme', async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'dark', reducedMotion: 'reduce' });
+    await page.goto('/#inkshift', { waitUntil: 'networkidle' });
+    const card = page.locator('#inkshift');
+    await expect(card.getByRole('heading', { name: 'Inkshift', level: 3 })).toBeVisible();
+    await expect(card).toContainText('npm v0.1.0');
+    await expect(card.getByRole('link', { name: 'View code: Inkshift' })).toHaveAttribute('href', 'https://github.com/lloydaq/inkshift');
+    await expect(card.getByRole('link', { name: 'Open on npm: Inkshift' })).toHaveAttribute(
+      'href',
+      'https://www.npmjs.com/package/inkshift',
+    );
+    await card.getByRole('button', { name: /^Try it/ }).click();
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+    await expect(card.locator('img')).toHaveAttribute('src', '/inkshift/inkshift-demo-light.png');
   });
 });
