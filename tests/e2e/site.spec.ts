@@ -762,6 +762,16 @@ test.describe('résumé', () => {
     expect((await response.body()).subarray(0, 5).toString()).toBe('%PDF-');
   });
 
+  test('says what he is looking for, and shows no certificate score', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator('.hero__open')).toContainText('Open to software engineering internships');
+    await expect(page.locator('.hero__open')).toContainText('Remote, or on-site in Bengaluru or Mangaluru');
+    await expect(page.locator('#resume')).not.toContainText('67%');
+    await page.goto('/resume/');
+    await expect(page.locator('.cv-sheet')).toContainText('Open to software engineering internships');
+    await expect(page.locator('.cv-sheet')).not.toContainText('67%');
+  });
+
   test('the printable page holds the whole résumé and prints only the sheet', async ({ page }) => {
     await page.goto('/resume/');
     await expect(page.getByRole('heading', { level: 1 })).toHaveText("Lloyd D'Souza");

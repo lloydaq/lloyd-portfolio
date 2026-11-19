@@ -221,6 +221,13 @@ export function Home() {
               traffic and checks every forecast against what happened. CampusSignal serves many colleges on
               one platform without any of them seeing another’s data.
             </p>
+            <p className="hero__open">
+              <span className="hero__open-dot" aria-hidden="true" />
+              <span>
+                <strong>{profile.lookingFor}</strong>
+                <span className="hero__open-where">{profile.workWhere}</span>
+              </span>
+            </p>
             <div className="actions hero__actions">
               <a className="button button--primary" href="#projects">
                 Explore projects <ArrowDown />
