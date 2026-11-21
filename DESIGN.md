@@ -1,5 +1,5 @@
 ---
-name: Lloyd D'Souza — portfolio
+name: Lloyd Dsouza — portfolio
 description: A component datasheet for an engineer — specs, block diagram, test conditions, limits.
 colors:
   charcoal-ground: "#0b0d12"
@@ -92,7 +92,7 @@ components:
     textColor: "{colors.warm-ink}"
 ---
 
-# Design System: Lloyd D'Souza — portfolio
+# Design System: Lloyd Dsouza — portfolio
 
 ## Overview
 

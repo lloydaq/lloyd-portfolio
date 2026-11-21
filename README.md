@@ -1,6 +1,6 @@
-# Lloyd D'Souza — portfolio
+# Lloyd Dsouza — portfolio
 
-Personal portfolio of Lloyd D'Souza, AI/ML engineering student. It has six
+Personal portfolio of Lloyd Dsouza, AI/ML engineering student. It has six
 static pages:
 
 - `/` — home, kept short (about 5.5 screens on desktop, 7.5 on a phone): introduction with

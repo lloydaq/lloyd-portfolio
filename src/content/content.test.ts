@@ -55,6 +55,14 @@ describe('content integrity', () => {
     }
   });
 
+  it('spells the name as the owner does: Lloyd Dsouza', () => {
+    expect(profile.name).toBe('Lloyd Dsouza');
+    for (const [file, text] of Object.entries(sources)) {
+      if (file.endsWith('.test.ts')) continue;
+      expect(text, file).not.toMatch(/D['’]Souza|DSouza/);
+    }
+  });
+
   it('uses the confirmed contact details', () => {
     expect(profile.email).toBe('lloyd25dsouza@gmail.com');
     expect(profile.github).toBe('https://github.com/lloydaq');

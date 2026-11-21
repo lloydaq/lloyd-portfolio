@@ -12,11 +12,11 @@ delegated: React + TypeScript + Vite, static build, no backend. The owner listed
 
 ## Users
 
-Primary: recruiters and hiring engineers who arrive from a résumé, LinkedIn, or GitHub and spend under a minute deciding whether Lloyd D'Souza is worth a conversation. Secondary: engineers who open the TND case study to judge technical depth and judgement.
+Primary: recruiters and hiring engineers who arrive from a résumé, LinkedIn, or GitHub and spend under a minute deciding whether Lloyd Dsouza is worth a conversation. Secondary: engineers who open the TND case study to judge technical depth and judgement.
 
 ## Product Purpose
 
-A personal portfolio for Lloyd D'Souza, an AI/ML engineering student who builds practical AI applications and backend systems. It must show, within seconds, who he is and what he builds, and let a technical reader verify that through one real, well-documented project: TND.
+A personal portfolio for Lloyd Dsouza, an AI/ML engineering student who builds practical AI applications and backend systems. It must show, within seconds, who he is and what he builds, and let a technical reader verify that through one real, well-documented project: TND.
 
 Success: a visitor understands the role immediately, opens the TND case study or repository, and finds every claim traceable to code, tests, or documentation.
 
@@ -45,7 +45,7 @@ Most student portfolios list many projects and claim skills. This one makes one 
 
 ## Brand Commitments
 
-- Name: Lloyd D'Souza. Role: AI/ML engineering student.
+- Name: Lloyd Dsouza (owner, 2026-11-21: spelled "Dsouza", never "D'Souza" or "DSouza"). Role: AI/ML engineering student.
 - Contact (confirmed for publication): GitHub https://github.com/lloydaq; email lloyd25dsouza@gmail.com; LinkedIn https://www.linkedin.com/in/lloyddso.
 - Voice: plain, specific, grounded. No hype, no "passionate", no expert claims.
 - Visual brief (owner-pinned): deep charcoal or near-black surfaces, warm white type, one restrained accent; no neon, no purple/blue AI gradients, no blobs, no stock photos, no fake terminals, no emoji, no skill percentages.

@@ -19,7 +19,7 @@ p { margin-top: 36px; font-size: 44px; font-weight: 560; letter-spacing: -0.015e
 .rule i { width: 40px; border-top: 1.5px solid #4d4d55; }
 </style></head><body>
 <div class="top"><span>AI/ML engineering student</span><span>github.com/lloydaq</span></div>
-<h1>Lloyd D'Souza</h1>
+<h1>Lloyd Dsouza</h1>
 <p>I build AI software that shows its work.</p>
 <div class="rule"><span></span><i></i><span></span><i></i><span class="on"></span><i></i><span></span><i></i><span></span><i></i><span></span></div>
 </body></html>`;
