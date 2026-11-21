@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "Portfolio of Lloyd D'Souza, AI/ML engineering student.",
+  "description": "Portfolio of Lloyd Dsouza, AI/ML engineering student.",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build && node scripts/check-budget.mjs",

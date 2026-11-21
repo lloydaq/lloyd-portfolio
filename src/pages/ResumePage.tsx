@@ -34,7 +34,7 @@ export function ResumePage() {
             <ArrowLeft /> Back to the portfolio
           </a>
           <div className="actions">
-            <a className="button button--primary" href={RESUME_PDF} download="Lloyd-DSouza-Resume.pdf">
+            <a className="button button--primary" href={RESUME_PDF} download="Lloyd-Dsouza-Resume.pdf">
               <Download /> Download PDF
             </a>
             <button type="button" className="button" onClick={() => window.print()}>

@@ -91,8 +91,8 @@ for (const { name, path } of pages) {
 test.describe('home interactions', () => {
   test('identifies the owner and links to verified profiles', async ({ page }) => {
     await page.goto('/');
-    await expect(page).toHaveTitle(/Lloyd D'Souza/);
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText("Lloyd D'Souza");
+    await expect(page).toHaveTitle(/Lloyd Dsouza/);
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText("Lloyd Dsouza");
     await expect(page.getByRole('link', { name: 'View GitHub' })).toHaveAttribute('href', 'https://github.com/lloydaq');
     await expect(page.getByRole('link', { name: /View code: Trustworthy News Detector/ })).toHaveAttribute(
       'href',
@@ -796,7 +796,7 @@ test.describe('résumé', () => {
 
   test('the printable page holds the whole résumé and prints only the sheet', async ({ page }) => {
     await page.goto('/resume/');
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText("Lloyd D'Souza");
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText("Lloyd Dsouza");
     for (const heading of ['Education', 'Projects', 'Hackathons', 'Leadership', 'Certification', 'Skills']) {
       await expect(page.getByRole('heading', { name: heading, level: 2 })).toBeVisible();
     }
