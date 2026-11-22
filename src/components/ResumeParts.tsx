@@ -7,9 +7,12 @@ export function EducationList({ items }: { items: Education[] }) {
     <ul className="cv-list cv-list--edu">
       {items.map((e) => (
         <li key={e.title} className="cv-item">
-          <p className="cv-item__title">{e.title}</p>
-          <p className="cv-item__meta">
-            {e.school} <span aria-hidden="true">·</span> {e.detail}
+          {/* School and grade on the title's line, so the PDF text reads in order. */}
+          <p className="cv-item__title">
+            {e.title}{' '}
+            <span className="cv-item__context">
+              · {e.school} · {e.detail}
+            </span>
           </p>
         </li>
       ))}

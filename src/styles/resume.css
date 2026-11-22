@@ -1,3 +1,11 @@
+/* Static Archivo for print: Chrome writes variable fonts into PDFs as Type 3, which some
+   applicant tracking systems read poorly; static files embed as TrueType. Only print uses
+   them, so the screen never downloads them. */
+@import '@fontsource/archivo/latin-400.css';
+@import '@fontsource/archivo/latin-500.css';
+@import '@fontsource/archivo/latin-600.css';
+@import '@fontsource/archivo/latin-700.css';
+
 /* ---------- Printable résumé (/resume/) ---------- */
 
 .resume-page {
@@ -84,43 +92,20 @@
   text-transform: uppercase;
 }
 
-.cv-columns {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0 var(--space-6);
-}
-
+/* Skills: one line per group ("Languages: Python, ..."), no grid, so text extracts in order. */
 .cv-skills {
   display: grid;
   gap: var(--space-1);
   margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--ink-2);
   font-size: var(--step--1);
 }
 
-.cv-skills > div {
-  display: grid;
-  grid-template-columns: 7rem minmax(0, 1fr);
-  gap: var(--space-3);
-}
-
-.cv-skills dt {
+.cv-skills strong {
+  color: var(--ink);
   font-weight: 620;
-}
-
-.cv-skills dd {
-  margin: 0;
-  color: var(--ink-2);
-}
-
-@media (max-width: 39.99rem) {
-  .cv-columns {
-    grid-template-columns: 1fr;
-  }
-
-  .cv-skills > div {
-    grid-template-columns: 1fr;
-    gap: 0;
-  }
 }
 
 /* ---------- Print and PDF: one A4 page, light paper, the sheet only ---------- */
@@ -163,6 +148,13 @@
     padding: 0;
   }
 
+  /* Single column throughout and body text at 10pt, for applicant tracking systems. */
+  .cv-sheet,
+  .cv-sheet * {
+    font-family: 'Archivo', system-ui, sans-serif;
+    font-stretch: normal !important;
+  }
+
   .cv-sheet {
     max-width: none;
     padding: 0;
@@ -170,89 +162,68 @@
     border-radius: 0;
     background: none;
     box-shadow: none;
-    font-size: 9.2pt;
-    line-height: 1.36;
+    font-size: 10pt;
+    line-height: 1.25;
   }
 
   .cv-sheet__name {
-    font-size: 21pt;
+    font-size: 20pt;
   }
 
   .cv-sheet__headline,
   .cv-sheet__open,
   .cv-sheet__contact,
   .cv-section > p,
+  .cv-section__title,
   .cv-item__meta,
   .cv-points,
   .cv-skills {
-    font-size: 8.6pt;
+    font-size: 10pt;
+  }
+
+  .cv-sheet__headline,
+  .cv-sheet__open {
+    margin-top: 1pt;
   }
 
   .cv-sheet__contact {
-    margin-top: 4pt;
-    padding-bottom: 6pt;
+    margin-top: 2pt;
+    padding-bottom: 4pt;
+    gap: 0 10pt;
   }
 
   .cv-section {
-    margin-top: 8pt;
+    margin-top: 6pt;
   }
 
   .cv-section__title {
+    margin-bottom: 3pt;
+    padding-bottom: 1pt;
     break-after: avoid;
   }
 
-  /* Education on one line per school: title left, school and grade right. */
-  .cv-list--edu .cv-item {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 0 8pt;
-  }
-
   .cv-list--edu .cv-item + .cv-item {
-    margin-top: 2pt;
-  }
-
-  .cv-list--edu .cv-item__meta {
-    margin-top: 0;
-  }
-
-  .cv-section__title {
-    margin-bottom: 5pt;
-    font-size: 8.6pt;
+    margin-top: 1pt;
   }
 
   .cv-item + .cv-item {
-    margin-top: 5pt;
+    margin-top: 3pt;
   }
 
-  .cv-item__meta {
+  .cv-item__meta,
+  .cv-points {
     margin-top: 0;
   }
 
-  .cv-points {
-    margin-top: 2pt;
-  }
-
   .cv-points li + li {
-    margin-top: 1pt;
+    margin-top: 0;
   }
 
   .cv-item {
     break-inside: avoid;
   }
 
-  .cv-columns {
-    grid-template-columns: 1fr 1fr;
-  }
-
   .cv-skills {
-    grid-template-columns: 1fr 1fr;
-    gap: 2pt 14pt;
-  }
-
-  .cv-skills > div {
-    grid-template-columns: 5.2rem minmax(0, 1fr);
-    gap: 6pt;
+    gap: 0;
   }
 }
