@@ -2,17 +2,15 @@ import { Footer } from '../components/Footer';
 import { Header } from '../components/Header';
 import { ArrowLeft, Download } from '../components/Icons';
 import { KineticGrid } from '../components/KineticGrid';
-import { CertificationList, EducationList, EntryList } from '../components/ResumeParts';
+import { EducationList, EntryList } from '../components/ResumeParts';
 import {
   RESUME_PDF,
-  certifications,
   education,
   hackathons,
   leadership,
   resume,
   resumeProjects,
   resumeSkills,
-  spokenLanguages,
 } from '../content/resume';
 import { profile } from '../content/site';
 
@@ -96,7 +94,7 @@ export function ResumePage() {
               {resumeProjects.map((p) => (
                 <li key={p.id} className="cv-item">
                   <p className="cv-item__title">
-                    {p.name} <span className="cv-item__context">· {linkify(p.status)}</span>
+                    {p.name}: {p.tagline} <span className="cv-item__context">· {linkify(p.status)}</span>
                   </p>
                   <p className="cv-item__meta">{p.stack}</p>
                   <ul className="cv-points">
@@ -123,19 +121,12 @@ export function ResumePage() {
             {/* One line per group, label and values in the same element, so the PDF's text
                 layer reads "Languages: Python, ..." in order for applicant tracking systems. */}
             <ul className="cv-skills">
-              {[...resumeSkills, { name: 'Spoken', items: spokenLanguages }].map((g) => (
+              {resumeSkills.map((g) => (
                 <li key={g.name}>
                   <strong>{g.name}:</strong> {g.items.join(', ')}
                 </li>
               ))}
             </ul>
-          </section>
-
-          <section className="cv-section" aria-labelledby="cv-cert">
-            <h2 id="cv-cert" className="cv-section__title">
-              Certification
-            </h2>
-            <CertificationList items={certifications} />
           </section>
 
           <section className="cv-section" aria-labelledby="cv-leadership">

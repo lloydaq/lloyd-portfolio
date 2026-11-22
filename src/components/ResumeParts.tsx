@@ -14,6 +14,7 @@ export function EducationList({ items }: { items: Education[] }) {
               · {e.school} · {e.detail}
             </span>
           </p>
+          {e.coursework && <p className="cv-item__meta">Relevant coursework: {e.coursework}</p>}
         </li>
       ))}
     </ul>
@@ -24,7 +25,7 @@ export function EntryList({ items }: { items: Entry[] }) {
   return (
     <ul className="cv-list">
       {items.map((e) => (
-        <li key={e.title} className="cv-item">
+        <li key={`${e.title} ${e.context}`} className="cv-item">
           <p className="cv-item__title">
             {e.title} <span className="cv-item__context">· {e.context}</span>
           </p>

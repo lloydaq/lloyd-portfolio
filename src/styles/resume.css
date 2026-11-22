@@ -112,7 +112,7 @@
 
 @page {
   size: A4;
-  margin: 10mm 12mm;
+  margin: 9mm 11mm;
 }
 
 @media print {
@@ -163,11 +163,11 @@
     background: none;
     box-shadow: none;
     font-size: 10pt;
-    line-height: 1.25;
+    line-height: 1.18;
   }
 
   .cv-sheet__name {
-    font-size: 20pt;
+    font-size: 18pt;
   }
 
   .cv-sheet__headline,
@@ -187,17 +187,17 @@
   }
 
   .cv-sheet__contact {
-    margin-top: 2pt;
-    padding-bottom: 4pt;
+    margin-top: 1pt;
+    padding-bottom: 2pt;
     gap: 0 10pt;
   }
 
   .cv-section {
-    margin-top: 6pt;
+    margin-top: 4pt;
   }
 
   .cv-section__title {
-    margin-bottom: 3pt;
+    margin-bottom: 2pt;
     padding-bottom: 1pt;
     break-after: avoid;
   }
@@ -207,7 +207,7 @@
   }
 
   .cv-item + .cv-item {
-    margin-top: 3pt;
+    margin-top: 2pt;
   }
 
   .cv-item__meta,
@@ -225,5 +225,9 @@
 
   .cv-skills {
     gap: 0;
+  }
+
+  .cv-section > p {
+    line-height: inherit;
   }
 }
