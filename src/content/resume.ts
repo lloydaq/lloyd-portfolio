@@ -111,7 +111,7 @@ export const resumeProjects: ResumeProject[] = [
     points: [
       'Built a DCRNN graph neural network and a LightGBM forecaster for 207 Los Angeles highway sensors (METR-LA benchmark), predicting speed 15–60 min ahead and scored against four baselines on identical rows.',
       'Reached 2.64 mph MAE at 15 min, 24% below the persistence baseline (3.48); a 95% day-block bootstrap shows DCRNN beats LightGBM at 15–45 min, with no clear difference at 60 min.',
-      'Blocked look-ahead leakage with a test that randomises all future readings and requires every earlier feature to stay bit-identical; treated zero readings as missing so no model scores better by skipping hard rows.',
+      'Blocked look-ahead leakage with a test that randomises all future readings and requires every earlier feature to stay exactly identical; treated zero readings as missing so no model scores better by skipping hard rows.',
     ],
   },
   {
