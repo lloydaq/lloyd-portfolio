@@ -1,3 +1,11 @@
+/* Static Archivo for print: Chrome writes variable fonts into PDFs as Type 3, which some
+   applicant tracking systems read poorly; static files embed as TrueType. Only print uses
+   them, so the screen never downloads them. */
+@import '@fontsource/archivo/latin-400.css';
+@import '@fontsource/archivo/latin-500.css';
+@import '@fontsource/archivo/latin-600.css';
+@import '@fontsource/archivo/latin-700.css';
+
 /* ---------- Printable résumé (/resume/) ---------- */
 
 .resume-page {
@@ -141,6 +149,12 @@
   }
 
   /* Single column throughout and body text at 10pt, for applicant tracking systems. */
+  .cv-sheet,
+  .cv-sheet * {
+    font-family: 'Archivo', system-ui, sans-serif;
+    font-stretch: normal !important;
+  }
+
   .cv-sheet {
     max-width: none;
     padding: 0;
@@ -186,14 +200,6 @@
     margin-bottom: 3pt;
     padding-bottom: 1pt;
     break-after: avoid;
-  }
-
-  /* Education on one line per school: title left, school and grade right. */
-  .cv-list--edu .cv-item {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 0 8pt;
   }
 
   .cv-list--edu .cv-item + .cv-item {

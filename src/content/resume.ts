@@ -1,7 +1,6 @@
 // Résumé content. Personal details (education, grades, hackathons, the certificate and
 // AIvibeX) were supplied by the owner on 2026-11-13, from his résumé and NPTEL
-// certificate. The two Claude Academy badges were supplied on 2026-11-22 (badge PDFs,
-// each with its public verify link). Hackathon finals (both reached the offline final
+// certificate. Hackathon finals (both reached the offline final
 // round) and the AIvibeX figures (40 teams, 118 participants; technical and media team)
 // were supplied on 2026-11-22. Project lines restate facts already verified in the project content
 // files; keep them in step. No phone number or street address: the site is public.
@@ -43,18 +42,16 @@ export const hackathons: Entry[] = [
   {
     title: 'JalSetu-Lite',
     context: 'Build for Billions Hackathon, NITK · Finalist, offline final round',
-    role: 'Backend: verification, security and disputes',
     points: [
-      'Built backend workflows and APIs, with teammates, for order verification, delivery validation and disputes.',
+      'Built backend APIs, with teammates, for order verification, delivery validation and disputes.',
       'Implemented OTP verification and server-side validation logic.',
     ],
   },
   {
     title: 'FocusCut',
     context: 'Tech Fusion 2.0 · Finalist, offline final round',
-    role: 'AI-powered learning assistant',
     points: [
-      'Turns YouTube videos into summaries, key takeaways and flashcards; I built the timelines and progress tracking.',
+      'Built the timelines and progress tracking for an app turning YouTube videos into summaries and flashcards.',
     ],
   },
 ];
@@ -84,15 +81,6 @@ export const certifications: Certification[] = [
     when: 'Jul–Oct 2026, 12-week course',
     detail: 'Elite certificate',
   },
-  {
-    name: 'Claude 101 & Claude Code 101',
-    issuer: 'Claude Academy',
-    when: 'Nov 2026',
-    verify: [
-      { label: 'Claude 101', url: 'https://academy.claude.com/verify/5c07816f52cd3470d56a2d550a5f915c' },
-      { label: 'Claude Code 101', url: 'https://academy.claude.com/verify/0ea9882d4ba20f4e86d7d04dc5e5f79c' },
-    ],
-  },
 ];
 
 export interface ResumeProject {
@@ -112,8 +100,8 @@ export const resumeProjects: ResumeProject[] = [
     stack: 'Python, FastAPI, Pydantic, Ollama, Trafilatura, HTTPX; HTML, CSS, JavaScript',
     status: 'github.com/lloydaq/TND-The-News-Detector',
     points: [
-      'Built a fact-checker: a local LLM extracts up to 5 claims per article, each checked against GNews and GDELT within 180 seconds.',
-      'Designed a deterministic 0–100 risk score; every run marked COMPLETE or DEGRADED with each failure listed; 159 pytest tests, Playwright in CI.',
+      'Built a fact-checker: a local LLM pulls up to 5 claims per article and checks each against GNews and GDELT.',
+      'Designed a deterministic 0–100 risk score; failed runs are marked DEGRADED; 159 pytest tests, Playwright CI.',
     ],
   },
   {
@@ -122,8 +110,8 @@ export const resumeProjects: ResumeProject[] = [
     stack: 'Python, FastAPI, pandas, NumPy, scikit-learn; HTML, CSS, JavaScript',
     status: 'github.com/lloydaq/DataSentry',
     points: [
-      'Built a local tool that screens CSVs of up to 200,000 rows for target leakage, label conflicts and quality issues, with evidence.',
-      'Implemented split advice and a CI quality gate; on its churn sample, flags a near-perfect leaking column and 20 of 180 test rows copied from training.',
+      'Built a tool screening CSVs of up to 200,000 rows for target leakage, label conflicts and quality issues.',
+      'Caught a near-perfect leaking column and 20 of 180 test rows copied from training on its churn sample.',
     ],
   },
   {
@@ -132,8 +120,8 @@ export const resumeProjects: ResumeProject[] = [
     stack: 'Python, pandas, LightGBM, PyTorch (DCRNN), FastAPI; React, TypeScript, Leaflet',
     status: 'live demo at lloydaq.github.io/flowcast',
     points: [
-      'Built models forecasting LA traffic 15–60 min ahead for 207 sensors; DCRNN hits 2.64 mph MAE at 15 min, 24% below the persistence baseline.',
-      'Showed DCRNN beats LightGBM at 15–45 min (95% day-block bootstrap); built leakage-tested features and a React dashboard replaying June 2012.',
+      'Built traffic-speed forecasts 15–60 min ahead for 207 LA sensors; DCRNN reaches 2.64 mph MAE at 15 min.',
+      'Cut 15-min MAE 24% below the persistence baseline; DCRNN beats LightGBM at 15–45 min (95% bootstrap).',
     ],
   },
   {
@@ -142,8 +130,8 @@ export const resumeProjects: ResumeProject[] = [
     stack: 'Python, FastAPI, SQLAlchemy, Alembic, PostgreSQL; React, TypeScript, Tailwind CSS',
     status: 'github.com/lloydaq/CampusSignal-pro',
     points: [
-      'Built a multi-tenant campus platform where the server enforces college isolation on every request, covered by tenant-isolation tests.',
-      'Implemented server-side sessions, CSRF checks and Argon2id; notices, department pages, moderated community, issue reporting; demo data.',
+      'Built a multi-tenant campus platform; the server enforces college isolation on every request, with tests.',
+      'Implemented server-side sessions, CSRF checks and Argon2id password hashing; runs on demo data.',
     ],
   },
   {
@@ -152,7 +140,7 @@ export const resumeProjects: ResumeProject[] = [
     stack: 'TypeScript, View Transitions, Web Animations; React entry point',
     status: 'npm, MIT · github.com/lloydaq/inkshift',
     points: [
-      'Published this site’s ink-bleed theme switch as a library: reversible, about 6 kB gzipped, no runtime dependencies.',
+      'Published this site’s ink-bleed theme switch as a library: reversible, about 6 kB gzipped, no dependencies.',
     ],
   },
 ];
