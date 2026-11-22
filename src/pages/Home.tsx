@@ -405,8 +405,8 @@ export function Home() {
             </h2>
             <div>
               <p className="section__lede">
-                BE in AI &amp; ML at MITE · CGPA 8.43 · two team hackathons · conducted the AIvibeX hackathon ·
-                NPTEL Foundations of Virtual Reality (Elite)
+                BE in AI &amp; ML at MITE · CGPA 8.43 · finalist in two team hackathons · organised AIvibeX (118
+                participants) · NPTEL Foundations of Virtual Reality (Elite)
               </p>
               <div className="actions resume__actions">
                 <a className="button button--primary" href={RESUME_PDF} download="Lloyd-Dsouza-Resume.pdf">

@@ -171,7 +171,7 @@
     background: none;
     box-shadow: none;
     font-size: 9.2pt;
-    line-height: 1.29;
+    line-height: 1.36;
   }
 
   .cv-sheet__name {
@@ -194,7 +194,7 @@
   }
 
   .cv-section {
-    margin-top: 6pt;
+    margin-top: 8pt;
   }
 
   .cv-section__title {
@@ -218,12 +218,12 @@
   }
 
   .cv-section__title {
-    margin-bottom: 4pt;
+    margin-bottom: 5pt;
     font-size: 8.6pt;
   }
 
   .cv-item + .cv-item {
-    margin-top: 4pt;
+    margin-top: 5pt;
   }
 
   .cv-item__meta {
@@ -231,7 +231,7 @@
   }
 
   .cv-points {
-    margin-top: 1pt;
+    margin-top: 2pt;
   }
 
   .cv-points li + li {
