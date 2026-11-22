@@ -61,13 +61,6 @@ export function ResumePage() {
             </p>
           </header>
 
-          <section className="cv-section" aria-labelledby="cv-summary">
-            <h2 id="cv-summary" className="cv-section__title">
-              Summary
-            </h2>
-            <p>{resume.summary}</p>
-          </section>
-
           <section className="cv-section" aria-labelledby="cv-education">
             <h2 id="cv-education" className="cv-section__title">
               Education

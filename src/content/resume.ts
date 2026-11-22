@@ -1,7 +1,9 @@
 // Résumé content. Personal details (education, grades, hackathons, the certificate and
 // AIvibeX) were supplied by the owner on 2026-11-13, from his résumé and NPTEL
 // certificate. The two Claude Academy badges were supplied on 2026-11-22 (badge PDFs,
-// each with its public verify link). Project lines restate facts already verified in the project content
+// each with its public verify link). Hackathon finals (both reached the offline final
+// round) and the AIvibeX figures (40 teams, 118 participants; technical and media team)
+// were supplied on 2026-11-22. Project lines restate facts already verified in the project content
 // files; keep them in step. No phone number or street address: the site is public.
 
 export const RESUME_PDF = '/lloyd-dsouza-resume.pdf';
@@ -10,8 +12,6 @@ export const RESUME_PAGE = '/resume/';
 export const resume = {
   headline: 'AI & ML engineering student',
   location: 'Karkala, Karnataka, India',
-  summary:
-    'AI & ML engineering student who builds complete applications: the service, the checks around a model, the interface and the tests. Four projects, one open-source library, two team hackathons.',
 } as const;
 
 export interface Education {
@@ -42,19 +42,19 @@ export interface Entry {
 export const hackathons: Entry[] = [
   {
     title: 'JalSetu-Lite',
-    context: 'Build for Billions Hackathon, NITK',
+    context: 'Build for Billions Hackathon, NITK · Finalist, offline final round',
     role: 'Backend: verification, security and disputes',
     points: [
       'Built backend workflows and APIs, with teammates, for order verification, delivery validation and disputes.',
-      'Worked on OTP verification and server-side validation logic.',
+      'Implemented OTP verification and server-side validation logic.',
     ],
   },
   {
     title: 'FocusCut',
-    context: 'Tech Fusion 2.0',
+    context: 'Tech Fusion 2.0 · Finalist, offline final round',
     role: 'AI-powered learning assistant',
     points: [
-      'Turns YouTube videos into summaries, key takeaways and flashcards; I worked on timelines and progress tracking.',
+      'Turns YouTube videos into summaries, key takeaways and flashcards; I built the timelines and progress tracking.',
     ],
   },
 ];
@@ -63,8 +63,8 @@ export const leadership: Entry[] = [
   {
     title: 'AIvibeX',
     context: 'Mangalore Institute of Technology and Engineering',
-    role: 'Conducted a 5-hour AI hackathon for the college',
-    points: [],
+    role: '5-hour AI hackathon: 40 teams, 118 participants',
+    points: ['Technical and media team: posters and participant certificates.'],
   },
 ];
 
@@ -110,59 +110,59 @@ export const resumeProjects: ResumeProject[] = [
     id: 'tnd',
     name: 'Trustworthy News Detector (TND)',
     stack: 'Python, FastAPI, Pydantic, Ollama, Trafilatura, HTTPX; HTML, CSS, JavaScript',
-    status: 'v1.0.0 · github.com/lloydaq/TND-The-News-Detector',
+    status: 'github.com/lloydaq/TND-The-News-Detector',
     points: [
-      'Extracts claims from an article with a local LLM, searches GNews and GDELT, and checks each claim against the evidence retrieved.',
-      'Deterministic 0–100 risk score; each run is marked COMPLETE or DEGRADED with every failure listed; pytest and Playwright suites.',
+      'Built a fact-checker: a local LLM extracts up to 5 claims per article, each checked against GNews and GDELT within 180 seconds.',
+      'Deterministic 0–100 risk score; every run marked COMPLETE or DEGRADED with each failure listed; 159 pytest tests, Playwright in CI.',
     ],
   },
   {
     id: 'datasentry',
     name: 'DataSentry',
     stack: 'Python, FastAPI, pandas, NumPy, scikit-learn; HTML, CSS, JavaScript',
-    status: 'v0.1.0 · github.com/lloydaq/DataSentry',
+    status: 'github.com/lloydaq/DataSentry',
     points: [
-      'Profiles a CSV and screens it for target leakage, label conflicts and quality problems, reporting each finding with its evidence and limits.',
-      'Near-duplicate and train/test overlap checks, split advice, model-impact experiments and a CI quality gate; runs fully locally.',
+      'Built a local tool that screens CSVs of up to 200,000 rows for target leakage, label conflicts and quality issues, with evidence.',
+      'On its churn sample, flags a near-perfect leaking column and 20 of 180 test rows copied from training; split advice, CI quality gate.',
     ],
   },
   {
     id: 'flowcast',
     name: 'FlowCast',
     stack: 'Python, pandas, LightGBM, PyTorch (DCRNN), FastAPI; React, TypeScript, Leaflet',
-    status: 'v1.0.0 · live demo at lloydaq.github.io/flowcast',
+    status: 'live demo at lloydaq.github.io/flowcast',
     points: [
-      'Forecasts LA traffic speed 15–60 min ahead (METR-LA, 207 sensors): four baselines, LightGBM and DCRNN on identical rows.',
-      'Leakage-tested features, a day-block bootstrap to compare models, and a React dashboard that replays June 2012.',
+      'Forecasts LA traffic 15–60 min ahead for 207 sensors; DCRNN hits 2.64 mph MAE at 15 min, 24% below the persistence baseline.',
+      'DCRNN beats LightGBM at 15–45 min (95% day-block bootstrap); leakage-tested features; React dashboard replaying June 2012.',
     ],
   },
   {
     id: 'campussignal',
     name: 'CampusSignal',
     stack: 'Python, FastAPI, SQLAlchemy, Alembic, PostgreSQL; React, TypeScript, Tailwind CSS',
-    status: 'Not deployed; demo data · github.com/lloydaq/CampusSignal-pro',
+    status: 'github.com/lloydaq/CampusSignal-pro',
     points: [
-      'A multi-college campus platform: notices, department pages, a moderated community, academic records and issue reporting.',
-      'College isolation enforced by the server on every request; server-side sessions, CSRF checks, Argon2id, tenant-isolation tests.',
+      'Built a multi-tenant campus platform where the server enforces college isolation on every request, covered by tenant-isolation tests.',
+      'Server-side sessions, CSRF checks, Argon2id; notices, department pages, moderated community, issue reporting; demo data.',
     ],
   },
   {
     id: 'inkshift',
     name: 'Inkshift (open source)',
     stack: 'TypeScript, View Transitions, Web Animations; React entry point',
-    status: 'npm v0.1.0, MIT · github.com/lloydaq/inkshift',
+    status: 'npm, MIT · github.com/lloydaq/inkshift',
     points: [
-      'This site’s ink-bleed theme switch as a library: reversible, about 6 kB gzipped, no runtime dependencies.',
+      'Published this site’s ink-bleed theme switch as a library: reversible, about 6 kB gzipped, no runtime dependencies.',
     ],
   },
 ];
 
 export const resumeSkills: { name: string; items: string[] }[] = [
-  { name: 'Languages', items: ['Python', 'JavaScript', 'TypeScript', 'Java', 'C', 'HTML', 'CSS'] },
+  { name: 'Languages', items: ['Python', 'Java', 'C', 'C++', 'TypeScript', 'JavaScript', 'SQL'] },
   { name: 'ML and data', items: ['NumPy', 'pandas', 'scikit-learn', 'LightGBM', 'PyTorch', 'Ollama'] },
   { name: 'Backend', items: ['FastAPI', 'REST APIs', 'Pydantic', 'PostgreSQL', 'SQLAlchemy'] },
   { name: 'Frontend', items: ['React', 'Vite', 'Tailwind CSS'] },
-  { name: 'Tools', items: ['Git', 'GitHub', 'VS Code', 'pytest', 'Playwright', 'GitHub Actions'] },
+  { name: 'Tools', items: ['Git', 'GitHub Actions', 'pytest', 'Playwright'] },
 ];
 
 export const spokenLanguages = ['English', 'Hindi', 'Kannada'];
