@@ -1,6 +1,6 @@
 // Personal details confirmed by the owner. Nothing here is inferred.
 export const profile = {
-  name: "Lloyd D'Souza",
+  name: "Lloyd Dsouza",
   role: 'AI/ML engineering student',
   email: 'lloyd25dsouza@gmail.com',
   github: 'https://github.com/lloydaq',

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "generatedAt": "2026-10-20T00:00:00Z",
-  "title": "Design System: Lloyd D'Souza — portfolio",
+  "title": "Design System: Lloyd Dsouza — portfolio",
   "extensions": {
     "colorMeta": {
       "sodium-amber": { "role": "primary", "displayName": "Sodium Amber", "canonical": "#e0a84f", "tonalRamp": ["#3a2a0f", "#5c4216", "#7f5c1e", "#a37728", "#c69138", "#e0a84f", "#ebc48a", "#f6e2c4"] },

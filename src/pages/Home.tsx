@@ -409,7 +409,7 @@ export function Home() {
                 NPTEL Foundations of Virtual Reality (Elite)
               </p>
               <div className="actions resume__actions">
-                <a className="button button--primary" href={RESUME_PDF} download="Lloyd-DSouza-Resume.pdf">
+                <a className="button button--primary" href={RESUME_PDF} download="Lloyd-Dsouza-Resume.pdf">
                   <Download /> Download résumé (PDF)
                 </a>
                 <a className="button" href={RESUME_PAGE}>
