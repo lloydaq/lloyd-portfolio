@@ -11,6 +11,8 @@ export const RESUME_PAGE = '/resume/';
 export const resume = {
   headline: 'AI & ML engineer (student)',
   location: 'Karkala, Karnataka, India',
+  summary:
+    'Third-year AI & ML engineering student (CGPA 8.43) who builds ML systems with the evaluation and tests around them: deep-learning forecasting, local-LLM pipelines and FastAPI backends. Finalist in two hackathons.',
 } as const;
 
 export interface Education {
