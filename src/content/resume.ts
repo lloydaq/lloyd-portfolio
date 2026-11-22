@@ -92,7 +92,8 @@ export interface ResumeProject {
 }
 
 // Shorter than the project pages, for one printed page. Every figure is in the
-// project content files (tnd.ts, datasentry.ts, flowcast.ts, campussignal.ts).
+// project content files (tnd.ts, datasentry.ts, flowcast.ts, campussignal.ts). Inkshift
+// is left off the résumé (owner's choice, 2026-11-22); it stays on the site.
 export const resumeProjects: ResumeProject[] = [
   {
     id: 'tnd',
@@ -132,15 +133,6 @@ export const resumeProjects: ResumeProject[] = [
     points: [
       'Built a multi-tenant campus platform; the server enforces college isolation on every request, with tests.',
       'Implemented server-side sessions, CSRF checks and Argon2id password hashing; runs on demo data.',
-    ],
-  },
-  {
-    id: 'inkshift',
-    name: 'Inkshift (open source)',
-    stack: 'TypeScript, View Transitions, Web Animations; React entry point',
-    status: 'npm, MIT · github.com/lloydaq/inkshift',
-    points: [
-      'Published this site’s ink-bleed theme switch as a library: reversible, about 6 kB gzipped, no dependencies.',
     ],
   },
 ];
