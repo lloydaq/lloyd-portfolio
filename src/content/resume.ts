@@ -113,7 +113,7 @@ export const resumeProjects: ResumeProject[] = [
     status: 'github.com/lloydaq/TND-The-News-Detector',
     points: [
       'Built a fact-checker: a local LLM extracts up to 5 claims per article, each checked against GNews and GDELT within 180 seconds.',
-      'Deterministic 0–100 risk score; every run marked COMPLETE or DEGRADED with each failure listed; 159 pytest tests, Playwright in CI.',
+      'Designed a deterministic 0–100 risk score; every run marked COMPLETE or DEGRADED with each failure listed; 159 pytest tests, Playwright in CI.',
     ],
   },
   {
@@ -123,7 +123,7 @@ export const resumeProjects: ResumeProject[] = [
     status: 'github.com/lloydaq/DataSentry',
     points: [
       'Built a local tool that screens CSVs of up to 200,000 rows for target leakage, label conflicts and quality issues, with evidence.',
-      'On its churn sample, flags a near-perfect leaking column and 20 of 180 test rows copied from training; split advice, CI quality gate.',
+      'Implemented split advice and a CI quality gate; on its churn sample, flags a near-perfect leaking column and 20 of 180 test rows copied from training.',
     ],
   },
   {
@@ -132,8 +132,8 @@ export const resumeProjects: ResumeProject[] = [
     stack: 'Python, pandas, LightGBM, PyTorch (DCRNN), FastAPI; React, TypeScript, Leaflet',
     status: 'live demo at lloydaq.github.io/flowcast',
     points: [
-      'Forecasts LA traffic 15–60 min ahead for 207 sensors; DCRNN hits 2.64 mph MAE at 15 min, 24% below the persistence baseline.',
-      'DCRNN beats LightGBM at 15–45 min (95% day-block bootstrap); leakage-tested features; React dashboard replaying June 2012.',
+      'Built models forecasting LA traffic 15–60 min ahead for 207 sensors; DCRNN hits 2.64 mph MAE at 15 min, 24% below the persistence baseline.',
+      'Showed DCRNN beats LightGBM at 15–45 min (95% day-block bootstrap); built leakage-tested features and a React dashboard replaying June 2012.',
     ],
   },
   {
@@ -143,7 +143,7 @@ export const resumeProjects: ResumeProject[] = [
     status: 'github.com/lloydaq/CampusSignal-pro',
     points: [
       'Built a multi-tenant campus platform where the server enforces college isolation on every request, covered by tenant-isolation tests.',
-      'Server-side sessions, CSRF checks, Argon2id; notices, department pages, moderated community, issue reporting; demo data.',
+      'Implemented server-side sessions, CSRF checks and Argon2id; notices, department pages, moderated community, issue reporting; demo data.',
     ],
   },
   {

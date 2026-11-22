@@ -18,6 +18,19 @@ import { profile } from '../content/site';
 
 const strip = (url: string) => url.replace(/^https?:\/\/(www\.)?/, '');
 
+/** Turns the bare addresses in a project's status line into links, keeping the visible text. */
+function linkify(text: string) {
+  return text.split(/((?:github\.com|lloydaq\.github\.io)\/\S+)/).map((part, i) =>
+    i % 2 ? (
+      <a key={part} href={`https://${part}`}>
+        {part}
+      </a>
+    ) : (
+      part
+    ),
+  );
+}
+
 /**
  * The résumé as one printable sheet. On screen it sits on the site like any page; in
  * print (and in the PDF made from it by scripts/make-resume-pdf.mjs) only the sheet
@@ -76,7 +89,7 @@ export function ResumePage() {
               {resumeProjects.map((p) => (
                 <li key={p.id} className="cv-item">
                   <p className="cv-item__title">
-                    {p.name} <span className="cv-item__context">· {p.status}</span>
+                    {p.name} <span className="cv-item__context">· {linkify(p.status)}</span>
                   </p>
                   <p className="cv-item__meta">{p.stack}</p>
                   <ul className="cv-points">
@@ -96,37 +109,33 @@ export function ResumePage() {
             <EntryList items={hackathons} />
           </section>
 
-          <div className="cv-columns">
-            <section className="cv-section" aria-labelledby="cv-leadership">
-              <h2 id="cv-leadership" className="cv-section__title">
-                Leadership
-              </h2>
-              <EntryList items={leadership} />
-            </section>
-            <section className="cv-section" aria-labelledby="cv-cert">
-              <h2 id="cv-cert" className="cv-section__title">
-                Certifications
-              </h2>
-              <CertificationList items={certifications} />
-            </section>
-          </div>
-
           <section className="cv-section" aria-labelledby="cv-skills">
             <h2 id="cv-skills" className="cv-section__title">
               Skills
             </h2>
-            <dl className="cv-skills">
-              {resumeSkills.map((g) => (
-                <div key={g.name}>
-                  <dt>{g.name}</dt>
-                  <dd>{g.items.join(', ')}</dd>
-                </div>
+            {/* One line per group, label and values in the same element, so the PDF's text
+                layer reads "Languages: Python, ..." in order for applicant tracking systems. */}
+            <ul className="cv-skills">
+              {[...resumeSkills, { name: 'Spoken', items: spokenLanguages }].map((g) => (
+                <li key={g.name}>
+                  <strong>{g.name}:</strong> {g.items.join(', ')}
+                </li>
               ))}
-              <div>
-                <dt>Spoken</dt>
-                <dd>{spokenLanguages.join(', ')}</dd>
-              </div>
-            </dl>
+            </ul>
+          </section>
+
+          <section className="cv-section" aria-labelledby="cv-cert">
+            <h2 id="cv-cert" className="cv-section__title">
+              Certifications
+            </h2>
+            <CertificationList items={certifications} />
+          </section>
+
+          <section className="cv-section" aria-labelledby="cv-leadership">
+            <h2 id="cv-leadership" className="cv-section__title">
+              Leadership
+            </h2>
+            <EntryList items={leadership} />
           </section>
         </article>
       </main>
