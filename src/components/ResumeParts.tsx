@@ -48,7 +48,25 @@ export function CertificationList({ items }: { items: Certification[] }) {
             {c.name} <span className="cv-item__context">· {c.issuer}</span>
           </p>
           <p className="cv-item__meta">
-            {c.when} <span aria-hidden="true">·</span> {c.detail}
+            {c.when}
+            {c.detail && (
+              <>
+                {' '}
+                <span aria-hidden="true">·</span> {c.detail}
+              </>
+            )}
+            {c.verify && (
+              <>
+                {' '}
+                <span aria-hidden="true">·</span> Verify:{' '}
+                {c.verify.map((v, i) => (
+                  <span key={v.url}>
+                    {i > 0 && ', '}
+                    <a href={v.url}>{v.label}</a>
+                  </span>
+                ))}
+              </>
+            )}
           </p>
         </li>
       ))}
