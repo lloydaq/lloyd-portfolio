@@ -112,7 +112,7 @@ export function ResumePage() {
             </section>
             <section className="cv-section" aria-labelledby="cv-cert">
               <h2 id="cv-cert" className="cv-section__title">
-                Certification
+                Certifications
               </h2>
               <CertificationList items={certifications} />
             </section>

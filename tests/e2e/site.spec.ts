@@ -797,7 +797,7 @@ test.describe('résumé', () => {
   test('the printable page holds the whole résumé and prints only the sheet', async ({ page }) => {
     await page.goto('/resume/');
     await expect(page.getByRole('heading', { level: 1 })).toHaveText("Lloyd Dsouza");
-    for (const heading of ['Education', 'Projects', 'Hackathons', 'Leadership', 'Certification', 'Skills']) {
+    for (const heading of ['Education', 'Projects', 'Hackathons', 'Leadership', 'Certifications', 'Skills']) {
       await expect(page.getByRole('heading', { name: heading, level: 2 })).toBeVisible();
     }
     // Public page: no phone number.

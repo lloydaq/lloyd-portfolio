@@ -1,6 +1,7 @@
 // Résumé content. Personal details (education, grades, hackathons, the certificate and
 // AIvibeX) were supplied by the owner on 2026-11-13, from his résumé and NPTEL
-// certificate. Project lines restate facts already verified in the project content
+// certificate. The two Claude Academy badges were supplied on 2026-11-22 (badge PDFs,
+// each with its public verify link). Project lines restate facts already verified in the project content
 // files; keep them in step. No phone number or street address: the site is public.
 
 export const RESUME_PDF = '/lloyd-dsouza-resume.pdf';
@@ -71,7 +72,9 @@ export interface Certification {
   name: string;
   issuer: string;
   when: string;
-  detail: string;
+  detail?: string;
+  /** Public pages where anyone can check the credential, one per badge. */
+  verify?: { label: string; url: string }[];
 }
 
 export const certifications: Certification[] = [
@@ -80,6 +83,15 @@ export const certifications: Certification[] = [
     issuer: 'NPTEL, IIT Madras',
     when: 'Jul–Oct 2026, 12-week course',
     detail: 'Elite certificate',
+  },
+  {
+    name: 'Claude 101 & Claude Code 101',
+    issuer: 'Claude Academy',
+    when: 'Nov 2026',
+    verify: [
+      { label: 'Claude 101', url: 'https://academy.claude.com/verify/5c07816f52cd3470d56a2d550a5f915c' },
+      { label: 'Claude Code 101', url: 'https://academy.claude.com/verify/0ea9882d4ba20f4e86d7d04dc5e5f79c' },
+    ],
   },
 ];
 
