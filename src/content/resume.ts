@@ -10,7 +10,7 @@ export const RESUME_PDF = '/lloyd-dsouza-resume.pdf';
 export const RESUME_PAGE = '/resume/';
 
 export const resume = {
-  headline: 'AI & ML engineering student',
+  headline: 'AI & ML engineer (student)',
   location: 'Karkala, Karnataka, India',
 } as const;
 

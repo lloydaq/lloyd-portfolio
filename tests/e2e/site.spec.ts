@@ -786,11 +786,11 @@ test.describe('résumé', () => {
 
   test('says what he is looking for, and shows no certificate score', async ({ page }) => {
     await page.goto('/');
-    await expect(page.locator('.hero__open')).toContainText('Open to software engineering internships');
+    await expect(page.locator('.hero__open')).toContainText('Open to ML and software engineering internships');
     await expect(page.locator('.hero__open')).toContainText('Remote, or on-site in Bengaluru or Mangaluru');
     await expect(page.locator('#resume')).not.toContainText('67%');
     await page.goto('/resume/');
-    await expect(page.locator('.cv-sheet')).toContainText('Open to software engineering internships');
+    await expect(page.locator('.cv-sheet')).toContainText('Open to ML and software engineering internships');
     await expect(page.locator('.cv-sheet')).not.toContainText('67%');
   });
 

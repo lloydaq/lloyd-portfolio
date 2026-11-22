@@ -6,7 +6,7 @@ export const profile = {
   github: 'https://github.com/lloydaq',
   linkedin: 'https://www.linkedin.com/in/lloyddso',
   /** What he is looking for (owner, 2026-11-19). No start date by choice. */
-  lookingFor: 'Open to software engineering internships',
+  lookingFor: 'Open to ML and software engineering internships',
   workWhere: 'Remote, or on-site in Bengaluru or Mangaluru',
 } as const;
 
